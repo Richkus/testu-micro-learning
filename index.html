@@ -555,7 +555,7 @@
   .ms-coach-body { padding: 14px 18px 16px; }
   .ms-coach-body h3 { font-size: 16px; font-weight: 700; line-height: 24px; color: var(--ms-ink-soft); margin: 10px 0 6px; }
   .ms-coach-body p { font-size: 14px; line-height: 21px; color: var(--ms-ink-soft); margin: 0 0 16px; }
-  .ms-coach-foot { display: flex; align-items: center; justify-content: space-between; }
+  .ms-coach-foot { display: flex; align-items: center; justify-content: flex-end; }
   .ms-coach-foot span { font-size: 13px; color: var(--ms-sub); }
   .ms-coach-foot .ms-btn { padding: 7px 20px; }
   /* rodyklė į išsiskleidusį atsakymą (kairėje) */
@@ -935,8 +935,7 @@
           <h3 id="ms-coach-title">Išaiškinimą dabar matote iškart</h3>
           <p>Pasirinkus atsakymą teisingas variantas išsiskleidžia su trumpu paaiškinimu. Visą tekstą rasite paspaudę „Skaityti visą išaiškinimą“.</p>
           <div class="ms-coach-foot">
-            <span>1 iš 1</span>
-            <button type="button" class="ms-btn" @click="coachClose()">Supratau</button>
+            <button type="button" class="ms-btn ms-btn-outline" @click="coachClose()">Supratau</button>
           </div>
         </div>
       </div>
