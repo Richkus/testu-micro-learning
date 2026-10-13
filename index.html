@@ -578,6 +578,9 @@
   .ms-ibanner-text { flex: 1; font-size: 14px; line-height: 20px; color: var(--ms-ink-soft); }
   .ms-ibanner-close { flex: 0 0 28px; width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background .15s; }
   .ms-ibanner-close:hover { background: rgba(15, 83, 84, .07); }
+  /* J variantas: ta pati juostelė kaip atskiras elementas, lygiuotas su kortele */
+  .ms-ibanner-wrap.is-separate { margin-bottom: -12px; padding: 0; }
+  .ms-ibanner-wrap.is-separate .ms-ibanner { padding: 12px 12px 12px 16px; border-radius: 14px; border-bottom: 1px solid var(--ms-ok-line); }
   @media (max-width: 575.98px) { .ms-ibanner-wrap { padding: 0 12px; } .ms-ibanner { align-items: flex-start; flex-wrap: wrap; row-gap: 6px; } .ms-ibanner-text { flex-basis: calc(100% - 40px); order: 3; } .ms-ibanner-close { margin-left: auto; } }
 
   @media (prefers-reduced-motion: reduce) {
@@ -762,8 +765,8 @@
       <!-- INTRO (variantai E-G, perjungiami per „Versijos“) -->
       <section x-show="screen === 'intro'" x-transition:enter.opacity.duration.300ms x-transition:leave.opacity.duration.1ms class="ms-intro-wrap" :class="'is-v' + introVariant">
 
-        <!-- I variantas: naujienos juostelė, „įkišta“ už testo kortelės viršaus -->
-        <div class="ms-ibanner-wrap" x-show="introVariant === 'I' && !tipSeen" x-collapse.duration.300ms>
+        <!-- I / J variantai: naujienos juostelė už kortelės (I) arba atskirai virš jos (J) -->
+        <div class="ms-ibanner-wrap" :class="{ 'is-separate': introVariant === 'J' }" x-show="(introVariant === 'I' || introVariant === 'J') && !tipSeen" x-collapse.duration.300ms>
           <div class="ms-ibanner">
             <span class="ms-announce-badge is-light">Naujiena</span>
             <span class="ms-ibanner-text">Išaiškinimą dabar matysite iškart po kiekvieno atsakymo</span>
@@ -1170,7 +1173,8 @@ function quiz() {
       { id: 'F', label: 'Naujienos kortelė su „Supratau“' },
       { id: 'G', label: '„Kas naujo“ modalas atėjus' },
       { id: 'H', label: 'Pranešimas prie pirmo atsakymo' },
-      { id: 'I', label: 'Juostelė virš testo kortelės' }
+      { id: 'I', label: 'Juostelė už testo kortelės' },
+      { id: 'J', label: 'Juostelė atskirai virš kortelės' }
     ],
     tipSeen: false,
     coachOpen: false,
