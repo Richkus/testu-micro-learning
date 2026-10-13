@@ -1102,7 +1102,7 @@ function quiz() {
       this.bg.source = src;
     },
     bgReset() { this.bg = { ...this.bgDefaults }; },
-    introVariant: 'F',
+    introVariant: 'G',
     introVariants: [
       { id: 'E', label: 'Modalas paspaudus „Pradėti“' },
       { id: 'F', label: 'Naujienos kortelė su „Supratau“' },
@@ -1207,12 +1207,12 @@ function quiz() {
 
     init() {
       try {
-        const saved = JSON.parse(localStorage.getItem('ms-proto') || '{}');
+        const saved = JSON.parse(localStorage.getItem('ms-proto-v2') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
         this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
         ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
       } catch (e) { this.bg = { ...this.bgDefaults }; }
-      const persist = () => { try { localStorage.setItem('ms-proto', JSON.stringify({ introVariant: this.introVariant, bg: this.bg })); } catch (e) {} };
+      const persist = () => { try { localStorage.setItem('ms-proto-v2', JSON.stringify({ introVariant: this.introVariant, bg: this.bg })); } catch (e) {} };
       this.$watch('introVariant', persist);
       this.$watch('bg', persist, { deep: true });
       this.$watch('screen', v => { if (v === 'intro') this.fbOpen = false; });
