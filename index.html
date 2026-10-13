@@ -1,0 +1,1326 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Testų micro-learning prototipas V.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.1/dist/cdn.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<style>
+  /* ---------- Tokens ---------- */
+  :root {
+    --ms-font: 'Open Sans', system-ui, sans-serif;
+
+    --ms-ink: #2f4347;
+    --ms-ink-soft: #405359;
+    --ms-sub: #5f7a7e;
+    --ms-muted: #8aa3a6;
+    --ms-line: #dbe6e6;
+    --ms-surface: #ffffff;
+    --ms-surface-soft: #f5f9f9;
+    --ms-pill: #eef2f2;
+    --ms-option-bg: #f3f6f6;
+    --ms-option-bg-hover: #e9efef;
+    --ms-option-line: #c9dada;
+
+    --ms-teal: #4c9095;       /* DS teal-500: mygtukai */
+    --ms-teal-hover: #437f83; /* DS teal-600 */
+    --ms-modal-line: #cdd5d6; /* DS grey-300 */
+    --ms-howto-bg: #f2f7f8;   /* DS teal-100 */
+    --ms-howto-line: #dbe9ea; /* DS teal-200 */
+    --ms-link-line: #dde9e9;  /* DS nuorodos bloko rėmelis */
+    --ms-link-eyebrow: #79878b; /* DS nuorodos bloko antraštė */
+    --ms-link-arrow: #005a5a;
+    --ms-icon-muted: #6c8284; /* DS grey-600 */
+    --ms-teal-dark: #0f5354;
+    --ms-teal-ink: #00555a;
+    --ms-sidebar: #99cccc;
+    --ms-sidebar-active: #b3d9d9;
+    --ms-topbar: #f1f7f7;
+    --ms-progress-track: #99cccc;
+    --ms-progress-fill: #447777;
+    --ms-link: #1f8f97;
+
+    /* Suflerio DS: Green (success) ir Red (error) skalės */
+    --ms-ok: #4fab7f;        /* green-500: ikona */
+    --ms-ok-text: #3f8865;   /* green-600: „Teisingai!“ tekstas */
+    --ms-ok-bg: #ebf6f0;     /* subtilus žalias fonas (kaip confirmation bloke) */
+    --ms-ok-line: #c7e5d7;   /* green-200: rėmelis, skirtukas */
+    --ms-ok-icon-bg: #c7e5d7; /* green-200: ikonos apskritimas */
+    --ms-bad: #d92d20;       /* red-500: apskritimas */
+    --ms-bad-text: #c8291e;  /* red-600: „Jūsų atsakymas“ */
+    --ms-bad-bg: #fdefee;    /* subtilus rausvas fonas (tas pats švelnumas kaip žalio) */
+    --ms-bad-line: #f4bcb8;  /* red-200: rėmelis */
+    --ms-bad-tag-bg: #fadedc; /* red-100: „Jūsų atsakymas“ fonas */
+    --ms-bad-icon-bg: #f4bcb8; /* red-200: ikonos apskritimas */
+
+    --ms-bg: linear-gradient(135deg, #c3e2e2 0%, #b4dada 45%, #9fcfcf 100%);
+    --ms-shadow-card: 0 4px 24px rgba(68, 119, 119, .14);
+    --ms-shadow-sheet: 0 -4px 24px rgba(15, 83, 84, .18);
+
+    --ms-radius-sm: 7px;
+    --ms-radius-md: 10px;
+    --ms-radius-lg: 14px;
+
+    --ms-space-1: 4px;
+    --ms-space-2: 8px;
+    --ms-space-3: 12px;
+    --ms-space-4: 16px;
+    --ms-space-5: 20px;
+    --ms-space-6: 24px;
+    --ms-space-7: 28px;
+    --ms-space-8: 36px;
+    --ms-space-9: 44px;
+
+    --ms-card-w: 600px;
+    --ms-card-w-split: 540px;
+    --ms-panel-w: 520px;
+    --ms-gap-split: 24px;
+
+    --ms-ease: cubic-bezier(.22, .61, .36, 1);
+    --ms-dur: .45s;
+  }
+
+  /* ---------- Base ---------- */
+  html, body { height: 100%; }
+  body { font-family: var(--ms-font); color: var(--ms-ink); background: var(--ms-bg); background-attachment: fixed; }
+  [x-cloak] { display: none !important; }
+  a { color: var(--ms-link); }
+  button { font: inherit; }
+
+  /* ---------- Shell ---------- */
+  .ms-app { display: flex; min-height: 100vh; }
+  .ms-sidebar { width: 272px; flex: 0 0 272px; background: var(--ms-sidebar); padding: 28px 0 40px; position: sticky; top: var(--ms-proto-h); height: calc(100vh - var(--ms-proto-h)); overflow-y: auto; }
+  .ms-logo { display: block; padding: 1px 30px 26px; color: #fff; text-decoration: none; line-height: 1; }
+  .ms-logo small { display: block; font-size: 10px; font-weight: 700; letter-spacing: .25em; }
+  .ms-logo strong { font-size: 21px; font-weight: 700; letter-spacing: .02em; }
+  .ms-nav { list-style: none; margin: 0; padding: 0; }
+  .ms-nav a { display: flex; align-items: center; gap: 10px; margin-right: 28px; padding: 8px 12px 8px 30px; color: var(--ms-teal-dark); text-decoration: none; font-size: 15px; white-space: nowrap; border-radius: 0 20px 20px 0; transition: background .2s; }
+  .ms-nav a:hover { background: rgba(255,255,255,.18); }
+  .ms-nav a.is-active { background: var(--ms-sidebar-active); font-weight: 600; }
+  .ms-nav .ms-count { font-size: 12px; color: #5c8a8a; }
+  .ms-nav .ms-badge { font-size: 12px; background: #77a7a7; color: #fff; border-radius: 10px; padding: 0 7px; }
+  .ms-nav-sep { height: 1px; background: #77a7a7; margin: 18px 28px 18px 30px; }
+  .ms-pro { font-size: 10px; font-weight: 700; color: #c6278d; background: #f3d6e8; padding: 1px 4px; border-radius: 2px; margin-right: 4px; }
+
+  .ms-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  /* viršutinė 5px juosta virš top bar'o: šoninio meniu spalva (ne fono paveikslas) */
+  .ms-topbar { height: 60px; border-top: 5px solid var(--ms-sidebar); background: var(--ms-topbar); display: flex; align-items: center; gap: 24px; padding: 0 32px; position: sticky; top: var(--ms-proto-h); z-index: 20; }
+  .ms-search { flex: 0 1 548px; position: relative; }
+  .ms-search input { width: 100%; height: 30px; border: 1px solid #669999; border-radius: 39px; padding: 0 40px 0 16px; font-size: 15px; color: var(--ms-ink); box-shadow: 0 2px 13px rgba(97,97,97,.12); }
+  .ms-search input::placeholder { color: #669999; }
+  .ms-search svg { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); }
+  .ms-topnav { margin-left: auto; display: flex; gap: 30px; }
+  .ms-topnav a { display: flex; align-items: center; gap: 7px; color: var(--ms-teal-dark); font-weight: 600; font-size: 15px; text-decoration: none; }
+  .ms-burger { display: none; background: none; border: 0; padding: 4px; }
+  /* MS logotipas iš Figmos (4804:1297), eksportuotas 4x; spalva per mask, kad tiktų ir baltam, ir tamsiam fonui */
+  .ms-logo-mark { display: block; width: 102px; height: 30px; background-color: currentColor; -webkit-mask: url("img/ms-logo.png") no-repeat center / contain; mask: url("img/ms-logo.png") no-repeat center / contain; }
+  .ms-logo-top .ms-logo-mark { width: 85px; height: 25px; }
+  .ms-logo-top { display: none; padding: 0; color: var(--ms-teal-dark); }
+  .ms-logo-top strong { font-size: 17px; }
+  .ms-logo-top small { font-size: 8px; }
+
+  /* Breadcrumb kaip pradiniame dizaine (Figma D3): 12px, #00555a, chevron ikonėlė */
+  .ms-crumbs { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 0 6px; padding: 22px 32px 0; font-size: 12px; line-height: 22px; color: var(--ms-teal-ink); }
+  .ms-crumbs a { color: inherit; text-decoration: none; }
+  .ms-crumbs a:hover { text-decoration: underline; }
+  .ms-crumbs svg { flex: 0 0 auto; }
+
+  .ms-content { flex: 1; padding: 44px 32px 80px; }
+
+  /* ---------- Cards ---------- */
+  .ms-card { background: var(--ms-surface); border-radius: var(--ms-radius-lg); box-shadow: var(--ms-shadow-card); }
+
+  /* Intro */
+  .ms-intro-wrap { max-width: 620px; margin: 24px auto 0; display: flex; flex-direction: column; gap: 24px; }
+  .ms-intro-row { display: flex; gap: 24px; align-items: stretch; }
+  .ms-intro-row > .ms-intro { flex: 1 1 auto; min-width: 0; }
+  .ms-intro { margin: 0; padding: 36px 52px 44px 68px; position: relative; }
+  .ms-intro-label { font-size: 14px; color: var(--ms-ink-soft); padding-bottom: 12px; border-bottom: 1px solid var(--ms-line); margin-right: 90px; }
+  .ms-intro-label b { font-weight: 600; }
+  .ms-intro h1 { font-size: 23px; font-weight: 700; line-height: 30px; color: var(--ms-ink-soft); margin: 24px 90px 16px 0; text-wrap: balance; }
+  .ms-intro p { font-size: 15px; line-height: 23px; color: var(--ms-ink-soft); margin-bottom: 24px; }
+  .ms-intro-check { position: absolute; right: 52px; top: 36px; width: 66px; height: 66px; border: 4px solid #8cc6c6; border-radius: 6px; display: grid; place-items: center; background: #fff; }
+
+  .ms-mini { background: #fff; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 6px 18px rgba(40, 75, 77, .18); transform: rotate(-3deg); }
+  .ms-mini-q { height: 6px; border-radius: 3px; background: var(--ms-ink-soft); opacity: .7; width: 90%; }
+  .ms-mini-q.is-short { width: 60%; margin-bottom: 4px; }
+  .ms-mini-opt { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px; border-radius: 5px; border: 1px solid var(--ms-option-line); background: var(--ms-option-bg); }
+  .ms-mini-opt span { width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 1px solid var(--ms-option-line); flex: 0 0 10px; }
+  .ms-mini-opt i { height: 4px; border-radius: 2px; background: #c3cfd0; flex: 1; }
+  .ms-mini-opt i.is-line { flex: 0 0 calc(100% - 16px); margin-left: 16px; background: #b6d9c8; }
+  .ms-mini-opt i.is-line.is-short { flex-basis: 50%; }
+  .ms-mini-opt b { flex: 0 0 44px; height: 10px; border-radius: 3px; background: var(--ms-teal); margin-left: 16px; }
+  .ms-mini-opt.is-bad { background: var(--ms-bad-bg); border-color: var(--ms-bad-line); }
+  .ms-mini-opt.is-bad span { background: var(--ms-bad-icon-bg); border-color: var(--ms-bad-icon-bg); }
+  .ms-mini-opt.is-ok { background: var(--ms-ok-bg); border-color: var(--ms-ok-line); }
+  .ms-mini-opt.is-ok span { background: var(--ms-ok-icon-bg); border-color: var(--ms-ok-icon-bg); }
+  .ms-announce-badge { display: inline-block; font-size: 12px; line-height: 16px; text-transform: uppercase; letter-spacing: .04em; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.6); color: var(--ms-teal-dark); }
+  .ms-announce-badge.is-light { background: #fad6b3; color: #7c4208; } /* DS Orange 200 / Orange 800 */
+  .ms-wn-body .ms-announce-badge { padding: 5px 10px; }
+  .ms-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .ms-steps li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 20px; }
+  .ms-steps li span { flex: 0 0 20px; height: 20px; border-radius: 50%; background: var(--ms-teal-dark); color: #fff; font-size: 11px; font-weight: 700; display: grid; place-items: center; }
+
+
+
+  /* F: naujienos kortelė kortelės viduje */
+  .ms-news { display: flex; gap: 18px; align-items: center; background: var(--ms-howto-bg); border: 1px solid var(--ms-howto-line); border-radius: 8px; padding: 16px 18px; margin: 0 0 24px; }
+  .ms-news-art { flex: 0 0 150px; border-radius: 10px; overflow: hidden; border: 1px solid var(--ms-howto-line); background-color: #f3f7f7; background-image: linear-gradient(#e1eaea 1px, transparent 1px), linear-gradient(90deg, #e1eaea 1px, transparent 1px); background-size: 30px 30px; background-position: -1px -1px; }
+  .ms-news-body { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .ms-news-body strong { font-size: 15px; font-weight: 600; line-height: 22px; color: var(--ms-ink-soft); }
+  .ms-news-body p { font-size: 13px; line-height: 19px; color: var(--ms-sub); margin: 0 0 4px; }
+  .ms-btn-sm { font-size: 13px; line-height: 18px; padding: 5px 14px; }
+
+
+  /* „Kas naujo“ modalas (E ir G): vaizdas kairėje, sąrašas dešinėje */
+  .ms-wn { position: relative; width: 100%; max-width: 720px; display: flex; gap: 36px; padding: 20px 40px 20px 20px; background: var(--ms-surface); border: 1px solid var(--ms-modal-line); border-radius: 16px; box-shadow: 0 0 24px rgba(0, 90, 90, .15); }
+  .ms-wn-close { position: absolute; top: 16px; right: 16px; }
+  .ms-wn-art { flex: 0 0 290px; border-radius: 12px; overflow: hidden; border: 1px solid var(--ms-howto-line); display: flex; }
+  .ms-wn-shot { width: 100%; height: 100%; display: flex; align-items: center; background-color: #f3f7f7; background-image: linear-gradient(#e1eaea 1px, transparent 1px), linear-gradient(90deg, #e1eaea 1px, transparent 1px); background-size: 46px 46px; background-position: -1px -1px; }
+  .ms-art { display: block; width: 100%; height: 100%; }
+  .ms-wn-shot .ms-art { height: auto; }
+  /* iliustracija iš Figmos (4866:9462), eksportuota 3x */
+  .ms-wn-img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; background: #cfe3e3; }
+  .ms-wn-body { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 24px 0 16px; }
+  .ms-wn-body h3 { font-size: 22px; font-weight: 700; line-height: 30px; color: var(--ms-ink-soft); margin: 12px 0 18px; }
+  .ms-wn-list { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-direction: column; gap: 12px; width: 100%; }
+  .ms-wn-list li { display: flex; align-items: center; gap: 12px; font-size: 15px; line-height: 22px; color: var(--ms-ink-soft); }
+  .ms-wn-ico { flex: 0 0 34px; height: 34px; border-radius: 8px; border: 1px solid var(--ms-howto-line); background: var(--ms-howto-bg); display: grid; place-items: center; }
+  .ms-wn-cta { width: 100%; }
+
+
+  /* Atsiliepimo slide-in kampe */
+  .ms-fb { position: fixed; right: 24px; bottom: 24px; z-index: 80; width: 340px; max-height: calc(100vh - 48px); overflow-y: auto; background: var(--ms-surface); border: 1px solid var(--ms-modal-line); border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 90, 90, .18); padding: 18px 20px 16px; transition: width .45s var(--ms-ease), padding .45s var(--ms-ease); }
+  /* pasirinkus vertinimą langas sklandžiai padidėja, o fone atsiranda backdrop */
+  .ms-fb.is-expanded { width: 400px; padding: 24px; }
+  .ms-fb-backdrop { position: fixed; inset: 0; z-index: 79; background: rgba(55, 119, 119, .4); }
+  .ms-fb-anim { transition: opacity .35s ease, transform .4s var(--ms-ease), width .45s var(--ms-ease), padding .45s var(--ms-ease); }
+  .ms-fb-from { opacity: 0; transform: translateY(16px); }
+  .ms-fb-to { opacity: 1; transform: none; }
+  .ms-fb-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; transition: margin .45s var(--ms-ease); }
+  .ms-fb.is-expanded .ms-fb-head { margin-bottom: 16px; }
+  .ms-fb-head strong { font-size: 15px; font-weight: 600; line-height: 22px; transition: font-size .45s var(--ms-ease), line-height .45s var(--ms-ease); }
+  .ms-fb.is-expanded .ms-fb-head strong { font-size: 16px; line-height: 26px; }
+  .ms-fb-head strong { color: var(--ms-ink-soft); }
+  .ms-fb-sub { font-size: 13px; line-height: 19px; color: var(--ms-sub); margin: 2px 0 12px; }
+  .ms-fb-faces { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; transition: gap .45s var(--ms-ease); }
+  .ms-fb.is-expanded .ms-fb-faces { gap: 12px; }
+  .ms-fb-face { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 8px 10px; border-radius: 8px; border: 1px solid var(--ms-modal-line); background: #fff; cursor: pointer; transition: background .2s, border-color .2s, transform .15s, padding .45s var(--ms-ease), gap .45s var(--ms-ease), opacity .2s; }
+  .ms-fb.is-expanded .ms-fb-face { gap: 8px; padding: 16px 8px 12px; }
+  .ms-face-bg { fill: #fff; stroke: var(--ms-icon-muted); stroke-width: 1.4; transition: fill .2s, stroke .2s; }
+  .ms-face-eye { fill: var(--ms-icon-muted); transition: fill .2s; }
+  .ms-face-line { fill: none; stroke: var(--ms-icon-muted); stroke-width: 1.4; stroke-linecap: round; transition: stroke .2s; }
+  .ms-fb-face:hover .ms-face-bg { fill: var(--ms-howto-bg); }
+  .ms-fb-face.is-bad.is-active .ms-face-bg { fill: #fff; stroke: var(--ms-bad-text); }
+  .ms-fb-face.is-bad.is-active .ms-face-eye { fill: var(--ms-bad-text); }
+  .ms-fb-face.is-bad.is-active .ms-face-line { stroke: var(--ms-bad-text); }
+  .ms-fb-face.is-ok.is-active .ms-face-bg { fill: #fff; stroke: var(--ms-ok-text); }
+  .ms-fb-face.is-ok.is-active .ms-face-eye { fill: var(--ms-ok-text); }
+  .ms-fb-face.is-ok.is-active .ms-face-line { stroke: var(--ms-ok-text); }
+  .ms-fb.is-expanded .ms-fb-face span { font-size: 15px; }
+  .ms-fb-face span { font-size: 14px; line-height: 22px; transition: font-size .45s var(--ms-ease); color: var(--ms-ink-soft); }
+  .ms-fb-face svg { transition: transform .2s var(--ms-ease); }
+  .ms-fb-face:hover { border-color: var(--ms-teal); }
+  .ms-fb-face:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; }
+  .ms-fb-face.is-bad.is-active { background: var(--ms-bad-bg); border-color: var(--ms-bad-line); }
+  .ms-fb-face.is-ok.is-active { background: var(--ms-ok-bg); border-color: var(--ms-ok-line); }
+  .ms-fb-faces:has(.is-active) .ms-fb-face:not(.is-active) { opacity: .55; }
+  .ms-fb-more { padding-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .ms-fb-tabs { display: grid; }
+  .ms-fb-pane { grid-area: 1 / 1; display: flex; flex-direction: column; gap: 10px; opacity: 0; visibility: hidden; transition: opacity .2s ease, visibility 0s linear .2s; }
+  .ms-fb-pane.is-active { opacity: 1; visibility: visible; transition: opacity .2s ease .05s, visibility 0s; }
+  .ms-fb-q { font-size: 15px; font-weight: 600; line-height: 22px; color: var(--ms-ink-soft); margin: 0 0 2px; display: block; }
+  .ms-fb-more > .ms-fb-q { margin-top: 10px; }
+  .ms-fb-opt { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; line-height: 22px; color: var(--ms-ink-soft); cursor: pointer; }
+  /* DS checkbox: 18px, apvalinti kampai, pažymėjus teal su balta varnele */
+  .ms-fb-opt input { appearance: none; -webkit-appearance: none; flex: 0 0 18px; width: 18px; height: 18px; margin: 2px 0 0; border: 1px solid var(--ms-modal-line); border-radius: 4px; background: #fff center / 12px no-repeat; cursor: pointer; transition: background-color .15s, border-color .15s; }
+  .ms-fb-opt:hover input { border-color: var(--ms-teal); }
+  .ms-fb-opt input:checked { background-color: var(--ms-teal); border-color: var(--ms-teal); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 5l3.2 3.2L11 1.5'/%3E%3C/svg%3E"); }
+  .ms-fb-opt input:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; }
+  .ms-fb-text { width: 100%; resize: vertical; border: 1px solid var(--ms-modal-line); background: #f2f5f5; border-radius: 6px; padding: 10px 12px; font: inherit; font-size: 15px; line-height: 22px; color: var(--ms-ink); }
+  .ms-fb-text::placeholder { color: var(--ms-sub); }
+  .ms-fb-text:focus { outline: none; border-color: var(--ms-teal); background: #fff; }
+  .ms-fb-actions { display: flex; align-items: center; gap: 20px; margin-top: 6px; }
+  .ms-fb-later { border: 0; background: none; padding: 0; margin-top: 16px; font-size: 15px; font-weight: 400; color: var(--ms-link); text-decoration: none; text-underline-offset: 3px; cursor: pointer; }
+  .ms-fb-later:hover { text-decoration: underline; }
+  .ms-fb-actions .ms-fb-later { margin-top: 0; }
+  /* Ačiū tosteris: viena eilutė, langas susitraukia iki turinio */
+  .ms-fb.is-sent { width: auto; padding: 14px 20px; }
+  .ms-fb-thanks { display: flex; gap: 10px; align-items: center; white-space: nowrap; }
+  .ms-fb-thanks .ms-icon { animation: ms-pop .35s var(--ms-ease); }
+  .ms-fb-thanks p { margin: 0; font-size: 15px; font-weight: 600; line-height: 22px; color: var(--ms-ink-soft); }
+
+  /* Prototipo versijų jungiklis */
+  /* ---------- Prototipo admin: minimalus, neutralus UI (Figma / Granola stiliumi), ne brando ---------- */
+  .ms-admin, .ms-bgp { --ui-font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif; --ui-ink: #1f2323; --ui-sub: #8b9090; --ui-line: rgba(0, 0, 0, .08); --ui-hover: rgba(0, 0, 0, .045); --ui-on: rgba(0, 0, 0, .07); --ui-shadow: 0 0 0 .5px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.04), 0 12px 32px rgba(0,0,0,.10); }
+  .ms-admin { position: fixed; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 90; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-family: var(--ui-font); -webkit-font-smoothing: antialiased; }
+  .ms-admin-btn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 8px; border: 0; background: rgba(255,255,255,.9); box-shadow: 0 0 0 .5px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.05); color: var(--ui-ink); font: 500 12px/1 var(--ui-font); cursor: pointer; opacity: .8; transition: opacity .15s, background .15s; backdrop-filter: blur(8px); }
+  .ms-admin-btn svg { color: var(--ui-sub); }
+  .ms-admin-btn:hover, .ms-admin-btn[aria-expanded="true"] { opacity: 1; background: #fff; }
+  .ms-admin-btn[aria-expanded="true"] svg { color: var(--ui-ink); }
+  .ms-admin-btn:focus-visible, .ms-bgp button:focus-visible { outline: 2px solid rgba(0,0,0,.25); outline-offset: 1px; }
+  .ms-admin-panel { width: 248px; background: #fff; border-radius: 12px; box-shadow: var(--ui-shadow); padding: 6px; font: 12px/1.4 var(--ui-font); color: var(--ui-ink); }
+  .ms-admin-title { font-weight: 600; padding: 8px 8px 4px; }
+  .ms-admin-group { font-size: 11px; font-weight: 500; color: var(--ui-sub); padding: 10px 8px 4px; margin: 0; }
+  .ms-admin-opt { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; line-height: 16px; transition: background .12s; }
+  .ms-admin-opt:hover { background: var(--ui-hover); }
+  .ms-admin-opt b { display: inline-block; width: 12px; font-weight: 600; color: var(--ui-sub); }
+  .ms-admin input[type=radio], .ms-admin input[type=checkbox], .ms-bgp input[type=checkbox] { appearance: none; -webkit-appearance: none; flex: 0 0 14px; width: 14px; height: 14px; margin: 0; border: 1px solid rgba(0,0,0,.25); background: #fff center / 10px no-repeat; cursor: pointer; transition: background-color .12s, border-color .12s; }
+  .ms-admin input[type=radio] { border-radius: 50%; }
+  .ms-admin input[type=radio]:checked { border: 4px solid var(--ui-ink); }
+  .ms-admin input[type=checkbox], .ms-bgp input[type=checkbox] { border-radius: 4px; }
+  .ms-admin input[type=checkbox]:checked, .ms-bgp input[type=checkbox]:checked { background-color: var(--ui-ink); border-color: var(--ui-ink); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 5l3.2 3.2L11 1.5'/%3E%3C/svg%3E"); }
+  .ms-admin-reset { display: block; width: calc(100% - 4px); margin: 6px 2px 2px; padding: 7px 8px; border: 0; border-top: 1px solid var(--ui-line); border-radius: 0 0 6px 6px; background: none; font: 12px var(--ui-font); color: var(--ui-sub); text-align: left; cursor: pointer; transition: color .12s, background .12s; }
+  .ms-admin-reset:hover { color: var(--ui-ink); background: var(--ui-hover); }
+
+  /* Buttons */
+  /* CTA pagal Figmą (D3 „Kitas klausimas“): įstrižas gradientas (iš viršaus dešinės į apačią kairėn, ~206°), be rėmelio */
+  .ms-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid transparent; border-radius: 6px; background: linear-gradient(206deg, #53a9b1 5%, #4c9095 192%); color: #fff; font-weight: 600; font-size: 15px; line-height: 22px; padding: 9px 24px; transition: filter .2s, transform .15s, background-color .2s; cursor: pointer; }
+  .ms-btn:hover { filter: brightness(.94); }
+  /* rodyklė mygtuke: hover metu švelniai pasislenka pirmyn, nuėjus pelei grįžta */
+  .ms-btn > svg:last-child { transition: transform .25s var(--ms-ease); }
+  .ms-btn:hover > svg:last-child, .ms-btn:focus-visible > svg:last-child { transform: translateX(4px); }
+  .ms-btn:active { transform: translateY(1px); }
+  .ms-btn:focus-visible { outline: 3px solid rgba(83,169,177,.4); outline-offset: 2px; }
+  .ms-btn-outline { background: transparent; border-color: var(--ms-teal); color: var(--ms-teal); }
+  .ms-btn-outline:hover { background: var(--ms-surface-soft); filter: none; }
+  .ms-kbd { font-size: 11px; font-weight: 700; border: 1px solid rgba(255,255,255,.5); border-radius: 4px; padding: 0 5px; opacity: .8; }
+
+  /* ---------- Quiz: viskas kortelės viduje ---------- */
+  .ms-qwrap { max-width: var(--ms-card-w); margin: 0 auto; }
+  .ms-qcard { padding: var(--ms-space-8) var(--ms-space-9) 40px; }
+  .ms-qbody { transition: opacity .22s ease; }
+  .ms-qbody.is-leaving { opacity: 0; }
+
+  .ms-progress { display: inline-flex; align-items: center; font-size: 12px; font-weight: 400; letter-spacing: .04em; text-transform: uppercase; line-height: 16px; color: var(--ms-ink); background: var(--ms-pill); border-radius: 999px; padding: 5px 12px; margin-bottom: 18px; font-variant-numeric: tabular-nums; }
+  .ms-progress-track { width: 158px; height: 4px; border-radius: 5px; background: var(--ms-progress-track); overflow: hidden; }
+  .ms-progress-fill { height: 100%; background: var(--ms-progress-fill); border-radius: 5px; transition: width .5s var(--ms-ease); }
+
+  .ms-question { font-size: 18px; font-weight: 700; line-height: 28px; color: var(--ms-ink); margin: 0 0 20px; }
+
+  .ms-options { display: flex; flex-direction: column; gap: 10px; }
+  .ms-option { border: 1px solid var(--ms-option-line); background: var(--ms-option-bg); border-radius: var(--ms-radius-md); transition: border-color .25s, background-color .3s, opacity .3s, box-shadow .2s; }
+  .ms-option-btn { width: 100%; text-align: left; display: flex; align-items: flex-start; gap: 14px; background: none; border: 0; padding: 13px 16px 13px 14px; cursor: pointer; border-radius: var(--ms-radius-md); color: inherit; }
+  .ms-option-btn:disabled { cursor: default; }
+  .ms-option-btn:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; }
+  .ms-option:not(.is-locked):hover { background: var(--ms-option-bg-hover); border-color: var(--ms-teal); }
+  .ms-option-text { flex: 1; font-size: 15px; line-height: 22.5px; color: var(--ms-ink); padding-top: 2.5px; }
+  .ms-key { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--ms-option-line); background: var(--ms-surface); display: grid; place-items: center; font-size: 13px; font-weight: 700; color: var(--ms-sub); transition: background .25s, border-color .25s; }
+  .ms-option:not(.is-locked):hover .ms-key { border-color: var(--ms-teal); color: var(--ms-teal-dark); }
+  .ms-icon { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #fff; animation: ms-pop .35s var(--ms-ease); }
+  .ms-icon.is-ok { background: var(--ms-ok-icon-bg); }
+  .ms-icon.is-ok svg { stroke: var(--ms-ok); }
+  .ms-icon.is-bad { background: var(--ms-bad-icon-bg); }
+  .ms-icon.is-bad svg { stroke: var(--ms-bad); }
+  @keyframes ms-pop { 0% { transform: scale(.4); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+  .ms-tag { font-size: 12px; font-weight: 600; line-height: 16px; border-radius: 10px; padding: 2px 8px; margin-top: 4px; white-space: nowrap; }
+  .ms-option.is-correct { background: var(--ms-ok-bg); border-color: var(--ms-ok-line); border-width: 1.5px; }
+  .ms-option.is-correct .ms-option-text { font-weight: 600; }
+  .ms-option.is-correct .ms-tag { color: var(--ms-ok-text); }
+  .ms-option.is-wrong { background: var(--ms-bad-bg); border-color: var(--ms-bad-line); border-width: 1.5px; }
+  .ms-option.is-wrong .ms-tag { color: var(--ms-bad-text); background: var(--ms-bad-tag-bg); }
+  .ms-option.is-dim { opacity: .45; }
+
+  /* Trumpas paaiškinimas teisingo varianto viduje */
+  .ms-inline { padding: 0 16px 16px 56px; }
+  .ms-inline-body { border-top: 1px solid var(--ms-ok-line); padding-top: 14px; }
+  .ms-inline-status { font-size: 12px; font-weight: 600; letter-spacing: .03em; margin-bottom: 4px; color: var(--ms-muted); }
+  .ms-inline-status.is-ok { color: var(--ms-ok-text); }
+  .ms-inline-status.is-bad { color: var(--ms-bad); }
+  .ms-inline-lead { font-size: 15px; line-height: 23px; color: var(--ms-ink); margin: 0 0 4px; }
+  .ms-more { display: inline-block; background: none; border: 0; padding: 0; color: var(--ms-link); font-weight: 400; font-size: 14px; line-height: 20px; cursor: pointer; margin-bottom: 22px; text-decoration: underline dashed; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color .2s; }
+  .ms-more:hover { color: var(--ms-teal-dark); text-decoration-style: solid; }
+  .ms-more:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; border-radius: 4px; }
+  .ms-inline .ms-btn { display: flex; width: fit-content; min-width: 200px; }
+
+  /* Pranešti apie klaidą: fiksuotai puslapio apačioje dešinėje (kol atidarytas atsiliepimo langas, paslepiama) */
+  .ms-report { position: fixed; right: 24px; bottom: 20px; z-index: 30; font-size: 13px; color: var(--ms-teal-dark); text-underline-offset: 3px; }
+  @media (max-width: 991.98px) { .ms-report { position: static; display: block; text-align: right; padding: 0 16px 24px; margin-top: -24px; } }
+
+  /* Modalas: pilnas išaiškinimas */
+  .ms-modal-backdrop { position: fixed; inset: 0; background: rgba(15, 83, 84, .45); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .ms-modal { width: 100%; max-width: 560px; max-height: min(680px, calc(100vh - 32px)); display: flex; flex-direction: column; padding: 32px; background: var(--ms-surface); border: 1px solid var(--ms-modal-line); border-radius: 12px; box-shadow: 0 0 24px rgba(0, 90, 90, .15); overflow: hidden; }
+  .ms-modal-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 12px; }
+  .ms-modal-head h3 { font-size: 16px; font-weight: 700; line-height: 26px; color: var(--ms-ink-soft); margin: 0; }
+  .ms-close { width: 24px; height: 24px; border-radius: 4px; border: 0; background: transparent; display: grid; place-items: center; cursor: pointer; padding: 0; transition: background .2s; }
+  .ms-close:hover { background: var(--ms-surface-soft); }
+  .ms-close:focus-visible { outline: 3px solid rgba(83,169,177,.35); }
+  .ms-modal-body { overflow-y: auto; margin-right: -12px; padding-right: 12px; scrollbar-width: thin; scrollbar-color: #c9dada transparent; }
+  .ms-modal-q { font-size: 13px; line-height: 20px; color: var(--ms-muted); margin-bottom: 16px; }
+  .ms-lead { font-size: 17px; font-weight: 700; line-height: 26px; color: var(--ms-ink); margin-bottom: 14px; }
+  .ms-why-not { font-size: 14px; line-height: 21px; color: var(--ms-ink); background: var(--ms-bad-bg); border-radius: var(--ms-radius-sm); padding: 10px 14px; margin-bottom: 14px; }
+  .ms-why-not b { color: var(--ms-bad); font-weight: 700; }
+  .ms-modal-body .ms-lead { font-size: 15px; line-height: 24px; font-weight: 600; margin-bottom: 12px; }
+  .ms-modal-body p { font-size: 15px; line-height: 24px; margin-bottom: 14px; }
+  /* Nuorodos blokas pagal DS „Nuoroda - default“ + hover būsena */
+  .ms-linkcard { display: flex; align-items: flex-start; gap: 14px; padding: 12px 16px 14px; border: 1px solid var(--ms-link-line); border-radius: 6px; background: transparent; text-decoration: none; margin: 4px 0 0; transition: border-color .2s, background-color .2s; }
+  .ms-linkcard:hover { border-color: var(--ms-teal); background: var(--ms-surface-soft); }
+  .ms-linkcard:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; }
+  .ms-linkcard-ico { flex: 0 0 36px; height: 36px; margin-top: 2px; border-radius: 6px; border: 1px solid var(--ms-link-line); background: var(--ms-surface-soft); display: grid; place-items: center; transition: border-color .2s, background-color .2s; }
+  .ms-linkcard:hover .ms-linkcard-ico { border-color: var(--ms-teal); background: #fff; }
+  .ms-linkcard-text { flex: 1; min-width: 0; }
+  .ms-linkcard-text small { display: block; font-size: 13px; line-height: 20px; font-weight: 400; text-transform: uppercase; color: var(--ms-link-eyebrow); }
+  .ms-linkcard-text span { display: block; font-size: 14px; font-weight: 400; line-height: 20px; color: var(--ms-ink-soft); transition: color .2s; }
+  .ms-linkcard:hover .ms-linkcard-text span { color: var(--ms-teal); }
+  .ms-linkcard .ms-ext { flex: 0 0 18px; margin-top: 21px; transition: transform .2s var(--ms-ease); }
+  .ms-linkcard:hover .ms-ext { transform: translate(2px, -2px); }
+  .ms-modal-foot { display: flex; align-items: center; gap: 16px; padding-top: 32px; }
+
+  /* Results: ta pati spalvų ir būsenų logika kaip klausimuose */
+  .ms-results { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .ms-results-card { overflow: hidden; }
+  .ms-results-head { margin: 8px 8px 0; padding: 28px 32px; border-radius: 10px; background: var(--ms-howto-bg); border: 1px solid var(--ms-howto-line); }
+  .ms-results-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+  .ms-results-head h1 { font-size: 23px; font-weight: 700; line-height: 30px; margin: 10px 0 14px; color: var(--ms-ink-soft); }
+  .ms-score { text-align: right; flex: 0 0 auto; }
+  .ms-score b { display: block; font-size: 44px; line-height: 50px; color: var(--ms-ink-soft); font-variant-numeric: tabular-nums; }
+  .ms-score small { font-size: 13px; color: var(--ms-sub); }
+  .ms-summary { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ms-chip { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 999px; font-size: 13px; line-height: 20px; border: 1px solid; }
+  .ms-chip .ms-icon { width: 22px; height: 22px; flex-basis: 22px; animation: none; }
+  .ms-chip.is-ok { background: var(--ms-ok-bg); border-color: var(--ms-ok-line); color: var(--ms-ok-text); }
+  .ms-chip.is-bad { background: var(--ms-bad-bg); border-color: var(--ms-bad-line); color: var(--ms-bad-text); }
+  .ms-results-headrow { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .ms-results-headrow .ms-results-actions { margin-left: auto; }
+  .ms-results-actions { display: flex; justify-content: flex-end; align-items: center; gap: 12px; font-size: 14px; }
+  .ms-results-actions a { color: var(--ms-teal-dark); font-weight: 600; text-decoration: none; }
+  .ms-results-actions a:hover { text-decoration: underline; }
+  .ms-results-actions span { width: 1px; height: 16px; background: var(--ms-teal-dark); opacity: .5; }
+
+  .ms-rlist-head { padding: 24px 40px 8px; }
+  .ms-rlist-head h2 { font-size: 17px; font-weight: 700; line-height: 24px; color: var(--ms-ink-soft); margin: 0 0 2px; }
+  .ms-rlist-head p { font-size: 14px; line-height: 20px; color: var(--ms-sub); margin: 0; }
+  .ms-rlist { padding: 0 0 8px; }
+  .ms-ritem { border-bottom: 1px solid var(--ms-line); }
+  .ms-ritem:last-child { border-bottom: 0; }
+  .ms-rbtn { width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: left; background: none; border: 0; padding: 18px 40px; cursor: pointer; transition: background .2s; }
+  .ms-rbtn:hover { background: var(--ms-surface-soft); }
+  .ms-rbtn[aria-expanded="true"]:hover { background: transparent; }
+  .ms-rbtn:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: -3px; }
+  .ms-rbtn .ms-icon { animation: none; }
+  .ms-rq { flex: 1; font-size: 15px; font-weight: 600; line-height: 23px; color: var(--ms-ink); padding-top: 2.5px; }
+  .ms-rq small { display: block; font-weight: 400; font-size: 13px; line-height: 19px; color: var(--ms-sub); margin-top: 2px; }
+  .ms-chev { flex: 0 0 auto; margin-top: 10px; transition: transform .3s var(--ms-ease); }
+  .ms-chev.is-open { transform: rotate(180deg); }
+  .ms-rexpl { padding: 0 40px 24px 82px; display: flex; flex-direction: column; gap: 16px; }
+  .ms-ropts { display: flex; flex-direction: column; gap: 8px; }
+  .ms-ropts .ms-option-btn { cursor: default; padding: 10px 14px 10px 12px; }
+  .ms-ropts .ms-icon, .ms-ropts .ms-key { width: 24px; height: 24px; flex-basis: 24px; animation: none; font-size: 12px; }
+  .ms-ropts .ms-option-text { font-size: 14px; line-height: 21px; padding-top: 1.5px; }
+  .ms-rwhy .ms-inline-status { margin-bottom: 4px; }
+  .ms-rwhy .ms-lead { font-size: 15px; line-height: 24px; font-weight: 600; margin-bottom: 8px; }
+  .ms-rwhy p { font-size: 14px; line-height: 22px; margin-bottom: 10px; }
+  .ms-rwhy .ms-linkcard { margin-top: 6px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1099.98px) {
+    .ms-sidebar { display: none; }
+    .ms-burger { display: inline-flex; }
+    .ms-logo-top { display: block; }
+    .ms-topbar { padding: 0 20px; }
+    .ms-topnav a span { display: none; }
+  }
+  @media (max-width: 991.98px) {
+    .ms-content { padding: 20px 16px 40px; }
+    .ms-crumbs { padding: 16px 16px 0; }
+    .ms-topbar { gap: 12px; height: 55px; border-top: 0; }
+    .ms-search { display: none; }
+    .ms-qcard { padding: 24px 20px 28px; }
+    .ms-question { font-size: 16px; line-height: 24px; }
+    .ms-intro-wrap { margin-top: 16px; }
+    .ms-intro-row { flex-direction: column; }
+    .ms-news { flex-direction: column; align-items: flex-start; }
+    .ms-news-art { flex-basis: auto; width: 100%; }
+    .ms-fb, .ms-fb.is-expanded, .ms-fb.is-sent { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: auto; }
+    .ms-fb-thanks { white-space: normal; }
+    /* telefone: plaukiojanti kortelė su paraštėmis (ne per visą ekraną), kad aiškiai matytųsi, jog tai modalas */
+    .ms-wn { flex-direction: column; gap: 0; padding: 12px 12px 16px; border-radius: 16px; max-height: calc(100dvh - 48px); overflow-y: auto; }
+    .ms-wn-art { flex-basis: auto; }
+    .ms-wn-shot .ms-art { height: 190px; }
+    .ms-wn-art { flex: 0 0 132px; height: 132px; }
+    .ms-wn-img { object-position: center 50%; }
+    .ms-wn-close { top: 20px; right: 20px; width: 32px; height: 32px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(15, 83, 84, .18); z-index: 2; }
+    /* CTA visada matomas apačioje, kai turinys netelpa */
+    .ms-wn-cta { position: sticky; bottom: 0; box-shadow: 0 -16px 16px #fff; margin-top: 4px; }
+    .ms-wn-body { padding: 14px 6px 0; }
+    .ms-wn-body h3 { font-size: 18px; line-height: 25px; margin: 10px 0 14px; }
+    .ms-wn-list { gap: 10px; margin-bottom: 18px; }
+    .ms-wn-list li { font-size: 14px; line-height: 20px; gap: 10px; }
+    .ms-wn-ico { flex-basis: 30px; height: 30px; }
+    .ms-intro { padding: 28px 24px 32px; }
+    .ms-intro-check { display: none; }
+    .ms-intro-label { margin-right: 0; }
+    .ms-intro h1 { margin-right: 0; }
+    .ms-inline { padding: 0 14px 14px 14px; }
+    /* telefone „Jūsų atsakymas“ žyma po atsakymo tekstu, ne šalia */
+    .ms-option-btn { flex-wrap: wrap; row-gap: 6px; }
+    .ms-option-text { flex: 1 1 calc(100% - 42px); }
+    .ms-tag { margin: 0 0 0 42px; }
+    /* telefone CTA lipniai laikosi ekrano apačioje, kol išskleistas išaiškinimas netelpa ekrane */
+    .ms-inline .ms-btn { width: 100%; position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 2; box-shadow: 0 6px 18px rgba(15, 83, 84, .22); }
+    .ms-modal-backdrop { align-items: flex-end; padding: 0; }
+    .ms-wn-backdrop { align-items: center; padding: 24px 16px calc(24px + env(safe-area-inset-bottom, 0px)); }
+    .ms-modal { max-width: none; max-height: 85vh; padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 0px)); border-radius: 12px 12px 0 0; }
+    .ms-modal-foot { padding-top: 24px; }
+    .ms-modal-foot .ms-btn { flex: 1; }
+    .ms-results-head { padding: 20px; margin: 6px 6px 0; }
+    .ms-rlist-head { padding: 20px 20px 4px; }
+    .ms-results-top { flex-direction: column-reverse; gap: 8px; }
+    .ms-score { text-align: left; }
+    .ms-rbtn { padding: 16px 20px; }
+    .ms-rexpl { padding: 0 20px 20px 20px; }
+    .ms-kbd { display: none; }
+  }
+
+  /* ---------- Fonas: statiški sluoksniai (paveikslas / bangos, šydas, raštas, grūdėtumas), reguliuojami „Fonas“ skydelyje ---------- */
+  .ms-bgx { position: fixed; top: 0; right: 0; bottom: 0; left: 272px; z-index: 0; overflow: hidden; pointer-events: none; }
+  .ms-bgx > div { position: absolute; inset: 0; }
+  .ms-bgx-img { background-size: cover; background-repeat: no-repeat; }
+  .ms-content { position: relative; } /* be z-index: kitaip modalai lieka po top bar'u */
+  @media (max-width: 991.98px) { .ms-bgx { left: 0; } }
+
+  .ms-admin-row { display: flex; gap: 6px; }
+  .ms-bgp { position: fixed; top: 8px; left: 8px; bottom: 8px; z-index: 95; width: 288px; max-width: calc(100vw - 16px); display: flex; flex-direction: column; background: #fff; border-radius: 12px; box-shadow: var(--ui-shadow); font: 12px/1.4 var(--ui-font); color: var(--ui-ink); -webkit-font-smoothing: antialiased; overflow: hidden; }
+  .ms-bgp-anim { transition: transform .25s var(--ms-ease), opacity .2s ease; }
+  .ms-bgp-from { transform: translateX(-12px); opacity: 0; }
+  .ms-bgp-to { transform: none; opacity: 1; }
+  .ms-bgp-head { display: flex; align-items: center; justify-content: space-between; height: 44px; padding: 0 8px 0 14px; border-bottom: 1px solid var(--ui-line); }
+  .ms-bgp-head strong { font-size: 12px; font-weight: 600; }
+  .ms-bgp-head .ms-close { width: 28px; height: 28px; border-radius: 6px; }
+  .ms-bgp-head .ms-close:hover { background: var(--ui-hover); }
+  .ms-bgp-body { flex: 1; overflow-y: auto; padding: 0 14px 12px; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.15) transparent; }
+  .ms-bgp-sec { font-size: 11px; font-weight: 600; color: var(--ui-ink); margin: 0 -14px; padding: 14px 14px 8px; border-top: 1px solid var(--ui-line); }
+  .ms-bgp-body > .ms-bgp-sec:first-child { border-top: 0; }
+  .ms-bgp-seg { display: flex; flex-wrap: wrap; gap: 0; padding: 2px; background: rgba(0,0,0,.05); border-radius: 7px; }
+  .ms-bgp-seg.is-wrap button { min-width: 33%; }
+  .ms-bgp-seg button { flex: 1 0 auto; border: 0; background: none; border-radius: 5px; padding: 4px 2px; font: 500 11px var(--ui-font); color: var(--ui-sub); cursor: pointer; transition: color .12s, background .12s; }
+  .ms-bgp-seg button:hover { color: var(--ui-ink); }
+  .ms-bgp-seg button.is-on { background: #fff; color: var(--ui-ink); box-shadow: 0 0 0 .5px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06); }
+  /* eilutė: pavadinimas | slankiklis | reikšmė (kaip Figma properties) */
+  .ms-bgp-field { display: grid; grid-template-columns: 92px 1fr 38px; align-items: center; gap: 8px; min-height: 28px; margin: 0; }
+  .ms-bgp-lab { display: contents; }
+  .ms-bgp-lab span:first-child { order: 1; color: var(--ui-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ms-bgp-field input[type=range] { order: 2; }
+  .ms-bgp-lab span:last-child { order: 3; text-align: right; color: var(--ui-ink); font-variant-numeric: tabular-nums; }
+  .ms-bgp input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 16px; margin: 0; background: transparent; cursor: pointer; }
+  .ms-bgp input[type=range]::-webkit-slider-runnable-track { height: 2px; border-radius: 2px; background: rgba(0,0,0,.12); }
+  .ms-bgp input[type=range]::-moz-range-track { height: 2px; border-radius: 2px; background: rgba(0,0,0,.12); }
+  .ms-bgp input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; margin-top: -5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 .5px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.18); transition: transform .12s; }
+  .ms-bgp input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border: 0; border-radius: 50%; background: #fff; box-shadow: 0 0 0 .5px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.18); }
+  .ms-bgp input[type=range]:hover::-webkit-slider-thumb, .ms-bgp input[type=range]:active::-webkit-slider-thumb { transform: scale(1.15); }
+  .ms-bgp-check { display: flex; align-items: center; gap: 8px; min-height: 28px; margin: 2px 0; color: var(--ui-ink); cursor: pointer; }
+  .ms-bgp-color { margin: 0 0 6px; }
+  .ms-bgp-color .ms-bgp-lab { display: block; margin: 8px 0 4px; }
+  .ms-bgp-color .ms-bgp-lab span:first-child { color: var(--ui-sub); }
+  .ms-bgp-pick { width: 100%; height: 28px; display: flex; align-items: center; gap: 8px; border: 0; border-radius: 6px; background: rgba(0,0,0,.04); padding: 0 8px 0 6px; font: 12px var(--ui-font); color: var(--ui-ink); cursor: pointer; text-align: left; transition: background .12s; }
+  .ms-bgp-pick:hover, .ms-bgp-pick[aria-expanded="true"] { background: rgba(0,0,0,.07); }
+  .ms-bgp-pick i { flex: 0 0 16px; height: 16px; border-radius: 4px; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.18); }
+  .ms-bgp-pick span { flex: 1; }
+  .ms-bgp-pick em { font-style: normal; color: var(--ui-sub); font-variant-numeric: tabular-nums; text-transform: uppercase; }
+  .ms-bgp-pal { padding: 8px 0 4px; display: flex; flex-direction: column; gap: 4px; }
+  .ms-bgp-pal-row { display: grid; grid-template-columns: 46px repeat(9, 1fr); gap: 3px; align-items: center; }
+  .ms-bgp-pal-row small { font-size: 10px; color: var(--ui-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ms-bgp-sw { aspect-ratio: 1; border-radius: 4px; border: 0; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.12); padding: 0; cursor: pointer; transition: transform .12s; }
+  .ms-bgp-sw:hover { transform: scale(1.12); }
+  .ms-bgp-sw.is-on { box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px var(--ui-ink); }
+  .ms-bgp-foot { display: flex; align-items: center; gap: 6px; padding: 8px; border-top: 1px solid var(--ui-line); }
+  .ms-bgp-copy { flex: 1; height: 30px; border: 0; border-radius: 7px; background: var(--ui-ink); color: #fff; font: 500 12px var(--ui-font); cursor: pointer; transition: opacity .15s; }
+  .ms-bgp-copy:hover { opacity: .88; }
+  .ms-bgp-foot .ms-admin-reset { width: auto; margin: 0; height: 30px; padding: 0 12px; border: 0; border-radius: 7px; color: var(--ui-ink); background: rgba(0,0,0,.05); }
+  .ms-bgp-foot .ms-admin-reset:hover { background: rgba(0,0,0,.08); }
+
+  /* ---------- Prototipo juostelė: DS Blue (info) 100 / 700, kad atsiskirtų nuo teal sąsajos; centruota, kaip MagicPath ---------- */
+  :root { --ms-proto-h: 34px; }
+  /* visada viršuje (sticky) ir virš modalų bei jų fono */
+  .ms-proto-bar { position: sticky; top: 0; z-index: 300; display: flex; align-items: center; justify-content: center; gap: 10px; height: var(--ms-proto-h); padding: 0 16px; font-size: 13px; background: #e1e9f4; border-bottom: 1px solid #c3d2e9; color: #315387; line-height: 18px; white-space: nowrap; overflow: hidden; }
+  .ms-proto-bar svg { flex: 0 0 auto; }
+  .ms-proto-bar strong { font-weight: 600; }
+  .ms-proto-text { overflow: hidden; text-overflow: ellipsis; opacity: .85; }
+  @media (max-width: 575.98px) { .ms-proto-bar { gap: 6px; font-size: 12px; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+<!-- Prototipo juostelė (MagicPath principu: šviesi, centruota, ikona + tekstas) -->
+<div class="ms-proto-bar" role="note">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.5h4M6.75 1.5v4.2L2.6 12.6A1.3 1.3 0 0 0 3.7 14.5h8.6a1.3 1.3 0 0 0 1.1-1.9L9.25 5.7V1.5"/><path d="M4.4 10h7.2"/></svg>
+  <span><strong>Testų micro-learning:</strong> <span class="ms-proto-text">Work in progress</span></span>
+</div>
+<div class="ms-app" x-data="quiz()" x-init="init()" @keydown.window="onKey($event)">
+
+  <!-- Prototipo versijų jungiklis (neutralus, tik peržiūrai) -->
+  <div class="ms-admin" @keydown.escape.window="adminOpen = false">
+    <div class="ms-admin-panel" x-show="adminOpen" x-cloak x-transition.opacity.scale.95.origin.bottom.left.duration.150ms @click.outside="adminOpen = false">
+      <div class="ms-admin-title">Prototipo versijos</div>
+      <div class="ms-admin-group">Naujienos vieta intro ekrane</div>
+      <template x-for="v in introVariants" :key="v.id">
+        <label class="ms-admin-opt"><input type="radio" name="ms-intro-variant" :value="v.id" :id="'ms-v-' + v.id" x-model="introVariant"><span><b x-text="v.id"></b> <span x-text="v.label"></span></span></label>
+      </template>
+      <div class="ms-admin-group">Apklausa</div>
+      <label class="ms-admin-opt"><input type="checkbox" id="ms-admin-fb" x-model="fbEnabled"><span>Atsiliepimo langas (po 4 klausimo)</span></label>
+      <button class="ms-admin-reset" @click="resetDemo()">Atstatyti ir grįžti į pradžią</button>
+    </div>
+    <div class="ms-admin-row">
+    <button class="ms-admin-btn" @click="adminOpen = !adminOpen" :aria-expanded="adminOpen" aria-label="Prototipo versijos">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h7M13 4h1M2 12h1M7 12h7"/><circle cx="11" cy="4" r="2"/><circle cx="5" cy="12" r="2"/></svg>
+      <span>Versijos</span>
+    </button>
+    <button class="ms-admin-btn" @click="bgPanel = !bgPanel; adminOpen = false" :aria-expanded="bgPanel" aria-label="Fono nustatymai">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M1.5 11l4-4 3 3 2-2 4 4"/></svg>
+      <span>Fonas</span>
+    </button>
+    </div>
+  </div>
+
+  <!-- Fono reguliavimo skydelis (prototipui) -->
+  <div class="ms-bgp" x-show="bgPanel" x-cloak role="dialog" aria-label="Fono nustatymai" @keydown.escape.window="bgPanel = false"
+       x-transition:enter="ms-bgp-anim" x-transition:enter-start="ms-bgp-from" x-transition:enter-end="ms-bgp-to"
+       x-transition:leave="ms-bgp-anim" x-transition:leave-start="ms-bgp-to" x-transition:leave-end="ms-bgp-from">
+    <div class="ms-bgp-head">
+      <strong>Fonas</strong>
+      <button class="ms-close" @click="bgPanel = false" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
+    </div>
+    <div class="ms-bgp-body">
+      <div class="ms-bgp-sec">Pagrindas</div>
+      <div class="ms-bgp-seg is-wrap">
+        <template x-for="o in [['default','Default'],['fonas1','Fonas 1'],['image','Paveikslas'],['waves','Bangos'],['none','Tik spalva']]" :key="o[0]">
+          <button type="button" :class="{ 'is-on': bg.source === o[0] }" @click="bgSetSource(o[0])" x-text="o[1]"></button>
+        </template>
+      </div>
+      <div class="ms-bgp-color" x-data="{ open: false }" x-show="bg.source !== 'default' && bg.source !== 'fonas1'">
+        <div class="ms-bgp-lab"><span>Bazinė spalva</span></div>
+        <button type="button" class="ms-bgp-pick" @click="open = !open" :aria-expanded="open"><i :style="'background:' + bg.baseColor"></i><span x-text="dsName(bg.baseColor)"></span><em x-text="bg.baseColor"></em></button>
+        <div x-show="open" x-collapse.duration.200ms>
+          <div class="ms-bgp-pal">
+            <template x-for="fam in dsPalette" :key="fam.name">
+              <div class="ms-bgp-pal-row"><small x-text="fam.name"></small>
+                <template x-for="c in fam.colors" :key="c.hex"><button type="button" class="ms-bgp-sw" :class="{ 'is-on': bg.baseColor === c.hex }" :style="'background:' + c.hex" :title="fam.name + ' ' + c.id + ' ' + c.hex" :aria-label="fam.name + ' ' + c.id" @click="bg.baseColor = c.hex"></button></template>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+      <template x-if="['image', 'waves', 'fonas1'].includes(bg.source)">
+        <div>
+          <template x-for="c in bgSliders.base" :key="c.k">
+            <div class="ms-bgp-field">
+              <div class="ms-bgp-lab"><span x-text="c.label"></span><span x-text="bg[c.k] + c.unit"></span></div>
+              <input type="range" :min="c.min" :max="c.max" :step="c.step || 1" x-model.number="bg[c.k]" :aria-label="c.label">
+            </div>
+          </template>
+          <label class="ms-bgp-check"><input type="checkbox" x-model="bg.flip"> Apversti horizontaliai</label>
+        </div>
+      </template>
+
+      <div class="ms-bgp-sec">Šydas</div>
+      <div class="ms-bgp-field">
+        <div class="ms-bgp-lab"><span>Baltas šydas</span><span x-text="bg.veil + '%'"></span></div>
+        <input type="range" min="0" max="80" x-model.number="bg.veil" aria-label="Baltas šydas">
+      </div>
+
+      <div class="ms-bgp-sec">Raštas</div>
+      <div class="ms-bgp-seg">
+        <template x-for="o in [['none','Nėra'],['grid','Tinklelis'],['dots','Taškai'],['icons','Ikonos']]" :key="o[0]">
+          <button type="button" :class="{ 'is-on': bg.pattern === o[0] }" @click="bg.pattern = o[0]" x-text="o[1]"></button>
+        </template>
+      </div>
+      <template x-if="bg.pattern !== 'none'">
+        <div>
+          <template x-for="c in bgSliders.pattern" :key="c.k">
+            <div class="ms-bgp-field">
+              <div class="ms-bgp-lab"><span x-text="c.label"></span><span x-text="bg[c.k] + c.unit"></span></div>
+              <input type="range" :min="c.min" :max="c.max" :step="c.step || 1" x-model.number="bg[c.k]" :aria-label="c.label">
+            </div>
+          </template>
+          <div class="ms-bgp-color" x-data="{ open: false }">
+        <div class="ms-bgp-lab"><span>Rašto spalva</span></div>
+        <button type="button" class="ms-bgp-pick" @click="open = !open" :aria-expanded="open"><i :style="'background:' + bg.patternColor"></i><span x-text="dsName(bg.patternColor)"></span><em x-text="bg.patternColor"></em></button>
+        <div x-show="open" x-collapse.duration.200ms>
+          <div class="ms-bgp-pal">
+            <template x-for="fam in dsPalette" :key="fam.name">
+              <div class="ms-bgp-pal-row"><small x-text="fam.name"></small>
+                <template x-for="c in fam.colors" :key="c.hex"><button type="button" class="ms-bgp-sw" :class="{ 'is-on': bg.patternColor === c.hex }" :style="'background:' + c.hex" :title="fam.name + ' ' + c.id + ' ' + c.hex" :aria-label="fam.name + ' ' + c.id" @click="bg.patternColor = c.hex"></button></template>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+          <label class="ms-bgp-check"><input type="checkbox" x-model="bg.patternEdges"> Tik kraštuose (centras švarus)</label>
+        </div>
+      </template>
+
+      <div class="ms-bgp-sec">Grūdėtumas</div>
+      <div class="ms-bgp-field">
+        <div class="ms-bgp-lab"><span>Grain</span><span x-text="bg.grain + '%'"></span></div>
+        <input type="range" min="0" max="40" x-model.number="bg.grain" aria-label="Grūdėtumas">
+      </div>
+    </div>
+    <div class="ms-bgp-foot">
+      <button type="button" class="ms-bgp-copy" @click="bgCopy()" x-text="bgCopied ? 'Nukopijuota ✓' : 'Kopijuoti CSS'"></button>
+      <button type="button" class="ms-admin-reset" @click="bgReset()">Atstatyti</button>
+    </div>
+  </div>
+
+
+  <!-- Sidebar (atkartota iš esamo dizaino) -->
+  <aside class="ms-sidebar">
+    <a class="ms-logo" href="#"><span class="ms-logo-mark" role="img" aria-label="Mokesčių Sufleris"></span></a>
+    <ul class="ms-nav">
+      <li><a href="#">Šiandien SUFLERYJE</a></li>
+      <li><a href="#">Mokesčių naujienos <span class="ms-badge">155</span></a></li>
+      <li><a href="#">Praktinės situacijos <span class="ms-count">8024</span></a></li>
+      <li><a href="#">Sąvadai ir teminiai rinkiniai</a></li>
+      <li><a href="#">Seminarai ir vaizdo įrašai</a></li>
+      <li><a href="#">Renginių kalendorius</a></li>
+      <li><a href="#">Skaičiuoklės</a></li>
+      <li><a href="#" class="is-active">Testai</a></li>
+      <li><a href="#">Užduokite savo klausimą</a></li>
+    </ul>
+    <div class="ms-nav-sep"></div>
+    <ul class="ms-nav">
+      <li><a href="#"><span><span class="ms-pro">PRO</span><b style="font-weight:600">turinys</b></span></a></li>
+      <li><a href="#">Geroji praktika</a></li>
+      <li><a href="#">Pro mikroskopą</a></li>
+      <li><a href="#">Kas geresnio?</a></li>
+      <li><a href="#">PRO komentarai</a></li>
+      <li><a href="#">Profilaktika</a></li>
+    </ul>
+  </aside>
+
+  <div class="ms-main">
+    <!-- Fonas: statiški sluoksniai, parametrai reguliuojami „Fonas“ skydelyje -->
+    <div class="ms-bgx" aria-hidden="true" :style="'background:' + (bg.source === 'default' || bg.source === 'fonas1' ? 'var(--ms-bg)' : bg.baseColor)">
+      <div class="ms-bgx-img" x-show="['image', 'waves', 'fonas1'].includes(bg.source)" :style="bgImgStyle()"></div>
+      <div :style="'background:#fff;opacity:' + (bg.veil / 100)"></div>
+      <div x-show="bg.pattern !== 'none'" :style="bgPatternStyle()"></div>
+      <div x-show="bg.grain > 0" :style="bgGrainStyle()"></div>
+    </div>
+    <!-- Top bar -->
+    <header class="ms-topbar">
+      <button class="ms-burger" aria-label="Meniu"><svg width="22" height="16" fill="none" stroke="#0f5354" stroke-width="2" stroke-linecap="round"><path d="M1 1h20M1 8h20M1 15h20"/></svg></button>
+      <a class="ms-logo ms-logo-top" href="#"><span class="ms-logo-mark" role="img" aria-label="Mokesčių Sufleris"></span></a>
+      <div class="ms-search">
+        <input type="search" placeholder="Ieškoti pagal frazę" aria-label="Paieška">
+        <svg width="18" height="18" fill="none" stroke="#00555a" stroke-width="2"><circle cx="7.5" cy="7.5" r="6"/><path d="M12 12l5 5" stroke-linecap="round"/></svg>
+      </div>
+      <nav class="ms-topnav">
+        <a href="#"><svg width="22" height="22" fill="none" stroke="#00555a" stroke-width="2"><path d="M4 3h4l2 5-2.5 1.5a11 11 0 005 5L14 12l5 2v4a2 2 0 01-2 2A16 16 0 012 5a2 2 0 012-2z"/></svg><span>Susisiekti</span></a>
+        <a href="#"><svg width="22" height="22" fill="none" stroke="#00555a" stroke-width="1.7"><path d="M3 3v16M19 3v16M3 7h16M3 12h16M3 17h16"/></svg><span>Planų kainos</span></a>
+        <a href="#"><svg width="22" height="22" fill="none" stroke="#0f5354" stroke-width="2"><circle cx="11" cy="11" r="10"/><circle cx="11" cy="9" r="3.5"/><path d="M5 18c1.5-2.5 3.5-3.5 6-3.5s4.5 1 6 3.5"/></svg><span>Laurynas</span></a>
+      </nav>
+    </header>
+
+    <nav class="ms-crumbs" aria-label="Kelias"><a href="#">Testai</a><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.6 3l2.7 3-2.7 3"/></svg><span x-text="title"></span></nav>
+
+    <main class="ms-content">
+
+      <!-- INTRO (variantai E-G, perjungiami per „Versijos“) -->
+      <section x-show="screen === 'intro'" x-transition:enter.opacity.duration.300ms x-transition:leave.opacity.duration.1ms class="ms-intro-wrap" :class="'is-v' + introVariant">
+
+        <div class="ms-intro-row">
+          <div class="ms-card ms-intro">
+            <div class="ms-intro-label"><b>ŽINIŲ TESTAS:</b> 2026-10-01</div>
+            <div class="ms-intro-check"><svg width="40" height="34" fill="#9fcfcf" stroke="#447777" stroke-width="2.5" stroke-linejoin="round"><path d="M2 18l5-5 8 8L33 3l5 5-23 23z"/></svg></div>
+            <h1 x-text="title"></h1>
+            <p>Prie kiekvieno atsakymo rasite išaiškinimą su nuorodomis į Mokesčių SUFLERYJE esantį turinį.</p>
+
+            <!-- F: naujienos kortelė su „Supratau“ (Fitbit tipo) -->
+            <template x-if="introVariant === 'F'">
+              <div x-show="!newsDismissed" x-collapse.duration.300ms>
+                <div class="ms-news">
+                  <div class="ms-news-art" x-html="artSvg"></div>
+                  <div class="ms-news-body">
+                    <span class="ms-announce-badge is-light">Naujiena</span>
+                    <strong>Dabar išaiškinimą matysite iškart</strong>
+                    <p>Atsakę į klausimą iškart pamatysite, ar teisingai, ir trumpą paaiškinimą. Pabaigoje, kaip ir anksčiau, rasite visų atsakymų suvestinę.</p>
+                    <button type="button" class="ms-btn ms-btn-outline ms-btn-sm" @click="newsDismissed = true">Supratau</button>
+                  </div>
+                </div>
+              </div>
+            </template>
+
+            <button class="ms-btn" @click="startClicked()">Pradėti testą
+              <svg width="16" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h14M10 1l5 5-5 5"/></svg>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- E: „Kas naujo“ modalas paspaudus „Pradėti testą“ (Lovable tipo išdėstymas) -->
+      <div class="ms-modal-backdrop ms-wn-backdrop" x-show="whatsNew" x-cloak x-transition.opacity.duration.250ms @click.self="whatsNew = false" @keydown.escape.window="whatsNew = false">
+        <div class="ms-wn" role="dialog" aria-modal="true" aria-labelledby="ms-wn-title" x-show="whatsNew" x-transition.scale.96.opacity.duration.250ms>
+          <button class="ms-close ms-wn-close" @click="whatsNew = false" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
+          <div class="ms-wn-art" aria-hidden="true">
+            <img class="ms-wn-img" src="img/onboarding-iliustracija.jpg?v=2" alt="" width="290" height="424" decoding="async">
+          </div>
+          <div class="ms-wn-body">
+            <span class="ms-announce-badge is-light">Naujiena</span>
+            <h3 id="ms-wn-title">Nuo šiol testų atsakymų išaiškinimus matysite iškart</h3>
+            <ul class="ms-wn-list">
+              <template x-for="(it, ii) in newsPoints" :key="'ms-wn-title' + ii">
+                <li><span class="ms-wn-ico" x-html="it.icon"></span><span x-text="it.text"></span></li>
+              </template>
+            </ul>
+            <button class="ms-btn ms-wn-cta" @click="whatsNewSeen = true; whatsNew = false; start()">Pradėti testą</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- G: „Kas naujo“ modalas atėjus (Lovable tipo išdėstymas) -->
+      <div class="ms-modal-backdrop ms-wn-backdrop" x-show="newsModal" x-cloak x-transition.opacity.duration.250ms @click.self="closeNews()" @keydown.escape.window="closeNews()">
+        <div class="ms-wn" role="dialog" aria-modal="true" aria-labelledby="ms-news-title" x-show="newsModal" x-transition.scale.96.opacity.duration.250ms>
+          <button class="ms-close ms-wn-close" @click="closeNews()" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
+          <div class="ms-wn-art" aria-hidden="true">
+            <img class="ms-wn-img" src="img/onboarding-iliustracija.jpg?v=2" alt="" width="290" height="424" decoding="async">
+          </div>
+          <div class="ms-wn-body">
+            <span class="ms-announce-badge is-light">Naujiena</span>
+            <h3 id="ms-news-title">Nuo šiol testų atsakymų išaiškinimus matysite iškart</h3>
+            <ul class="ms-wn-list">
+              <template x-for="(it, ii) in newsPoints" :key="'ms-news-title' + ii">
+                <li><span class="ms-wn-ico" x-html="it.icon"></span><span x-text="it.text"></span></li>
+              </template>
+            </ul>
+            <button class="ms-btn ms-wn-cta" @click="closeNews()">Supratau</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Atsiliepimas: mažas slide-in kampe, atsiranda atsakius į 4-ą klausimą -->
+      <div class="ms-fb-backdrop" x-show="fbOpen && fbRating !== null && !fbSent" x-cloak x-transition.opacity.duration.350ms aria-hidden="true"></div>
+      <div class="ms-fb" x-show="fbOpen" x-cloak role="dialog" aria-labelledby="ms-fb-title" :class="{ 'is-expanded': fbRating !== null && !fbSent, 'is-sent': fbSent }"
+           x-transition:enter="ms-fb-anim" x-transition:enter-start="ms-fb-from" x-transition:enter-end="ms-fb-to"
+           x-transition:leave="ms-fb-anim" x-transition:leave-start="ms-fb-to" x-transition:leave-end="ms-fb-from">
+        <template x-if="!fbSent">
+          <div>
+            <div class="ms-fb-head">
+              <strong id="ms-fb-title">Ar padeda iškart rodomi atsakymų išaiškinimai?</strong>
+              <button class="ms-close" @click="fbClose()" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
+            </div>
+            <div class="ms-fb-faces" role="radiogroup" aria-label="Įvertinimas">
+              <button type="button" class="ms-fb-face is-bad" :class="{ 'is-active': fbRating === 'bad' }" @click="fbRate('bad')" role="radio" :aria-checked="fbRating === 'bad'" title="Nepadeda"><svg class="ms-face" width="38" height="38" viewBox="0 0 38 38" aria-hidden="true"><circle class="ms-face-bg" cx="19" cy="19" r="17"/><circle class="ms-face-eye" cx="13.5" cy="16" r="1.4"/><circle class="ms-face-eye" cx="24.5" cy="16" r="1.4"/><path class="ms-face-line" d="M13.5 26c1.4-2.2 3.2-3.2 5.5-3.2s4.1 1 5.5 3.2"/></svg><span>Nepadeda</span></button>
+              <button type="button" class="ms-fb-face is-ok" :class="{ 'is-active': fbRating === 'ok' }" @click="fbRate('ok')" role="radio" :aria-checked="fbRating === 'ok'" title="Padeda"><svg class="ms-face" width="38" height="38" viewBox="0 0 38 38" aria-hidden="true"><circle class="ms-face-bg" cx="19" cy="19" r="17"/><circle class="ms-face-eye" cx="13.5" cy="16" r="1.4"/><circle class="ms-face-eye" cx="24.5" cy="16" r="1.4"/><path class="ms-face-line" d="M13.5 22.5c1.4 2.2 3.2 3.2 5.5 3.2s4.1-1 5.5-3.2"/></svg><span>Padeda</span></button>
+            </div>
+            <div x-show="fbRating !== null" x-collapse.duration.300ms>
+              <div class="ms-fb-more">
+                <!-- Abu turiniai toje pačioje vietoje (kaip tab'ai): langas nekeičia dydžio, keičiasi tik turinys -->
+                <div class="ms-fb-tabs">
+                  <div class="ms-fb-pane" :class="{ 'is-active': fbRating === 'bad' }" :aria-hidden="fbRating !== 'bad'">
+                    <div class="ms-fb-q">Kas trukdo?</div>
+                    <template x-for="(o, oi) in fbBadOptions" :key="'fbb' + oi">
+                      <label class="ms-fb-opt"><input type="checkbox" :value="o" x-model="fbPickedBad" :id="'ms-fb-bad' + oi" :tabindex="fbRating === 'bad' ? 0 : -1"><span x-text="o"></span></label>
+                    </template>
+                  </div>
+                  <div class="ms-fb-pane" :class="{ 'is-active': fbRating === 'ok' }" :aria-hidden="fbRating !== 'ok'">
+                    <div class="ms-fb-q">Kas labiausiai padeda?</div>
+                    <template x-for="(o, oi) in fbOkOptions" :key="'fbk' + oi">
+                      <label class="ms-fb-opt"><input type="checkbox" :value="o" x-model="fbPickedOk" :id="'ms-fb-ok' + oi" :tabindex="fbRating === 'ok' ? 0 : -1"><span x-text="o"></span></label>
+                    </template>
+                  </div>
+                </div>
+                <label class="ms-fb-q" for="ms-fb-text">Gal norite ką nors pridurti?</label>
+                <textarea id="ms-fb-text" class="ms-fb-text" rows="3" x-model="fbText" placeholder="Pvz., ką norėtumėte matyti kitaip…"></textarea>
+                <div class="ms-fb-actions">
+                  <button type="button" class="ms-btn" @click="fbSend()">Siųsti</button>
+                  <button type="button" class="ms-fb-later" @click="fbClose()">Ne dabar</button>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="ms-fb-later" x-show="fbRating === null" @click="fbClose()">Ne dabar</button>
+          </div>
+        </template>
+        <template x-if="fbSent">
+          <div class="ms-fb-thanks">
+            <span class="ms-icon is-ok"><svg width="13" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.5 3.5L12 1"/></svg></span>
+            <p>Ačiū, jūsų nuomonė padės tobulinti testus.</p>
+          </div>
+        </template>
+      </div>
+
+      <!-- QUIZ -->
+      <section x-show="screen === 'quiz'" x-cloak x-transition:enter.opacity.duration.300ms x-transition:leave.opacity.duration.1ms>
+        <div class="ms-qwrap">
+          <div class="ms-card ms-qcard">
+            <div class="ms-qcard-inner">
+              <div class="ms-progress">
+                <span x-text="`Klausimas ${idx + 1} iš ${questions.length}`"></span>
+              </div>
+              <div class="ms-qbody" x-ref="qbody" :class="{ 'is-leaving': leaving }">
+              <h2 class="ms-question" x-text="q.text"></h2>
+              <div class="ms-options" role="group" aria-label="Atsakymų variantai">
+                <template x-for="(o, i) in q.options" :key="idx + '-' + i">
+                  <div class="ms-option" :class="[optClass(i), answered ? 'is-locked' : '']">
+                    <button type="button" class="ms-option-btn" :disabled="answered" @click="answer(i)">
+                      <template x-if="!answered || (i !== q.correct && i !== picked)">
+                        <span class="ms-key" x-text="letters[i]"></span>
+                      </template>
+                      <template x-if="answered && i === q.correct">
+                        <span class="ms-icon is-ok"><svg width="13" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.5 3.5L12 1"/></svg></span>
+                      </template>
+                      <template x-if="answered && i === picked && i !== q.correct">
+                        <span class="ms-icon is-bad" aria-label="Neteisingas atsakymas"><svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg></span>
+                      </template>
+                      <span class="ms-option-text" x-text="o"></span>
+                      <span class="ms-tag" x-show="answered && i === picked && i !== q.correct" x-transition.opacity.duration.250ms>Jūsų atsakymas</span>
+                    </button>
+                    <!-- Trumpas paaiškinimas + CTA tik teisingame variante -->
+                    <div x-show="answered && !leaving && i === q.correct" x-collapse.duration.400ms>
+                      <div class="ms-inline" aria-live="polite">
+                        <div class="ms-inline-body">
+                          <div class="ms-inline-status" :class="{ 'is-ok': isCorrect }" x-text="isCorrect ? 'Teisingai!' : 'Kodėl taip?'"></div>
+                          <p class="ms-inline-lead" x-text="q.lead"></p>
+                          <button type="button" class="ms-more" @click="openModal()">
+                            Skaityti visą išaiškinimą
+                          </button>
+                          <button class="ms-btn" x-ref="next" @click="next()">
+                            <span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODALAS: pilnas išaiškinimas -->
+      <div class="ms-modal-backdrop" x-show="modal" x-cloak x-transition.opacity.duration.250ms @click.self="closeModal()" @keydown.escape.window="closeModal()">
+        <div class="ms-modal" role="dialog" aria-modal="true" aria-labelledby="ms-modal-title" x-show="modal" x-transition.scale.96.opacity.duration.250ms>
+          <div class="ms-modal-head">
+            <h3 id="ms-modal-title">Atsakymo išaiškinimas</h3>
+            <button class="ms-close" x-ref="close" @click="closeModal()" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
+          </div>
+          <div class="ms-modal-body">
+            <div class="ms-modal-q" x-text="`${idx + 1}. ${q.text}`"></div>
+            <div class="ms-lead" x-text="q.lead"></div>
+            <template x-for="(para, pi) in q.paras" :key="idx + 'p' + pi"><p x-text="para"></p></template>
+            <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
+              <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+              <span class="ms-linkcard-text"><small>PRAKTINĖ SITUACIJA</small><span x-text="q.link.title"></span></span>
+              <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
+            </a>
+          </div>
+          <div class="ms-modal-foot">
+            <button class="ms-btn ms-btn-outline" @click="closeModal()">Uždaryti</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <section x-show="screen === 'results'" x-cloak x-transition:enter.opacity.duration.300ms x-transition:leave.opacity.duration.1ms class="ms-results">
+        <div class="ms-results-headrow">
+        <!-- Veiksmai virš kortelės, kaip senajame dizaine -->
+        <div class="ms-results-actions">
+          <a href="#" @click.prevent>Atsisiųsti PDF</a>
+          <span aria-hidden="true"></span>
+          <a href="#" @click.prevent="restart()">Spręsti iš naujo</a>
+        </div>
+        </div>
+
+        <!-- Viena kortelė: rezultatas viršuje (šviesus fonas) + atsakymų sąrašas -->
+        <div class="ms-card ms-results-card">
+          <div class="ms-results-head">
+            <div class="ms-results-top">
+              <div>
+                <span class="ms-progress">Testas baigtas</span>
+                <h1>Testo rezultatai</h1>
+                <div class="ms-summary">
+                  <span class="ms-chip is-ok"><span class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span><span x-text="`Teisingai: ${score}`"></span></span>
+                  <span class="ms-chip is-bad" x-show="questions.length - score > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Klaidos: ${questions.length - score}`"></span></span>
+                </div>
+              </div>
+              <div class="ms-score">
+                <b x-text="`${score} / ${questions.length}`"></b>
+                <small>teisingi atsakymai</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="ms-rlist-head">
+            <h2>Atsakymai su išaiškinimais</h2>
+            <p>Išaiškinimus jau matėte eigoje. Čia galite juos peržiūrėti dar kartą.</p>
+          </div>
+          <div class="ms-rlist">
+          <template x-for="(rq, ri) in questions" :key="'r' + ri">
+            <div class="ms-ritem" x-data="{ open: false }">
+              <button class="ms-rbtn" @click="open = !open" :aria-expanded="open">
+                <span class="ms-icon" :class="answers[ri] === rq.correct ? 'is-ok' : 'is-bad'">
+                  <svg x-show="answers[ri] === rq.correct" width="13" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.5 3.5L12 1"/></svg>
+                  <svg x-show="answers[ri] !== rq.correct" width="10" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+                </span>
+                <span class="ms-rq"><span x-text="`${ri + 1}. ${rq.text}`"></span>
+                  <small x-text="answers[ri] === rq.correct ? 'Atsakėte teisingai' : `Jūsų atsakymas: ${rq.options[answers[ri]] ?? '-'}`"></small>
+                </span>
+                <svg class="ms-chev" :class="{ 'is-open': open }" width="12" height="8" fill="none" stroke="#5f7a7e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l5 5 5-5"/></svg>
+              </button>
+              <div x-show="open" x-collapse.duration.300ms>
+                <div class="ms-rexpl">
+                  <!-- Variantai: tos pačios būsenos kaip klausime -->
+                  <div class="ms-ropts">
+                    <template x-for="(o, oi) in rq.options" :key="'ro' + ri + oi">
+                      <div class="ms-option is-locked" :class="oi === rq.correct ? 'is-correct' : (oi === answers[ri] ? 'is-wrong' : 'is-dim')">
+                        <div class="ms-option-btn">
+                          <span x-show="oi !== rq.correct && oi !== answers[ri]" class="ms-key" x-text="letters[oi]"></span>
+                          <span x-show="oi === rq.correct" class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span>
+                          <span x-show="oi === answers[ri] && oi !== rq.correct" class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span>
+                          <span class="ms-option-text" x-text="o"></span>
+                          <span class="ms-tag" x-show="oi === answers[ri] && oi !== rq.correct">Jūsų atsakymas</span>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                  <!-- Išaiškinimas -->
+                  <div class="ms-rwhy">
+                    <div class="ms-inline-status">Kodėl taip?</div>
+                    <div class="ms-lead" x-text="rq.lead"></div>
+                    <template x-for="(para, pi) in rq.paras" :key="'rp' + ri + pi"><p x-text="para"></p></template>
+                    <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
+                      <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+                      <span class="ms-linkcard-text"><small>PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
+                      <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+        </div>
+      </section>
+
+    </main>
+    <!-- Pranešti apie klaidą: vienas globalus elementas, visuose ekranuose toje pačioje vietoje -->
+    <a href="#" class="ms-report" x-show="!fbOpen" x-transition.opacity.duration.200ms>Pranešti apie klaidą</a>
+  </div>
+</div>
+
+<script>
+function quiz() {
+  return {
+    title: '6 klausimai apie darbo santykius ir VDU',
+    letters: ['A', 'B', 'C', 'D'],
+    screen: 'intro',
+    idx: 0,
+    picked: null,
+    answered: false,
+    leaving: false,
+    answers: [],
+    modal: false,
+    // prototipo versijos
+    adminOpen: false,
+    bgPanel: false,
+    dsPalette: [
+      { name: 'Teal', colors: [{ id: '100', hex: '#f2f7f8' }, { id: '200', hex: '#dbe9ea' }, { id: '300', hex: '#94bcbf' }, { id: '400', hex: '#70a6aa' }, { id: '500', hex: '#4c9095' }, { id: '600', hex: '#437f83' }, { id: '700', hex: '#3a6d71' }, { id: '800', hex: '#315c5f' }, { id: '900', hex: '#284b4d' }] },
+      { name: 'Salmon', colors: [{ id: '100', hex: '#ffe8e8' }, { id: '200', hex: '#ffd1d1' }, { id: '300', hex: '#ffbaba' }, { id: '400', hex: '#ff9393' }, { id: '500', hex: '#ff6565' }, { id: '600', hex: '#d95656' }, { id: '700', hex: '#b24747' }, { id: '800', hex: '#8c3838' }, { id: '900', hex: '#662828' }] },
+      { name: 'Purple', colors: [{ id: '100', hex: '#f4e5f0' }, { id: '200', hex: '#eacbe0' }, { id: '300', hex: '#dfb2d1' }, { id: '400', hex: '#cd87b8' }, { id: '500', hex: '#b85399' }, { id: '600', hex: '#9c4782' }, { id: '700', hex: '#813a6b' }, { id: '800', hex: '#652e54' }, { id: '900', hex: '#4a213d' }] },
+      { name: 'Grey', colors: [{ id: '100', hex: '#f2f5f5' }, { id: '200', hex: '#e3e8e8' }, { id: '300', hex: '#cdd5d6' }, { id: '400', hex: '#abb9ba' }, { id: '500', hex: '#899d9f' }, { id: '600', hex: '#6c8284' }, { id: '700', hex: '#556768' }, { id: '800', hex: '#405359' }, { id: '900', hex: '#272f30' }] },
+      { name: 'Red', colors: [{ id: '100', hex: '#fadedc' }, { id: '200', hex: '#f4bcb8' }, { id: '300', hex: '#ee928c' }, { id: '400', hex: '#e55c52' }, { id: '500', hex: '#d92d20' }, { id: '600', hex: '#c8291e' }, { id: '700', hex: '#a02118' }, { id: '800', hex: '#781912' }, { id: '900', hex: '#50100c' }] },
+      { name: 'Green', colors: [{ id: '100', hex: '#e3f2eb' }, { id: '200', hex: '#c7e5d7' }, { id: '300', hex: '#a4d5be' }, { id: '400', hex: '#79c19e' }, { id: '500', hex: '#4fab7f' }, { id: '600', hex: '#3f8865' }, { id: '700', hex: '#2f654b' }, { id: '800', hex: '#204634' }, { id: '900', hex: '#132a1f' }] },
+      { name: 'Blue', colors: [{ id: '100', hex: '#e1e9f4' }, { id: '200', hex: '#c3d2e9' }, { id: '300', hex: '#9eb7dc' }, { id: '400', hex: '#80a0d1' }, { id: '500', hex: '#628ac6' }, { id: '600', hex: '#406db0' }, { id: '700', hex: '#315387' }, { id: '800', hex: '#233c61' }, { id: '900', hex: '#16253c' }] },
+      { name: 'Orange', colors: [{ id: '100', hex: '#fcead9' }, { id: '200', hex: '#fad6b3' }, { id: '300', hex: '#f7bc83' }, { id: '400', hex: '#f4a85d' }, { id: '500', hex: '#f19132' }, { id: '600', hex: '#e0770f' }, { id: '700', hex: '#ac5b0c' }, { id: '800', hex: '#7c4208' }, { id: '900', hex: '#4c2905' }] },
+      { name: 'Soft', colors: [{ id: 'sage', hex: '#e1ece2' }, { id: 'sky', hex: '#e5f0fe' }, { id: 'peach', hex: '#fcf1e2' }, { id: 'blush', hex: '#f6e1e0' }, { id: 'lilac', hex: '#f4e6ef' }, { id: 'white', hex: '#ffffff' }] }
+    ],
+    dsName(hex) { for (const f of this.dsPalette) { const c = f.colors.find(c => c.hex === hex); if (c) return f.name + ' ' + c.id; } return 'Ne DS spalva'; },
+    bgCopied: false,
+    bgDefaults: { source: 'default', baseColor: '#f2f7f8', opacity: 100, blur: 0, scale: 100, posX: 50, posY: 50, saturate: 100, brightness: 100, hue: 0, flip: false, veil: 0, pattern: 'none', patternSize: 40, patternOpacity: 25, patternColor: '#4c9095', patternEdges: true, grain: 0 },
+    bg: {},
+    bgSliders: {
+      base: [
+        { k: 'opacity', label: 'Permatomumas', min: 0, max: 100, unit: '%' },
+        { k: 'blur', label: 'Blur', min: 0, max: 80, unit: 'px' },
+        { k: 'scale', label: 'Mastelis', min: 100, max: 250, unit: '%' },
+        { k: 'posX', label: 'Pozicija X', min: 0, max: 100, unit: '%' },
+        { k: 'posY', label: 'Pozicija Y', min: 0, max: 100, unit: '%' },
+        { k: 'saturate', label: 'Sodrumas', min: 0, max: 200, unit: '%' },
+        { k: 'brightness', label: 'Šviesumas', min: 70, max: 130, unit: '%' },
+        { k: 'hue', label: 'Atspalvis', min: -60, max: 60, unit: '°' }
+      ],
+      pattern: [
+        { k: 'patternOpacity', label: 'Rašto ryškumas', min: 0, max: 100, unit: '%' },
+        { k: 'patternSize', label: 'Rašto dydis', min: 16, max: 140, unit: 'px' }
+      ]
+    },
+    bgWavesSvg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000' preserveAspectRatio='xMidYMid slice'><defs><filter id='b' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur stdDeviation='70'/></filter></defs><rect width='1600' height='1000' fill='#eef5f2'/><g filter='url(#b)'><path d='M-100 120C200 40 420 260 700 330S1150 420 1700 260V-100H-100Z' fill='#8fcdcc' opacity='.75'/><path d='M-100 380C250 300 520 560 860 600S1300 520 1700 640V420C1300 380 1050 520 760 440S200 220 -100 300Z' fill='#bfe3e3' opacity='.8'/><path d='M1200 120C1350 160 1500 120 1700 60V420C1550 380 1380 300 1200 260Z' fill='#f4e6dc' opacity='.7'/><path d='M-100 700C120 640 300 760 420 1100H-100Z' fill='#f3ddd3' opacity='.8'/><path d='M900 760C1150 700 1350 620 1700 700V1100H760C780 900 820 800 900 760Z' fill='#9fd6d2' opacity='.7'/></g></svg>`,
+    bgImgStyle() {
+      const b = this.bg, pad = b.blur * 2 + 10;
+      const src = b.source === 'waves' ? `data:image/svg+xml,${encodeURIComponent(this.bgWavesSvg)}` : b.source === 'fonas1' ? 'img/fonas-1.jpg' : 'img/testo-fonas.jpg';
+      return `inset:-${pad}px;background-image:url("${src}");background-position:${b.posX}% ${b.posY}%;opacity:${b.opacity / 100};` +
+        `filter:blur(${b.blur}px) saturate(${b.saturate}%) brightness(${b.brightness}%) hue-rotate(${b.hue}deg);` +
+        `transform:scale(${(b.flip ? -1 : 1) * b.scale / 100}, ${b.scale / 100});`;
+    },
+    bgPatternStyle() {
+      const b = this.bg, c = b.patternColor, z = b.patternSize;
+      let img = '';
+      if (b.pattern === 'grid') img = `linear-gradient(${c} 1px, transparent 1px), linear-gradient(90deg, ${c} 1px, transparent 1px)`;
+      if (b.pattern === 'dots') img = `radial-gradient(circle, ${c} 1.2px, transparent 1.6px)`;
+      if (b.pattern === 'icons') {
+        const st = `fill='none' stroke='${c}' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'`;
+        const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><g ${st}><path d='M22 18h14l7 7v23H22z'/><path d='M36 18v7h7M27 32h10M27 38h10'/><circle cx='112' cy='34' r='10'/><path d='M107 34.5l3.5 3.5 6.5-7'/><path d='M50 108h8M51 112h6M54 88a10 10 0 0 0-6 18c1 .8 1.6 1.9 1.6 3.2v.8h8.8v-.8c0-1.3.6-2.4 1.6-3.2A10 10 0 0 0 54 88z'/><path d='M120 96l-16 22M106 98a3 3 0 1 0 0 .1M118 116a3 3 0 1 0 0 .1'/></g></svg>`;
+        img = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+      }
+      const size = b.pattern === 'icons' ? z * 4 : z;
+      const mask = b.patternEdges ? 'radial-gradient(ellipse 60% 55% at 50% 45%, transparent 40%, #000 85%)' : 'none';
+      return `background-image:${img};background-size:${size}px ${size}px;opacity:${b.patternOpacity / 100};-webkit-mask-image:${mask};mask-image:${mask};`;
+    },
+    bgGrainStyle() {
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>`;
+      return `background-image:url("data:image/svg+xml,${encodeURIComponent(svg).replace('%2523', '%23')}");opacity:${this.bg.grain / 100};`;
+    },
+    bgCopy() {
+      const b = this.bg;
+      const css = `/* Testo fonas: nustatymai iš prototipo */
+.bg { background: ${b.source === 'default' || b.source === 'fonas1' ? 'linear-gradient(135deg, #c3e2e2 0%, #b4dada 45%, #9fcfcf 100%)' : b.baseColor}; }
+` +
+        (['image', 'waves', 'fonas1'].includes(b.source) ? `.bg-image { ${this.bgImgStyle()} }
+` : '') +
+        (b.veil ? `.bg-veil { background: #fff; opacity: ${b.veil / 100}; }
+` : '') +
+        (b.pattern !== 'none' ? `.bg-pattern { ${this.bgPatternStyle()} }
+` : '') +
+        (b.grain ? `/* grain: ${b.grain}% */
+` : '') +
+        `/* JSON: ${JSON.stringify(b)} */`;
+      const done = () => { this.bgCopied = true; setTimeout(() => this.bgCopied = false, 1600); };
+      try { navigator.clipboard.writeText(css).then(done, done); } catch (e) { done(); }
+    },
+    /* Fonas 1 iš Figmos (D2, 4867:9942): numatytas gradientas + paveikslas 43% permatomumu */
+    bgSetSource(src) {
+      if (src === 'fonas1' && this.bg.source !== 'fonas1') Object.assign(this.bg, { opacity: 43, posX: 50, posY: 66, scale: 100, blur: 0, saturate: 100, brightness: 100, hue: 0, flip: false });
+      this.bg.source = src;
+    },
+    bgReset() { this.bg = { ...this.bgDefaults }; },
+    introVariant: 'F',
+    introVariants: [
+      { id: 'E', label: 'Modalas paspaudus „Pradėti“' },
+      { id: 'F', label: 'Naujienos kortelė su „Supratau“' },
+      { id: 'G', label: '„Kas naujo“ modalas atėjus' }
+    ],
+    artSvg: `<svg class="ms-art" viewBox="0 0 300 230" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M246 62v26h-6M50 150v-30h10" fill="none" stroke="#cfdcdc" stroke-width="1.2"/><rect x="60" y="39" width="180" height="162" rx="10" fill="#447777" opacity=".07"/><rect x="60" y="36" width="180" height="162" rx="10" fill="#447777" opacity=".05"/><rect x="60" y="34" width="180" height="162" rx="10" fill="#fff" stroke="#e3eaea"/><rect x="76" y="50" width="120" height="6" rx="3" fill="#c9d8d9"/><rect x="76" y="62" width="80" height="6" rx="3" fill="#c9d8d9"/><rect x="76" y="80" width="148" height="24" rx="6" fill="#fdf1f0" stroke="#f4cfcc"/><circle cx="88" cy="92" r="6" fill="#fbe0dd" stroke="#e59a94" stroke-width="1.2"/><path d="M85.6 89.6l4.8 4.8M90.4 89.6l-4.8 4.8" stroke="#d95656" stroke-width="1.3" stroke-linecap="round"/><rect x="100" y="90" width="70" height="4" rx="2" fill="#ebcfcc"/><rect x="76" y="110" width="148" height="56" rx="6" fill="#eef7f2" stroke="#cbe6d8"/><circle cx="88" cy="122" r="6" fill="#d7eee2" stroke="#79c19e" stroke-width="1.2"/><path d="M85.3 122.2l1.9 1.9 3.6-3.8" fill="none" stroke="#3f8865" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="100" y="120" width="84" height="4" rx="2" fill="#b9dcc9"/><rect x="100" y="134" width="110" height="3" rx="1.5" fill="#d3e8dc"/><rect x="100" y="142" width="74" height="3" rx="1.5" fill="#d3e8dc"/><rect x="100" y="152" width="40" height="8" rx="3" fill="#4c9095"/><rect x="76" y="172" width="148" height="14" rx="5" fill="#f3f6f6" stroke="#e3eaea"/><rect x="226" y="25" width="40" height="40" rx="10" fill="#447777" opacity=".07"/><rect x="226" y="22" width="40" height="40" rx="10" fill="#447777" opacity=".05"/><rect x="226" y="20" width="40" height="40" rx="10" fill="#fff" stroke="#e3eaea"/><path d="M243 46h6M243.6 49h4.8M246 29a6 6 0 0 0-3.6 10.8c.7.5 1.2 1.3 1.2 2.2v.4h4.8V42c0-.9.5-1.7 1.2-2.2A6 6 0 0 0 246 29z" fill="#e6f0f0" stroke="#6f9a9c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="30" y="155" width="40" height="40" rx="10" fill="#447777" opacity=".07"/><rect x="30" y="152" width="40" height="40" rx="10" fill="#447777" opacity=".05"/><rect x="30" y="150" width="40" height="40" rx="10" fill="#fff" stroke="#e3eaea"/><path d="M43 160h10l5 5v15H43z" fill="#e6f0f0" stroke="#6f9a9c" stroke-width="1.4" stroke-linejoin="round"/><path d="M53 160v5h5z" fill="#f3d6e8" stroke="#6f9a9c" stroke-width="1.4" stroke-linejoin="round"/><path d="M46 170h8M46 174h6" stroke="#9cbcbe" stroke-width="1.3" stroke-linecap="round"/></svg>`,
+    newsPoints: [
+      { icon: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#405359" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><path d="M5 8.2l2 2L11 6"/></svg>', text: 'Iškart sužinosite ar atsakėte teisingai' },
+      { icon: '<svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="#405359" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 13.5h5M7.25 16h3.5"/><path d="M9 2a5 5 0 0 0-3 9c.6.45 1 1.1 1 1.9v.6h4v-.6c0-.8.4-1.45 1-1.9A5 5 0 0 0 9 2z"/></svg>', text: 'Trumpas išaiškinimas prie teisingo atsakymo' },
+      { icon: '<svg width="14" height="16" viewBox="0 0 16 19" fill="none" stroke="#405359" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6"/></svg>', text: 'Pilnas išaiškinimas ir nuoroda į praktinę situaciją' },
+      { icon: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#405359" stroke-width="1.6" stroke-linecap="round"><path d="M6 4h8M6 8h8M6 12h8"/><circle cx="2.5" cy="4" r=".8" fill="#405359"/><circle cx="2.5" cy="8" r=".8" fill="#405359"/><circle cx="2.5" cy="12" r=".8" fill="#405359"/></svg>', text: 'Pabaigoje, kaip ir anksčiau, visų atsakymų suvestinė' }
+    ],
+    introSteps: ['Pasirinkite atsakymą', 'Iškart pamatysite, ar teisingai, ir trumpą išaiškinimą', 'Pabaigoje gausite visų atsakymų suvestinę'],
+    whatsNew: false,
+    whatsNewSeen: false,
+    newsDismissed: false,
+    // atsiliepimas
+    fbEnabled: true,
+    fbOpen: false,
+    fbShown: false,
+    fbRating: null,
+    fbPickedBad: [],
+    fbPickedOk: [],
+    fbText: '',
+    fbSent: false,
+    fbBadOptions: ['Išaiškinimai per ilgi', 'Išaiškinimai neaiškūs', 'Blaško sprendžiant testą', 'Kita'],
+    fbOkOptions: ['Trumpas esmės paaiškinimas', 'Pilnas išaiškinimas', 'Nuorodos į praktines situacijas', 'Kita'],
+    newsModal: false,
+    newsSeen: false,
+
+    // Demo turinys. 4-asis klausimas paimtas iš realaus testo, kiti improvizuoti.
+    questions: [
+      {
+        text: 'Darbuotoja, auginanti 5 metų vaiką, pateikė darbdaviui prašymą visą darbo laiką dirbti nuotoliniu būdu. Ar darbdavys privalo tenkinti šį darbuotojos prašymą?',
+        options: ['Taip, privalo', 'Taip, privalo, jeigu dėl gamybinio būtinumo ar darbo organizavimo ypatumų darbdaviui tai nesukels per didelių sąnaudų', 'Ne, neprivalo'],
+        correct: 1,
+        reason: 'Pareiga nėra besąlygiška: darbdavys gali atsisakyti, jei tai sukeltų per dideles sąnaudas.',
+        lead: 'Darbdavys privalo tenkinti prašymą, jei tai nesukels per didelių sąnaudų.',
+        paras: ['Ši darbuotoja priklauso tai kategorijai darbuotojų, kurių prašymus dirbti nuotoliniu būdu darbdavys privalo tenkinti, jeigu dėl gamybinio būtinumo ar darbo organizavimo ypatumų tai jam nesukels per didelių sąnaudų.'],
+        link: { title: 'Lanksčios darbo sąlygos darbuotojams ir įpareigojimai darbdaviui', href: '#' }
+      },
+      {
+        text: 'Kiek kasmetinių atostogų per metus priklauso darbuotojui, kuris dirba penkias dienas per savaitę ir nepatenka į jokią lengvatinę kategoriją?',
+        options: ['20 darbo dienų', '28 kalendorinės dienos', '25 darbo dienos'],
+        correct: 0,
+        reason: null,
+        lead: 'Dirbant penkias dienas per savaitę priklauso 20 darbo dienų.',
+        paras: ['Darbo kodeksas nustato, kad minimali kasmetinių atostogų trukmė yra 20 darbo dienų, kai dirbama penkias dienas per savaitę, ir 24 darbo dienos, kai dirbama šešias. Ilgesnės, 25 darbo dienų, atostogos priklauso tik tam tikroms darbuotojų grupėms, pavyzdžiui, jaunesniems nei 18 metų ar vieniems auginantiems vaiką iki 14 metų.'],
+        link: { title: 'Kasmetinių atostogų trukmė ir jų suteikimas', href: '#' }
+      },
+      {
+        text: 'Kokia ilgiausia bandomojo laikotarpio trukmė, kurią galima sulygti darbo sutartyje?',
+        options: ['3 mėnesiai', '6 mėnesiai', '1 mėnuo'],
+        correct: 0,
+        reason: null,
+        lead: 'Bandomasis laikotarpis negali būti ilgesnis nei 3 mėnesiai.',
+        paras: ['Į bandomąjį laikotarpį neįskaitomas laikas, kai darbuotojas faktiškai nedirbo, pavyzdžiui, sirgo ar buvo atostogose. Todėl kalendoriškai bandymas gali pasibaigti vėliau, nors sulygta trukmė neviršija trijų mėnesių.'],
+        link: { title: 'Bandomasis laikotarpis: ką svarbu žinoti darbdaviui', href: '#' }
+      },
+      {
+        text: 'Darbuotojai metinė premija buvo paskirta 2024-12-31, bet išmokėta tik 2025-03-04. Šis darbuotojas atostogaus 2026 m. vasario 2-13 dienomis. Ar apskaičiuojant atostoginius reikia įtraukti minėtą premiją?',
+        options: ['Taip', 'Ne'],
+        correct: 1,
+        reason: 'Lemia ne išmokėjimo (2025-03-04), o paskyrimo data, kuri buvo iki naujos tvarkos.',
+        lead: 'Ne, premija neįtraukiama, nes ji paskirta dar 2024-12-31.',
+        paras: [
+          'VDU skaičiavimo tvarkos aprašo nuostatos, nustatančios premijų įtraukimo apskaičiuojant VDU tvarką, buvo pakeistos, nauja jų redakcija taikoma nuo 2025-10-31. Ji nurodo, kad ketvirtinės ir metinės premijos apskaičiuojant VDU įtraukiamos atsižvelgiant į tai, kada jos buvo apskaičiuotos. Apskaičiavimo momentu laikytina data, kai tokios premijos buvo paskirtos.',
+          'Svarbu atskirti premijos paskyrimo ir išmokėjimo datas. Įtraukiant ketvirtines ir metines premijas į VDU, žiūrima ne į tai, kada pinigai faktiškai pervesti darbuotojui, o į tai, kada premija buvo paskirta. Todėl net jei premija išmokėta vėliau, lemiama yra paskyrimo data.',
+          'Praktikoje dažniausiai suklystama tada, kai premija paskiriama vienais metais, o išmokama kitais. Tokiais atvejais pirmiausia verta pasitikrinti įsakymo ar sprendimo dėl premijos skyrimo datą, nes būtent ji lemia, ar premija patenka į VDU skaičiavimą.'
+        ],
+        link: { title: 'Metinių premijų įtraukimas į VDU nuo 2025-10-31', href: '#' }
+      },
+      {
+        text: 'Kaip turi būti apmokamas viršvalandinis darbas, jei darbo sutartyje nesulygta kitaip?',
+        options: ['Ne mažiau kaip 1,5 darbo užmokesčio dydžio', 'Ne mažiau kaip 2 darbo užmokesčio dydžiais', 'Įprastu darbo užmokesčio dydžiu'],
+        correct: 0,
+        reason: 'Dvigubai mokama už darbą poilsio ir švenčių dienomis, o ne už viršvalandžius.',
+        lead: 'Viršvalandžiai apmokami ne mažiau kaip pusantro darbo užmokesčio dydžio.',
+        paras: ['Darbuotojo prašymu viršvalandžių laikas gali būti ne apmokamas, o pridedamas prie kasmetinių atostogų, perskaičiavus jį taikant tą patį 1,5 koeficientą.'],
+        link: { title: 'Viršvalandžių apmokėjimas ir apskaita', href: '#' }
+      },
+      {
+        text: 'Prieš kiek laiko darbuotojas turi įspėti darbdavį, jei savo iniciatyva be svarbių priežasčių nori nutraukti neterminuotą darbo sutartį?',
+        options: ['Prieš 14 kalendorinių dienų', 'Prieš 20 kalendorinių dienų', 'Prieš 1 mėnesį'],
+        correct: 1,
+        reason: null,
+        lead: 'Darbuotojas turi raštu įspėti darbdavį prieš 20 kalendorinių dienų.',
+        paras: ['Jei darbuotojas nutraukia sutartį dėl svarbių priežasčių, įspėjimo terminas trumpesnis, 5 darbo dienos. Bandomuoju laikotarpiu užtenka įspėti prieš 3 darbo dienas.'],
+        link: { title: 'Darbo sutarties nutraukimas darbuotojo iniciatyva', href: '#' }
+      }
+    ],
+
+    get q() { return this.questions[this.idx]; },
+    get isCorrect() { return this.picked === this.q.correct; },
+    get isLast() { return this.idx === this.questions.length - 1; },
+    get score() { return this.answers.filter((a, i) => a === this.questions[i].correct).length; },
+    get remainingText() {
+      const n = this.questions.length - this.idx - 1;
+      if (n === 0) return 'Paskutinis klausimas';
+      return `Liko ${n} ${this.plural(n, 'klausimas', 'klausimai', 'klausimų')}`;
+    },
+
+    init() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('ms-proto') || '{}');
+        if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
+        this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
+        ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
+      } catch (e) { this.bg = { ...this.bgDefaults }; }
+      const persist = () => { try { localStorage.setItem('ms-proto', JSON.stringify({ introVariant: this.introVariant, bg: this.bg })); } catch (e) {} };
+      this.$watch('introVariant', persist);
+      this.$watch('bg', persist, { deep: true });
+      this.$watch('screen', v => { if (v === 'intro') this.fbOpen = false; });
+      this.$watch('introVariant', () => { this.newsDismissed = false; this.newsSeen = false; this.maybeShowNews(); });
+      this.maybeShowNews();
+    },
+
+    maybeShowNews() {
+      if (this.introVariant === 'G' && this.screen === 'intro' && !this.newsSeen) setTimeout(() => { if (this.introVariant === 'G' && this.screen === 'intro') this.newsModal = true; }, 500);
+    },
+    fbMaybeShow(delay) {
+      if (!this.fbEnabled || this.fbShown) return;
+      clearTimeout(this._fbTimer);
+      this._fbTimer = setTimeout(() => { if (this.screen !== 'intro' && !this.fbShown) { this.fbShown = true; this.fbOpen = true; } }, delay);
+    },
+    fbRate(r) { this.fbRating = r; },
+    fbClose() { this.fbOpen = false; },
+    fbSend() { this.fbSent = true; setTimeout(() => { this.fbOpen = false; }, 2600); },
+
+    closeNews() { this.newsModal = false; this.newsSeen = true; },
+
+    startClicked() {
+      if (this.introVariant === 'E' && !this.whatsNewSeen) { this.whatsNew = true; return; }
+      this.start();
+    },
+
+    resetDemo() {
+      this.fbShown = false; this.fbSent = false; this.fbRating = null; this.fbPickedBad = []; this.fbPickedOk = []; this.fbText = ''; this.fbOpen = false;
+      this.whatsNewSeen = false; this.newsDismissed = false; this.newsSeen = false; this.adminOpen = false;
+      this.restart();
+      this.maybeShowNews();
+    },
+
+    plural(n, one, few, many) {
+      const m10 = n % 10, m100 = n % 100;
+      if (m10 === 1 && m100 !== 11) return one;
+      if (m10 >= 2 && m10 <= 9 && (m100 < 10 || m100 >= 20)) return few;
+      return many;
+    },
+
+    start() { this.screen = 'quiz'; window.scrollTo({ top: 0, behavior: 'smooth' }); },
+
+    optClass(i) {
+      if (!this.answered) return '';
+      if (i === this.q.correct) return 'is-correct';
+      if (i === this.picked) return 'is-wrong';
+      return 'is-dim';
+    },
+
+    answer(i) {
+      if (this.answered) return;
+      this.picked = i;
+      this.answers[this.idx] = i;
+      this.answered = true;
+      // apklausa: pasiūlom įvertinti po 4-o klausimo
+      if (this.idx === 3) this.fbMaybeShow(1400);
+      // kai teisingas variantas išsiskleidžia, fokusas ant CTA; telefone nuslenkam, kad jis matytųsi
+      setTimeout(() => {
+        const btn = this.$root.querySelector('.ms-option.is-correct .ms-btn');
+        if (!btn) return;
+        btn.focus({ preventScroll: true });
+        const r = btn.getBoundingClientRect();
+        if (r.bottom > window.innerHeight - 16) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 420);
+    },
+
+    openModal() { this.modal = true; document.body.style.overflow = 'hidden'; this.$nextTick(() => this.$refs.close.focus()); },
+    closeModal() { if (!this.modal) return; this.modal = false; document.body.style.overflow = ''; },
+
+    next() {
+      if (!this.answered || this.leaving) return;
+      if (this.isLast) {
+        this.leaving = true;
+        setTimeout(() => { this.answered = false; this.leaving = false; this.screen = 'results'; window.scrollTo({ top: 0, behavior: 'smooth' }); }, 300);
+        return;
+      }
+      // sklandus perėjimas: išaiškinimas susiskleidžia (x-collapse), turinys išblunka su atsakyto klausimo būsena, tik tada įdedamas naujas klausimas
+      const card = this.$refs.qbody.closest('.ms-card');
+      this.leaving = true;
+      setTimeout(() => {
+        this.answered = false;
+        this.idx++;
+        this.picked = null;
+        this.leaving = false;
+        if (card.getBoundingClientRect().top < 0) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 260);
+    },
+
+    restart() {
+      this.answers = [];
+      this.idx = 0;
+      this.picked = null;
+      this.answered = false;
+      this.screen = 'intro';
+    },
+
+    onKey(e) {
+      if (this.screen !== 'quiz' || this.modal || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.target.closest && e.target.closest('input, textarea, .ms-fb')) return;
+      if (!this.answered) {
+        const i = this.letters.indexOf(e.key.toUpperCase());
+        if (i > -1 && i < this.q.options.length) { e.preventDefault(); this.answer(i); }
+      } else if (e.key === 'Enter' && !document.activeElement.closest('button, a')) {
+        e.preventDefault(); this.next();
+      }
+    }
+  };
+}
+</script>
+</body>
+</html>
