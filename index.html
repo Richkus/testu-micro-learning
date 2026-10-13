@@ -570,6 +570,13 @@
   .ms-coach.is-bottom .ms-coach-body h3 { margin-top: 8px; padding-right: 28px; }
   .ms-coach.is-bottom.ms-coach-from { transform: translateY(12px); }
 
+  /* ---------- I variantas: pranešimas išaiškinimo viduje ---------- */
+  .ms-tip { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; padding: 8px 8px 8px 10px; border-radius: 8px; background: rgba(255, 255, 255, .7); border: 1px solid var(--ms-ok-line); }
+  .ms-tip .ms-announce-badge { flex: 0 0 auto; font-size: 11px; padding: 3px 8px; }
+  .ms-tip-text { flex: 1; font-size: 14px; line-height: 20px; color: var(--ms-ink-soft); }
+  .ms-tip-close { flex: 0 0 24px; width: 24px; height: 24px; display: grid; place-items: center; border: 0; border-radius: 6px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background .15s; }
+  .ms-tip-close:hover { background: rgba(15, 83, 84, .06); }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   }
@@ -903,6 +910,14 @@
                     <div x-show="answered && !leaving && i === q.correct" x-collapse.duration.400ms>
                       <div class="ms-inline" aria-live="polite">
                         <div class="ms-inline-body">
+                          <!-- I variantas: funkcijos pranešimas išaiškinimo viduje (tik prie pirmo klausimo) -->
+                          <div x-show="introVariant === 'I' && idx === 0 && !tipSeen" x-collapse.duration.250ms>
+                            <div class="ms-tip">
+                              <span class="ms-announce-badge is-light">Naujiena</span>
+                              <span class="ms-tip-text">Dabar išaiškinimą matote iškart po atsakymo</span>
+                              <button type="button" class="ms-tip-close" @click="tipSeen = true" aria-label="Uždaryti pranešimą"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg></button>
+                            </div>
+                          </div>
                           <div class="ms-inline-status" :class="{ 'is-ok': isCorrect }" x-text="isCorrect ? 'Teisingai!' : 'Kodėl taip?'"></div>
                           <p class="ms-inline-lead" x-text="q.lead"></p>
                           <button type="button" class="ms-more" @click="openModal()">
@@ -1151,8 +1166,10 @@ function quiz() {
       { id: 'E', label: 'Modalas paspaudus „Pradėti“' },
       { id: 'F', label: 'Naujienos kortelė su „Supratau“' },
       { id: 'G', label: '„Kas naujo“ modalas atėjus' },
-      { id: 'H', label: 'Pranešimas prie pirmo atsakymo' }
+      { id: 'H', label: 'Pranešimas prie pirmo atsakymo' },
+      { id: 'I', label: 'Pranešimas išaiškinimo viduje' }
     ],
+    tipSeen: false,
     coachOpen: false,
     coachSeen: false,
     coachStyle: '',
@@ -1323,7 +1340,7 @@ function quiz() {
     },
     coachClose() { this.coachOpen = false; this.coachSeen = true; },
     resetDemo() {
-      this.coachOpen = false; this.coachSeen = false;
+      this.coachOpen = false; this.coachSeen = false; this.tipSeen = false;
       this.fbShown = false; this.fbSent = false; this.fbRating = null; this.fbPickedBad = []; this.fbPickedOk = []; this.fbText = ''; this.fbOpen = false;
       this.whatsNewSeen = false; this.newsDismissed = false; this.newsSeen = false; this.adminOpen = false;
       this.restart();
@@ -1369,6 +1386,7 @@ function quiz() {
 
     next() {
       if (this.coachOpen) this.coachClose();
+      if (this.introVariant === 'I' && this.idx === 0) this.tipSeen = true;
       if (!this.answered || this.leaving) return;
       if (this.isLast) {
         this.leaving = true;
