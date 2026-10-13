@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Testų micro-learning prototipas V.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Figtree:wght@400;500;600;700&family=Gelasio:wght@500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.1/dist/cdn.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
@@ -590,6 +590,107 @@
   .ms-ibanner-wrap.is-separate .ms-ibanner { padding: 12px 12px 12px 16px; border-radius: 14px; border-bottom: 1px solid var(--ms-ok-line); }
   @media (max-width: 575.98px) { .ms-ibanner-wrap { padding: 0 12px; } .ms-ibanner { align-items: flex-start; flex-wrap: wrap; row-gap: 6px; } .ms-ibanner-text { flex-basis: calc(100% - 40px); order: 3; } .ms-ibanner-more { order: 4; flex-basis: 100%; } .ms-ibanner-close { margin-left: auto; } }
 
+  /* =====================================================================
+     THEME: NEW — iliustruotas, „Vocabulary“ tipo stilius: kreminis fonas, serif antraštės,
+     tamsūs kontūrai su kietu šešėliu, pill mygtukai, teal + lašišinė spalva
+     ===================================================================== */
+  .ms-intro-illo, .ms-wn-illo { display: none; }
+  html.theme-new {
+    --ms-font: 'Figtree', system-ui, sans-serif;
+    --ms-serif: 'Gelasio', Georgia, serif;
+    --ink-line: #1f2323;
+    --ms-ink: #1f2323; --ms-ink-soft: #1f2323; --ms-sub: #5e5850; --ms-muted: #9a928a;
+    --ms-line: #e6ddd2; --ms-surface: #fffdf9; --ms-surface-soft: #f6f0e8; --ms-pill: #fffdf9;
+    --ms-option-bg: #fffdf9; --ms-option-bg-hover: #fbf6ef; --ms-option-line: var(--ink-line);
+    --ms-teal: #9fc3c4; --ms-teal-hover: #8fb8b9; --ms-teal-dark: #1f2323; --ms-teal-ink: #1f2323; --ms-link: #2f6e72;
+    --ms-modal-line: var(--ink-line); --ms-howto-bg: #f3ece3; --ms-howto-line: var(--ink-line);
+    --ms-link-line: var(--ink-line); --ms-icon-muted: #5e5850;
+    --ms-sidebar: #ece4d9; --ms-sidebar-active: #fffdf9; --ms-topbar: #f7f2ea;
+    --ms-ok: #1f2323; --ms-ok-text: #2f6e72; --ms-ok-bg: #e3efee; --ms-ok-line: var(--ink-line); --ms-ok-icon-bg: #9fc3c4;
+    --ms-bad: #1f2323; --ms-bad-text: #a8402f; --ms-bad-bg: #fae6de; --ms-bad-line: var(--ink-line); --ms-bad-tag-bg: #f6d3c7; --ms-bad-icon-bg: #f1b4a3;
+    --ms-bg: #f2ebe2;
+    --ms-shadow-card: 0 4px 0 var(--ink-line);
+    --ms-radius-md: 18px; --ms-radius-lg: 24px;
+  }
+  html.theme-new body { background: var(--ms-bg); }
+  html.theme-new .ms-bgx { display: none; }
+  /* tipografija */
+  html.theme-new .ms-intro h1, html.theme-new .ms-question, html.theme-new .ms-results-head h1, html.theme-new .ms-wn-body h3,
+  html.theme-new .ms-modal-head h3, html.theme-new .ms-fb-head strong, html.theme-new .ms-coach-body h3, html.theme-new .ms-rlist-head h2 { font-family: var(--ms-serif); font-weight: 700; letter-spacing: -.005em; }
+  html.theme-new .ms-question { font-size: 21px; line-height: 30px; }
+  html.theme-new .ms-intro h1 { font-size: 28px; line-height: 36px; }
+  /* šoninis meniu ir viršutinė juosta */
+  html.theme-new .ms-logo { color: var(--ink-line); }
+  html.theme-new .ms-nav a { color: var(--ink-line); }
+  html.theme-new .ms-nav a:hover { background: rgba(31,35,35,.05); }
+  html.theme-new .ms-nav a.is-active { margin: 2px 20px 6px 16px; padding-left: 14px; border-radius: 999px; background: var(--ms-surface); border: 1.5px solid var(--ink-line); box-shadow: 0 3px 0 var(--ink-line); }
+  html.theme-new .ms-nav .ms-badge { background: var(--ink-line); color: #fffdf9; }
+  html.theme-new .ms-nav .ms-count { color: var(--ms-sub); }
+  html.theme-new .ms-nav-sep { background: rgba(31,35,35,.18); }
+  html.theme-new .ms-topbar { border-top-color: var(--ms-sidebar); border-bottom: 1.5px solid var(--ink-line); }
+  html.theme-new .ms-search input { border: 1.5px solid var(--ink-line); background: #fffdf9; box-shadow: none; }
+  html.theme-new .ms-search input::placeholder { color: var(--ms-sub); }
+  html.theme-new .ms-topnav a, html.theme-new .ms-crumbs { color: var(--ink-line); }
+  html.theme-new .ms-topnav svg { stroke: var(--ink-line); }
+  /* kortelės */
+  html.theme-new .ms-card { border: 1.5px solid var(--ink-line); }
+  html.theme-new .ms-progress { background: var(--ms-surface); border: 1.5px solid var(--ink-line); font-weight: 600; }
+  html.theme-new .ms-intro-label { color: var(--ms-sub); }
+  html.theme-new .ms-intro-check { display: none; }
+  html.theme-new .ms-intro-illo { display: block; position: absolute; top: 14px; right: 24px; width: 150px; }
+  html.theme-new .ms-intro h1 { margin-right: 140px; }
+  /* atsakymų variantai */
+  html.theme-new .ms-option { border-width: 1.5px; box-shadow: 0 3px 0 var(--ink-line); transition: transform .15s, box-shadow .15s, background-color .3s, opacity .3s; }
+  html.theme-new .ms-option:not(.is-locked):hover { transform: translateY(-1px); box-shadow: 0 4px 0 var(--ink-line); }
+  html.theme-new .ms-option.is-dim { opacity: .5; box-shadow: none; }
+  html.theme-new .ms-key { border: 1.5px solid var(--ink-line); background: #fffdf9; color: var(--ink-line); }
+  html.theme-new .ms-icon { border: 1.5px solid var(--ink-line); }
+  html.theme-new .ms-icon svg { stroke: var(--ink-line) !important; }
+  html.theme-new .ms-tag { border: 1px solid var(--ink-line); }
+  html.theme-new .ms-inline-body { border-top: 1.5px dashed rgba(31,35,35,.35); }
+  html.theme-new .ms-chip { border-width: 1.5px; border-color: var(--ink-line); }
+  /* mygtukai: pill su kietu šešėliu */
+  html.theme-new .ms-btn { background: #9fc3c4; background-image: none; color: var(--ink-line); border: 1.5px solid var(--ink-line); border-radius: 999px; box-shadow: 0 3px 0 var(--ink-line); font-weight: 700; transition: transform .12s, box-shadow .12s, background-color .2s; }
+  html.theme-new .ms-btn:hover { filter: none; background-color: #92bbbc; transform: translateY(1px); box-shadow: 0 2px 0 var(--ink-line); }
+  html.theme-new .ms-btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--ink-line); }
+  html.theme-new .ms-btn-outline { background: var(--ms-surface); color: var(--ink-line); }
+  html.theme-new .ms-btn-outline:hover { background: #fbf6ef; }
+  /* ženkliukai */
+  html.theme-new .ms-announce-badge.is-light { background: #f6d3c7; color: var(--ink-line); border: 1.5px solid var(--ink-line); font-weight: 600; }
+  /* modalai, langai */
+  html.theme-new .ms-modal-backdrop, html.theme-new .ms-fb-backdrop { background: rgba(31, 35, 35, .38); }
+  html.theme-new .ms-news { border: 1.5px solid var(--ink-line); border-radius: 18px; background: #f6f0e8; }
+  html.theme-new .ms-news-art { border: 1.5px solid var(--ink-line); border-radius: 14px; background: #f3ece3; }
+  html.theme-new .ms-modal, html.theme-new .ms-wn { border: 1.5px solid var(--ink-line); border-radius: 24px; box-shadow: 0 6px 0 var(--ink-line); }
+  html.theme-new .ms-wn-art { border: 1.5px solid var(--ink-line); border-radius: 18px; background: #f3ece3; }
+  html.theme-new .ms-wn-img, html.theme-new .ms-coach-art img { display: none; }
+  html.theme-new .ms-wn-illo { display: grid; place-items: center; width: 100%; height: 100%; padding: 18px; background: #f3ece3; }
+  html.theme-new .ms-wn-illo svg { width: 100%; max-width: 250px; height: auto; }
+  html.theme-new .ms-wn-ico { border: 1.5px solid var(--ink-line); background: #fffdf9; }
+  html.theme-new .ms-wn-ico svg, html.theme-new .ms-wn-ico svg * { stroke: var(--ink-line); }
+  html.theme-new .ms-close { color: var(--ink-line); }
+  html.theme-new .ms-linkcard { border-width: 1.5px; border-radius: 16px; background: #fffdf9; }
+  html.theme-new .ms-fb, html.theme-new .ms-coach { border: 1.5px solid var(--ink-line); box-shadow: 0 4px 0 var(--ink-line); }
+  html.theme-new .ms-coach-art { border-bottom: 1.5px solid var(--ink-line); background: #f3ece3; }
+  html.theme-new .ms-coach-arrow { box-shadow: -1.5px 1.5px 0 var(--ink-line); }
+  html.theme-new .ms-fb-face { border: 1.5px solid var(--ink-line); border-radius: 16px; box-shadow: 0 3px 0 var(--ink-line); }
+  html.theme-new .ms-fb-face.is-bad.is-active, html.theme-new .ms-fb-face.is-ok.is-active { border-color: var(--ink-line); }
+  html.theme-new .ms-fb-opt input { border: 1.5px solid var(--ink-line); }
+  html.theme-new .ms-fb-opt input:checked { background-color: #2f6e72; border-color: var(--ink-line); }
+  html.theme-new .ms-fb-text { border: 1.5px solid var(--ink-line); background: #fffdf9; border-radius: 14px; }
+  html.theme-new .ms-ibanner { border-color: var(--ink-line); border-width: 1.5px; }
+  html.theme-new .ms-ibanner-wrap.is-separate .ms-ibanner { box-shadow: 0 3px 0 var(--ink-line); }
+  /* rezultatai */
+  html.theme-new .ms-results-head { border: 1.5px solid var(--ink-line); border-radius: 18px; }
+  html.theme-new .ms-results-actions a { color: var(--ink-line); }
+  html.theme-new .ms-ritem { border-bottom-color: #e6ddd2; }
+  html.theme-new .ms-report { color: var(--ink-line); }
+  @media (max-width: 991.98px) {
+    html.theme-new .ms-intro-illo { position: static; width: 120px; margin: 4px 0 -4px; }
+    html.theme-new .ms-intro h1 { margin-right: 0; }
+    html.theme-new .ms-question { font-size: 18px; line-height: 26px; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   }
@@ -607,6 +708,9 @@
   <div class="ms-admin" @keydown.escape.window="adminOpen = false">
     <div class="ms-admin-panel" x-show="adminOpen" x-cloak x-transition.opacity.scale.95.origin.bottom.left.duration.150ms @click.outside="adminOpen = false">
       <div class="ms-admin-title">Prototipo versijos</div>
+      <div class="ms-admin-group">Tema</div>
+      <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="default" id="ms-theme-default" x-model="theme"><span>Default (dabartinė)</span></label>
+      <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="new" id="ms-theme-new" x-model="theme"><span>New (iliustruota)</span></label>
       <div class="ms-admin-group">Naujienos vieta intro ekrane</div>
       <template x-for="v in introVariants" :key="v.id">
         <label class="ms-admin-opt"><input type="radio" name="ms-intro-variant" :value="v.id" :id="'ms-v-' + v.id" x-model="introVariant"><span><b x-text="v.id"></b> <span x-text="v.label"></span></span></label>
@@ -784,6 +888,7 @@
         <div class="ms-intro-row">
           <div class="ms-card ms-intro">
             <div class="ms-intro-label"><b>ŽINIŲ TESTAS:</b> 2026-10-01</div>
+            <div class="ms-intro-illo" aria-hidden="true" x-html="illoBooks"></div>
             <div class="ms-intro-check"><svg width="40" height="34" fill="#9fcfcf" stroke="#447777" stroke-width="2.5" stroke-linejoin="round"><path d="M2 18l5-5 8 8L33 3l5 5-23 23z"/></svg></div>
             <h1 x-text="title"></h1>
             <p>Prie kiekvieno atsakymo rasite išaiškinimą su nuorodomis į Mokesčių SUFLERYJE esantį turinį.</p>
@@ -792,7 +897,7 @@
             <template x-if="introVariant === 'F'">
               <div x-show="!newsDismissed" x-collapse.duration.300ms>
                 <div class="ms-news">
-                  <div class="ms-news-art" x-html="artSvg"></div>
+                  <div class="ms-news-art" x-html="theme === 'new' ? illoBooks : artSvg"></div>
                   <div class="ms-news-body">
                     <span class="ms-announce-badge is-light">Naujiena</span>
                     <strong>Dabar išaiškinimą matysite iškart</strong>
@@ -816,7 +921,7 @@
         <div class="ms-wn" role="dialog" aria-modal="true" aria-labelledby="ms-wn-title" x-show="whatsNew" x-transition.scale.96.opacity.duration.250ms>
           <button class="ms-close ms-wn-close" @click="whatsNew = false" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
           <div class="ms-wn-art" aria-hidden="true">
-            <img class="ms-wn-img" src="img/onboarding-iliustracija.jpg?v=2" alt="" width="290" height="424" decoding="async">
+            <img class="ms-wn-img" src="img/onboarding-iliustracija.jpg?v=2" alt="" width="290" height="424" decoding="async"><div class="ms-wn-illo" aria-hidden="true" x-html="illoBooks"></div>
           </div>
           <div class="ms-wn-body">
             <span class="ms-announce-badge is-light">Naujiena</span>
@@ -836,7 +941,7 @@
         <div class="ms-wn" role="dialog" aria-modal="true" aria-labelledby="ms-news-title" x-show="newsModal" x-transition.scale.96.opacity.duration.250ms>
           <button class="ms-close ms-wn-close" @click="closeNews()" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
           <div class="ms-wn-art" aria-hidden="true">
-            <img class="ms-wn-img" src="img/onboarding-iliustracija.jpg?v=2" alt="" width="290" height="424" decoding="async">
+            <img class="ms-wn-img" src="img/onboarding-iliustracija.jpg?v=2" alt="" width="290" height="424" decoding="async"><div class="ms-wn-illo" aria-hidden="true" x-html="illoBooks"></div>
           </div>
           <div class="ms-wn-body">
             <span class="ms-announce-badge is-light">Naujiena</span>
@@ -957,7 +1062,7 @@
            x-transition:enter="ms-coach-anim" x-transition:enter-start="ms-coach-from" x-transition:enter-end="ms-coach-to"
            x-transition:leave="ms-coach-anim" x-transition:leave-start="ms-coach-to" x-transition:leave-end="ms-coach-from">
         <span class="ms-coach-arrow" aria-hidden="true"></span>
-        <div class="ms-coach-art"><img src="img/onboarding-iliustracija.jpg?v=2" alt="" decoding="async"></div>
+        <div class="ms-coach-art"><img src="img/onboarding-iliustracija.jpg?v=2" alt="" decoding="async"><div class="ms-wn-illo" aria-hidden="true" x-html="illoBooks"></div></div>
         <button class="ms-close ms-coach-close" @click="coachClose()" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
         <div class="ms-coach-body">
           <span class="ms-announce-badge is-light">Naujiena</span>
@@ -1185,6 +1290,8 @@ function quiz() {
       { id: 'J', label: 'Juostelė atskirai virš kortelės' }
     ],
     tipSeen: false,
+    theme: 'default',
+    illoBooks: `<svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#1f2323" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><defs><pattern id="msdots" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.1" fill="#e8907e" stroke="none"/></pattern></defs><path d="M70 114L126 142L168 121L112 93Z" fill="url(#msdots)" stroke="none"/><path d="M100 74L156 102L116 122L60 94Z" fill="#9fc3c4"/><path d="M60 94L116 122L116 136L60 108Z" fill="#9fc3c4"/><path d="M156 102L116 122L116 136L156 116Z" fill="#fffdf9"/><path d="M118 126L154 108M118 129L154 111M118 132L154 114" stroke-width="1.1"/><path d="M104 58L160 86L120 106L64 78Z" fill="#fffdf9"/><path d="M64 78L120 106L120 120L64 92Z" fill="#f1c9bd"/><path d="M160 86L120 106L120 120L160 100Z" fill="#fffdf9"/><path d="M122 110L158 92M122 113L158 95M122 116L158 98" stroke-width="1.1"/><path d="M98 42L154 70L114 90L58 62Z" fill="#9fc3c4"/><path d="M58 62L114 90L114 104L58 76Z" fill="#9fc3c4"/><path d="M154 70L114 90L114 104L154 84Z" fill="#fffdf9"/><path d="M116 94L152 76M116 97L152 79M116 100L152 82" stroke-width="1.1"/><path d="M84 60L104 70" stroke-width="2.4"/><rect x="132" y="17" width="48" height="32" rx="11" fill="#1f2323" stroke="none"/><rect x="132" y="13" width="48" height="32" rx="11" fill="#fffdf9"/><path d="M146 45l-4 9 12-9" fill="#fffdf9"/><path d="M147 29l6 6 12-12" stroke="#2f6e72" stroke-width="3"/><path d="M38 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#9fc3c4" stroke-width="1.4"/><circle cx="60" cy="22" r="3" fill="#f1c9bd" stroke-width="1.2"/></svg>`,
     coachOpen: false,
     coachSeen: false,
     coachStyle: '',
@@ -1290,11 +1397,14 @@ function quiz() {
       try {
         const saved = JSON.parse(localStorage.getItem('ms-proto-v2') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
+        if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
         this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
         ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
       } catch (e) { this.bg = { ...this.bgDefaults }; }
-      const persist = () => { try { localStorage.setItem('ms-proto-v2', JSON.stringify({ introVariant: this.introVariant, bg: this.bg })); } catch (e) {} };
+      const persist = () => { try { localStorage.setItem('ms-proto-v2', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme })); } catch (e) {} };
       this.$watch('introVariant', persist);
+      const applyTheme = () => document.documentElement.classList.toggle('theme-new', this.theme === 'new');
+      applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
       this.$watch('bg', persist, { deep: true });
       this.$watch('screen', v => { if (v === 'intro') this.fbOpen = false; });
       window.addEventListener('resize', () => { if (this.coachOpen) this.coachPlace(); });
