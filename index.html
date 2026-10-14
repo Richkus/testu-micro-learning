@@ -399,6 +399,7 @@
   .ms-ring b { position: relative; font-size: 20px; line-height: 26px; font-weight: 700; color: var(--ms-ink-soft); font-variant-numeric: tabular-nums; }
   @media (prefers-reduced-motion: reduce) { .ms-ring-fill { transition: none; } }
   .ms-summary { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ms-summary-note { margin: 8px 0 0; font-size: 13px; line-height: 18px; color: var(--ms-icon-muted); }
   .ms-chip { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 4px; border-radius: 999px; font-size: 13px; line-height: 20px; border: 1px solid; }
   .ms-chip .ms-icon { width: 22px; height: 22px; flex-basis: 22px; animation: none; }
   .ms-chip.is-ok { background: var(--ms-ok-bg); border-color: var(--ms-ok-line); color: var(--ms-ok-text); }
@@ -719,8 +720,6 @@
   .ms-option.is-unknown .ms-inline-body, .ms-option.is-unknown .ms-rinline-body { border-top-color: #cdd5d6; }
   .ms-inline-status.is-neutral { color: #556768; }
   .ms-tag.is-neutral { color: #556768; background: #e3e8e8; }
-  .ms-chip.is-neutral { background: #f2f5f5; border-color: #cdd5d6; color: #556768; }
-  .ms-chip .ms-icon.is-neutral .ms-q-mark { font-size: 12px; }
 
   /* =====================================================================
      THEME: NEW — iliustruotas, „Vocabulary“ tipo stilius: kreminis fonas, serif antraštės,
@@ -1316,9 +1315,9 @@
                 <h1>Testas baigtas</h1>
                 <div class="ms-summary">
                   <span class="ms-chip is-ok"><span class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span><span x-text="`Teisingai: ${score}`"></span></span>
-                  <span class="ms-chip is-bad" x-show="wrongCount > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Klaidos: ${wrongCount}`"></span></span>
-                  <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">?</span></span><span x-text="`Nežinojote: ${unknownCount}`"></span></span>
+                  <span class="ms-chip is-bad" x-show="questions.length - score > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Neteisingai: ${questions.length - score}`"></span></span>
                 </div>
+                <p class="ms-summary-note" x-show="unknownCount > 0" x-text="`Iš jų ${unknownCount} ${timesWord(unknownCount)} pasirinkote „Nežinau“`"></p>
               </div>
             </div>
           </div>
@@ -1639,7 +1638,7 @@ function quiz() {
     get pickedUnknown() { return this.q.unknown !== undefined && this.picked === this.q.unknown; },
     isUnknownAns(ri) { const qq = this.questions[ri]; return qq.unknown !== undefined && this.answers[ri] === qq.unknown; },
     get unknownCount() { return this.questions.filter((qq, i) => this.isUnknownAns(i)).length; },
-    get wrongCount() { return this.questions.length - this.score - this.unknownCount; },
+    timesWord(n) { return n % 10 === 1 && n % 100 !== 11 ? 'kartą' : (n % 10 === 0 || (n % 100 > 10 && n % 100 < 20) ? 'kartų' : 'kartus'); },
     inlineResult(ri) { const qq = this.questions[ri], a = this.answers[ri]; return this.protoVersion === 'v2' && !qq.multi && a !== undefined && a !== null; },
     get expandIdx() { return this.protoVersion === 'v2' ? this.picked : this.q.correct; },
     isRightOpt(qq, i) { return Array.isArray(qq.correct) ? qq.correct.includes(i) : i === qq.correct; },
