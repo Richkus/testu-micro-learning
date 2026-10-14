@@ -665,11 +665,12 @@
   .ms-proto-ver button.is-on { background: #fff; opacity: 1; box-shadow: 0 1px 2px rgba(49, 83, 135, .2); }
 
   /* ilgas trumpas išaiškinimas kortelėje: ribotas aukštis, fade apačioje rodo, kad yra daugiau teksto */
-  .ms-inline-scroll { max-height: 176px; overflow-y: auto; margin-right: -8px; padding-right: 8px; scrollbar-width: thin; scrollbar-color: rgba(15, 83, 84, .25) transparent;
-    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); }
-  .ms-inline-scroll:not(.is-top):not(.is-end), .ms-fade-scroll:not(.is-top):not(.is-end) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); }
-  .ms-inline-scroll.is-end:not(.is-top), .ms-fade-scroll.is-end:not(.is-top) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px); mask-image: linear-gradient(to bottom, transparent 0, #000 40px); }
-  .ms-inline-scroll.is-end.is-top, .ms-fade-scroll.is-end.is-top { -webkit-mask-image: none; mask-image: none; }
+  /* kortelėje tekstas rodomas visas (be ribojimo ir fade); fade naudojamas tik modale ir galutiniuose rezultatuose */
+  .ms-inline-scroll { }
+  .ms-rpar { max-height: 240px; overflow-y: auto; margin-right: -8px; padding-right: 8px; scrollbar-width: thin; scrollbar-color: rgba(15, 83, 84, .25) transparent; }
+  .ms-fade-scroll:not(.is-top):not(.is-end) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); }
+  .ms-fade-scroll.is-end:not(.is-top) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px); mask-image: linear-gradient(to bottom, transparent 0, #000 40px); }
+  .ms-fade-scroll.is-end.is-top { -webkit-mask-image: none; mask-image: none; }
   .ms-fade-scroll.is-top:not(.is-end) { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); }
   .ms-inline-scroll .ms-inline-lead { margin-bottom: 4px; }
 
@@ -1324,7 +1325,7 @@
                           <div class="ms-rinline">
                             <div class="ms-rinline-body">
                               <div class="ms-inline-status" :class="isRightAnswer(ri) ? 'is-ok' : (isUnknownAns(ri) ? 'is-neutral' : 'is-bad')" x-text="isRightAnswer(ri) ? 'Teisingai!' : (isUnknownAns(ri) ? 'Teisingas atsakymas' : 'Kodėl neteisingai?')"></div>
-                              <template x-for="(para, pi) in rq.paras" :key="'rpi' + ri + pi"><p x-text="para"></p></template>
+                              <div class="ms-rpar ms-fade-scroll" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }" x-effect="open; setTimeout(() => { top = $el.scrollTop < 2; end = $el.scrollHeight <= $el.clientHeight + 2 }, 350)" @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2"><template x-for="(para, pi) in rq.paras" :key="'rpi' + ri + pi"><p x-text="para"></p></template></div>
                               <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
                                 <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
                                 <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
@@ -1339,7 +1340,7 @@
                   <!-- Išaiškinimas po variantais (V.1, V.2 kelių atsakymų klausimai, neatsakyti) -->
                   <div class="ms-rwhy" x-show="!inlineResult(ri)">
                     <div class="ms-inline-status">Kodėl taip?</div>
-                    <template x-for="(para, pi) in rq.paras" :key="'rp' + ri + pi"><p x-text="para"></p></template>
+                    <div class="ms-rpar ms-fade-scroll" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }" x-effect="open; setTimeout(() => { top = $el.scrollTop < 2; end = $el.scrollHeight <= $el.clientHeight + 2 }, 350)" @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2"><template x-for="(para, pi) in rq.paras" :key="'rp' + ri + pi"><p x-text="para"></p></template></div>
                     <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
                       <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
                       <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
