@@ -542,7 +542,7 @@
   .ms-proto-bar strong { font-weight: 600; }
   .ms-proto-text { overflow: hidden; text-overflow: ellipsis; opacity: .85; }
   .ms-proto-sep { margin: 0 8px; opacity: .45; }
-  @media (max-width: 575.98px) { .ms-proto-bar { gap: 6px; font-size: 12px; } }
+  @media (max-width: 575.98px) { .ms-proto-bar { gap: 6px; font-size: 12px; } .ms-proto-mid { display: none; } .ms-proto-bar svg { display: none; } }
 
   /* ---------- H variantas: coachmark prie pirmo atsakymo ---------- */
   .ms-coach { position: fixed; z-index: 90; width: 340px; background: var(--ms-surface); border-radius: 14px; box-shadow: 0 0 0 1px rgba(15,83,84,.08), 0 12px 40px rgba(15,83,84,.22); }
@@ -622,6 +622,36 @@
   html.cta-live:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; box-shadow: none; }
   html.cta-live:not(.theme-new) .ms-btn-outline:hover { background: rgba(77, 170, 175, .1); }
   @media (prefers-reduced-motion: reduce) { html.cta-live:not(.theme-new) .ms-btn:hover { --hl: 0; } }
+
+  /* ---------- V.2: klausimai su keliais teisingais atsakymais ---------- */
+  .ms-multi-hint { display: inline-flex; align-items: center; gap: 8px; margin: -6px 0 16px; padding: 6px 12px 6px 10px; border-radius: 8px; background: var(--ms-howto-bg); border: 1px solid var(--ms-howto-line); font-size: 14px; line-height: 20px; color: var(--ms-ink-soft); }
+  .ms-multi-hint svg { flex: 0 0 auto; color: var(--ms-teal-dark); }
+  .ms-mbox { flex: 0 0 24px; width: 24px; height: 24px; margin: 2px 2px 0; border-radius: 6px; border: 1.5px solid var(--ms-option-line); background: var(--ms-surface); display: grid; place-items: center; color: #fff; transition: background-color .2s, border-color .2s; }
+  .ms-moption:not(.is-locked):hover .ms-mbox { border-color: var(--ms-teal); }
+  .ms-moption.is-selected { border-color: var(--ms-teal); background: var(--ms-surface); box-shadow: 0 0 0 1px var(--ms-teal) inset; }
+  .ms-moption.is-selected .ms-mbox { background: var(--ms-teal); border-color: var(--ms-teal); }
+  .ms-moption.is-correct .ms-mbox { background: var(--ms-ok-icon-bg); border-color: var(--ms-ok-icon-bg); color: var(--ms-ok); }
+  .ms-moption.is-wrong .ms-mbox { background: var(--ms-bad-icon-bg); border-color: var(--ms-bad-icon-bg); color: var(--ms-bad); }
+  .ms-moption.is-missed { background: var(--ms-surface); border: 1.5px dashed var(--ms-ok); }
+  .ms-moption.is-missed .ms-mbox { background: var(--ms-surface); border: 1.5px dashed var(--ms-ok); color: var(--ms-ok); }
+  .ms-tag.is-missed { color: var(--ms-ok-text); background: var(--ms-ok-bg); }
+  .ms-mcheck { display: flex; align-items: center; gap: 16px; padding-top: 18px; }
+  .ms-mcheck .ms-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
+  .ms-mcount { font-size: 14px; color: var(--ms-sub); }
+  .ms-mexpl { margin-top: 16px; padding: 16px 18px 18px; border-radius: var(--ms-radius-md); border: 1.5px solid var(--ms-ok-line); background: var(--ms-ok-bg); }
+  .ms-mexpl.is-partial { border-color: #fad6b3; background: #fdf5ec; }
+  .ms-mexpl.is-bad { border-color: var(--ms-bad-line); background: var(--ms-bad-bg); }
+  .ms-inline-status.is-partial { color: #ac5b0c; }
+  .ms-mexpl .ms-btn { display: flex; width: fit-content; min-width: 200px; }
+  @media (max-width: 991.98px) { .ms-mexpl .ms-btn { width: 100%; } .ms-mcheck { flex-wrap: wrap; } .ms-mcheck .ms-btn { width: 100%; } }
+  html.theme-new .ms-mbox { border-color: var(--ink-line); }
+  html.theme-new .ms-moption.is-selected { box-shadow: 0 3px 0 var(--ink-line); background: #e3efee; }
+  html.theme-new .ms-mexpl { border-color: var(--ink-line); }
+  /* versijų perjungiklis juostelėje */
+  .ms-proto-ver { display: inline-flex; padding: 2px; border-radius: 7px; background: rgba(49, 83, 135, .1); }
+  .ms-proto-ver button { border: 0; background: none; padding: 3px 9px; border-radius: 5px; font: 600 12px/1.2 inherit; font-family: inherit; color: #315387; cursor: pointer; opacity: .7; transition: background-color .15s, opacity .15s; }
+  .ms-proto-ver button:hover { opacity: 1; }
+  .ms-proto-ver button.is-on { background: #fff; opacity: 1; box-shadow: 0 1px 2px rgba(49, 83, 135, .2); }
 
   /* =====================================================================
      THEME: NEW — iliustruotas, „Vocabulary“ tipo stilius: kreminis fonas, serif antraštės,
@@ -733,7 +763,10 @@
 <!-- Prototipo juostelė (MagicPath principu: šviesi, centruota, ikona + tekstas) -->
 <div class="ms-proto-bar" role="note">
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.5h4M6.75 1.5v4.2L2.6 12.6A1.3 1.3 0 0 0 3.7 14.5h8.6a1.3 1.3 0 0 0 1.1-1.9L9.25 5.7V1.5"/><path d="M4.4 10h7.2"/></svg>
-  <span><strong>V.1. Prototipas</strong><span class="ms-proto-sep" aria-hidden="true">/</span><span class="ms-proto-text">Testai, micro-learning</span><span class="ms-proto-sep" aria-hidden="true">/</span><span class="ms-proto-text">Work in progress</span></span>
+  <span class="ms-proto-ver" role="group" aria-label="Prototipo versija">
+    <button type="button" onclick="window.msSetVersion('v1')" data-ver="v1">V.1</button><button type="button" onclick="window.msSetVersion('v2')" data-ver="v2">V.2</button>
+  </span>
+  <span><strong>Prototipas</strong><span class="ms-proto-sep ms-proto-mid" aria-hidden="true">/</span><span class="ms-proto-text ms-proto-mid">Testai, micro-learning</span><span class="ms-proto-sep" aria-hidden="true">/</span><span class="ms-proto-text">Work in progress</span></span>
 </div>
 <div class="ms-app" x-data="quiz()" x-init="init()" @keydown.window="onKey($event)">
 
@@ -1054,7 +1087,40 @@
               </div>
               <div class="ms-qbody" x-ref="qbody" :class="{ 'is-leaving': leaving }">
               <h2 class="ms-question" x-text="q.text"></h2>
-              <div class="ms-options" role="group" aria-label="Atsakymų variantai">
+              <!-- V.2: keli teisingi atsakymai -->
+              <template x-if="q.multi">
+                <div class="ms-multi">
+                  <div class="ms-multi-hint"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3"/><path d="M4.8 8.2l2.1 2.1 4.3-4.6"/></svg><span>Pažymėkite <b>visus</b> teisingus atsakymus</span></div>
+                  <div class="ms-options" role="group" aria-label="Atsakymų variantai, galima pažymėti kelis">
+                    <template x-for="(o, i) in q.options" :key="'m' + idx + '-' + i">
+                      <div class="ms-option ms-moption" :class="[multiClass(i), answered ? 'is-locked' : '']">
+                        <button type="button" class="ms-option-btn" role="checkbox" :aria-checked="multiSel.includes(i)" :disabled="answered" @click="toggleMulti(i)">
+                          <span class="ms-mbox" aria-hidden="true">
+                            <svg x-show="(!answered && multiSel.includes(i)) || (answered && q.correct.includes(i))" width="12" height="10" viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.2 3.2L11 1.5"/></svg>
+                            <svg x-show="answered && multiSel.includes(i) && !q.correct.includes(i)" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+                          </span>
+                          <span class="ms-option-text" x-text="o"></span>
+                          <span class="ms-tag" x-show="answered && multiSel.includes(i) && !q.correct.includes(i)" x-transition.opacity.duration.250ms>Jūsų atsakymas</span>
+                          <span class="ms-tag is-missed" x-show="answered && !multiSel.includes(i) && q.correct.includes(i)" x-transition.opacity.duration.250ms>Praleistas teisingas</span>
+                        </button>
+                      </div>
+                    </template>
+                  </div>
+                  <div class="ms-mcheck" x-show="!answered" x-collapse.duration.250ms>
+                    <button type="button" class="ms-btn" :disabled="!multiSel.length" @click="checkMulti()">Patikrinti</button>
+                    <span class="ms-mcount" x-text="multiSel.length ? `Pažymėta: ${multiSel.length}` : 'Pažymėkite bent vieną'"></span>
+                  </div>
+                  <div x-show="answered && !leaving" x-collapse.duration.400ms>
+                    <div class="ms-mexpl" :class="'is-' + multiResult" aria-live="polite">
+                      <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-partial': multiResult === 'partial' }" x-text="multiResult === 'ok' ? 'Teisingai!' : (multiResult === 'partial' ? `Iš dalies teisingai: pažymėjote ${multiHits} iš ${q.correct.length} teisingų` : 'Neteisingai')"></div>
+                      <p class="ms-inline-lead" x-text="q.lead"></p>
+                      <button type="button" class="ms-more" @click="openModal()">Skaityti visą išaiškinimą</button>
+                      <button class="ms-btn" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span></button>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <div class="ms-options" x-show="!q.multi" role="group" aria-label="Atsakymų variantai">
                 <template x-for="(o, i) in q.options" :key="idx + '-' + i">
                   <div class="ms-option" :class="[optClass(i), answered ? 'is-locked' : '']">
                     <button type="button" class="ms-option-btn" :disabled="answered" @click="answer(i)">
@@ -1172,12 +1238,12 @@
           <template x-for="(rq, ri) in questions" :key="'r' + ri">
             <div class="ms-ritem" x-data="{ open: false }">
               <button class="ms-rbtn" @click="open = !open" :aria-expanded="open">
-                <span class="ms-icon" :class="answers[ri] === rq.correct ? 'is-ok' : 'is-bad'">
-                  <svg x-show="answers[ri] === rq.correct" width="13" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.5 3.5L12 1"/></svg>
-                  <svg x-show="answers[ri] !== rq.correct" width="10" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+                <span class="ms-icon" :class="isRightAnswer(ri) ? 'is-ok' : 'is-bad'">
+                  <svg x-show="isRightAnswer(ri)" width="13" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.5 3.5L12 1"/></svg>
+                  <svg x-show="!isRightAnswer(ri)" width="10" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
                 </span>
                 <span class="ms-rq"><span x-text="`${ri + 1}. ${rq.text}`"></span>
-                  <small x-text="answers[ri] === rq.correct ? 'Atsakėte teisingai' : `Jūsų atsakymas: ${rq.options[answers[ri]] ?? '-'}`"></small>
+                  <small x-text="isRightAnswer(ri) ? 'Atsakėte teisingai' : `Jūsų atsakymas: ${answerText(ri)}`"></small>
                 </span>
                 <svg class="ms-chev" :class="{ 'is-open': open }" width="12" height="8" fill="none" stroke="#5f7a7e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l5 5 5-5"/></svg>
               </button>
@@ -1186,13 +1252,13 @@
                   <!-- Variantai: tos pačios būsenos kaip klausime -->
                   <div class="ms-ropts">
                     <template x-for="(o, oi) in rq.options" :key="'ro' + ri + oi">
-                      <div class="ms-option is-locked" :class="oi === rq.correct ? 'is-correct' : (oi === answers[ri] ? 'is-wrong' : 'is-dim')">
+                      <div class="ms-option is-locked" :class="isRightOpt(rq, oi) ? 'is-correct' : (wasPicked(ri, oi) ? 'is-wrong' : 'is-dim')">
                         <div class="ms-option-btn">
-                          <span x-show="oi !== rq.correct && oi !== answers[ri]" class="ms-key" x-text="letters[oi]"></span>
-                          <span x-show="oi === rq.correct" class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span>
-                          <span x-show="oi === answers[ri] && oi !== rq.correct" class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span>
+                          <span x-show="!isRightOpt(rq, oi) && !wasPicked(ri, oi)" class="ms-key" x-text="letters[oi]"></span>
+                          <span x-show="isRightOpt(rq, oi)" class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span>
+                          <span x-show="wasPicked(ri, oi) && !isRightOpt(rq, oi)" class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span>
                           <span class="ms-option-text" x-text="o"></span>
-                          <span class="ms-tag" x-show="oi === answers[ri] && oi !== rq.correct">Jūsų atsakymas</span>
+                          <span class="ms-tag" x-show="wasPicked(ri, oi) && !isRightOpt(rq, oi)">Jūsų atsakymas</span>
                         </div>
                       </div>
                     </template>
@@ -1327,6 +1393,7 @@ function quiz() {
       { id: 'J', label: 'Juostelė atskirai virš kortelės' }
     ],
     tipSeen: false,
+    protoVersion: 'v2',
     theme: 'default',
     ctaStyle: 'gradient',
     illoBooks: `<svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#1f2323" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><defs><pattern id="msdots" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.1" fill="#e8907e" stroke="none"/></pattern></defs><path d="M70 114L126 142L168 121L112 93Z" fill="url(#msdots)" stroke="none"/><path d="M100 74L156 102L116 122L60 94Z" fill="#9fc3c4"/><path d="M60 94L116 122L116 136L60 108Z" fill="#9fc3c4"/><path d="M156 102L116 122L116 136L156 116Z" fill="#fffdf9"/><path d="M118 126L154 108M118 129L154 111M118 132L154 114" stroke-width="1.1"/><path d="M104 58L160 86L120 106L64 78Z" fill="#fffdf9"/><path d="M64 78L120 106L120 120L64 92Z" fill="#f1c9bd"/><path d="M160 86L120 106L120 120L160 100Z" fill="#fffdf9"/><path d="M122 110L158 92M122 113L158 95M122 116L158 98" stroke-width="1.1"/><path d="M98 42L154 70L114 90L58 62Z" fill="#9fc3c4"/><path d="M58 62L114 90L114 104L58 76Z" fill="#9fc3c4"/><path d="M154 70L114 90L114 104L154 84Z" fill="#fffdf9"/><path d="M116 94L152 76M116 97L152 79M116 100L152 82" stroke-width="1.1"/><path d="M84 60L104 70" stroke-width="2.4"/><rect x="132" y="17" width="48" height="32" rx="11" fill="#1f2323" stroke="none"/><rect x="132" y="13" width="48" height="32" rx="11" fill="#fffdf9"/><path d="M146 45l-4 9 12-9" fill="#fffdf9"/><path d="M147 29l6 6 12-12" stroke="#2f6e72" stroke-width="3"/><path d="M38 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#9fc3c4" stroke-width="1.4"/><circle cx="60" cy="22" r="3" fill="#f1c9bd" stroke-width="1.2"/></svg>`,
@@ -1360,7 +1427,7 @@ function quiz() {
     newsSeen: false,
 
     // Demo turinys. 4-asis klausimas paimtas iš realaus testo, kiti improvizuoti.
-    questions: [
+    baseQuestions: [
       {
         text: 'Darbuotoja, auginanti 5 metų vaiką, pateikė darbdaviui prašymą visą darbo laiką dirbti nuotoliniu būdu. Ar darbdavys privalo tenkinti šį darbuotojos prašymą?',
         options: ['Taip, privalo', 'Taip, privalo, jeigu dėl gamybinio būtinumo ar darbo organizavimo ypatumų darbdaviui tai nesukels per didelių sąnaudų', 'Ne, neprivalo'],
@@ -1421,10 +1488,57 @@ function quiz() {
       }
     ],
 
+    // V.2: klausimas su keliais teisingais atsakymais (įterpiamas kaip 2-as)
+    multiQuestion: {
+      multi: true,
+      text: 'Kurios išmokos įtraukiamos apskaičiuojant darbuotojo vidutinį darbo užmokestį (VDU)?',
+      options: ['Darbo užmokestis už faktiškai dirbtą laiką', 'Metinė premija, paskirta per skaičiavimo laikotarpį', 'Dienpinigiai komandiruotės metu', 'Ligos pašalpa, kurią moka Sodra'],
+      correct: [0, 1],
+      reason: null,
+      lead: 'Įtraukiamas darbo užmokestis ir premijos, o dienpinigiai bei pašalpos neįtraukiami.',
+      paras: ['Į VDU įtraukiamos su darbo santykiais susijusios išmokos: darbo užmokestis, priedai, priemokos ir premijos. Kompensacinio pobūdžio išmokos, pavyzdžiui, dienpinigiai, ir socialinio draudimo pašalpos į VDU neįtraukiamos.'],
+      link: { title: 'Kas įtraukiama į VDU ir kas ne', href: '#' }
+    },
+    get questions() {
+      if (this.protoVersion !== 'v2') return this.baseQuestions;
+      const q = this.baseQuestions.slice(); q.splice(1, 0, this.multiQuestion); return q;
+    },
     get q() { return this.questions[this.idx]; },
-    get isCorrect() { return this.picked === this.q.correct; },
+    get isCorrect() { return this.q.multi ? this.multiResult === 'ok' : this.picked === this.q.correct; },
+    isRightOpt(qq, i) { return Array.isArray(qq.correct) ? qq.correct.includes(i) : i === qq.correct; },
+    wasPicked(ri, i) { const a = this.answers[ri]; return Array.isArray(a) ? a.includes(i) : a === i; },
+    isRightAnswer(ri) {
+      const qq = this.questions[ri], a = this.answers[ri];
+      if (!Array.isArray(qq.correct)) return a === qq.correct;
+      return Array.isArray(a) && a.length === qq.correct.length && qq.correct.every(c => a.includes(c));
+    },
+    answerText(ri) { const qq = this.questions[ri], a = this.answers[ri]; if (a === undefined || a === null) return '-'; return Array.isArray(a) ? a.map(i => qq.options[i]).join('; ') : (qq.options[a] ?? '-'); },
+    // multi: pažymėjimas, patikrinimas, rezultatas
+    multiSel: [],
+    toggleMulti(i) { if (this.answered) return; const k = this.multiSel.indexOf(i); k > -1 ? this.multiSel.splice(k, 1) : this.multiSel.push(i); },
+    checkMulti() {
+      if (this.answered || !this.multiSel.length) return;
+      this.answers[this.idx] = this.multiSel.slice().sort();
+      this.answered = true;
+      setTimeout(() => { const b = this.$root.querySelector('.ms-mexpl .ms-btn'); if (b) { b.focus({ preventScroll: true }); const r = b.getBoundingClientRect(); if (r.bottom > window.innerHeight - 16) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }, 420);
+    },
+    get multiHits() { return this.multiSel.filter(i => this.q.correct.includes(i)).length; },
+    get multiResult() {
+      if (!this.q.multi) return null;
+      const wrong = this.multiSel.some(i => !this.q.correct.includes(i));
+      if (!wrong && this.multiHits === this.q.correct.length) return 'ok';
+      return this.multiHits > 0 ? 'partial' : 'bad';
+    },
+    multiClass(i) {
+      const sel = this.multiSel.includes(i), right = this.q.correct.includes(i);
+      if (!this.answered) return sel ? 'is-selected' : '';
+      if (right && sel) return 'is-correct';
+      if (right) return 'is-missed';
+      if (sel) return 'is-wrong';
+      return 'is-dim';
+    },
     get isLast() { return this.idx === this.questions.length - 1; },
-    get score() { return this.answers.filter((a, i) => a === this.questions[i].correct).length; },
+    get score() { return this.questions.filter((qq, i) => this.isRightAnswer(i)).length; },
     get remainingText() {
       const n = this.questions.length - this.idx - 1;
       if (n === 0) return 'Paskutinis klausimas';
@@ -1436,14 +1550,19 @@ function quiz() {
         const saved = JSON.parse(localStorage.getItem('ms-proto-v2') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
         if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
+        if (saved.protoVersion === 'v1' || saved.protoVersion === 'v2') this.protoVersion = saved.protoVersion;
         if (['solid', 'gradient', 'live'].includes(saved.ctaStyle)) this.ctaStyle = saved.ctaStyle;
         this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
         ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
       } catch (e) { this.bg = { ...this.bgDefaults }; }
-      const persist = () => { try { localStorage.setItem('ms-proto-v2', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle })); } catch (e) {} };
+      const persist = () => { try { localStorage.setItem('ms-proto-v2', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion })); } catch (e) {} };
       this.$watch('introVariant', persist);
       const applyTheme = () => document.documentElement.classList.toggle('theme-new', this.theme === 'new');
       applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
+      window.msSetVersion = v => { this.protoVersion = v; };
+      const markVer = () => document.querySelectorAll('.ms-proto-ver button').forEach(b => b.classList.toggle('is-on', b.dataset.ver === this.protoVersion));
+      markVer();
+      this.$watch('protoVersion', () => { markVer(); persist(); this.restart(); this.screen = 'intro'; window.scrollTo({ top: 0 }); });
       const applyCta = () => { const c = document.documentElement.classList; c.toggle('cta-solid', this.ctaStyle === 'solid'); c.toggle('cta-live', this.ctaStyle === 'live'); };
       // „Gyvas“ mygtukas: spotlight sklandžiai (lerp) plaukia iki žymeklio, nuėjus pelei grįžta į kampą
       const REST = { x: 22, y: 0 }, spots = new Map();
@@ -1597,7 +1716,7 @@ function quiz() {
       setTimeout(() => {
         this.answered = false;
         this.idx++;
-        this.picked = null;
+        this.picked = null; this.multiSel = [];
         this.leaving = false;
         if (card.getBoundingClientRect().top < 0) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 260);
@@ -1606,7 +1725,7 @@ function quiz() {
     restart() {
       this.answers = [];
       this.idx = 0;
-      this.picked = null;
+      this.picked = null; this.multiSel = [];
       this.answered = false;
       this.screen = 'intro';
     },
@@ -1616,7 +1735,8 @@ function quiz() {
       if (e.target.closest && e.target.closest('input, textarea, .ms-fb')) return;
       if (!this.answered) {
         const i = this.letters.indexOf(e.key.toUpperCase());
-        if (i > -1 && i < this.q.options.length) { e.preventDefault(); this.answer(i); }
+        if (i > -1 && i < this.q.options.length) { e.preventDefault(); this.q.multi ? this.toggleMulti(i) : this.answer(i); }
+        else if (this.q.multi && e.key === 'Enter' && this.multiSel.length && !document.activeElement.closest('button, a')) { e.preventDefault(); this.checkMulti(); }
       } else if (e.key === 'Enter' && !document.activeElement.closest('button, a')) {
         e.preventDefault(); this.next();
       }
