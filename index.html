@@ -664,6 +664,14 @@
   .ms-proto-ver button:hover { opacity: 1; }
   .ms-proto-ver button.is-on { background: #fff; opacity: 1; box-shadow: 0 1px 2px rgba(49, 83, 135, .2); }
 
+  /* klausimas su ilga situacija */
+  .ms-situation { margin: -8px 0 20px; font-size: 15px; line-height: 23px; color: var(--ms-ink-soft); }
+  .ms-situation > span:first-child { color: var(--ms-sub); }
+  .ms-modal-sit { margin: 6px 0 0; font-size: 13px; line-height: 20px; color: var(--ms-sub); }
+  .ms-rsit { margin: 0; padding: 10px 14px 12px; border-radius: 8px; background: var(--ms-howto-bg); font-size: 14px; line-height: 22px; color: var(--ms-ink-soft); }
+  .ms-rsit > span:first-child { font-weight: 600; color: var(--ms-sub); }
+  @media (max-width: 991.98px) { .ms-situation { font-size: 14px; line-height: 22px; } }
+
   /* ---------- Vaidos pastabos ---------- */
   .ms-done { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--ms-ok-text); }
   .ms-done-ico { width: 20px; height: 20px; border-radius: 50%; background: var(--ms-ok); display: grid; place-items: center; }
@@ -1115,6 +1123,7 @@
               </div>
               <div class="ms-qbody" x-ref="qbody" :class="{ 'is-leaving': leaving }">
               <h2 class="ms-question" x-text="q.text"></h2>
+              <p class="ms-situation" x-show="q.situation"><span>Situacija:</span> <span x-text="q.situation"></span></p>
               <!-- V.2: keli teisingi atsakymai -->
               <template x-if="q.multi">
                 <div class="ms-multi">
@@ -1216,7 +1225,7 @@
             <button class="ms-close" x-ref="close" @click="closeModal()" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
           </div>
           <div class="ms-modal-body">
-            <div class="ms-modal-q"><small>Klausimas</small><span x-text="q.text"></span></div>
+            <div class="ms-modal-q"><small>Klausimas</small><span x-text="q.text"></span><p class="ms-modal-sit" x-show="q.situation" x-text="'Situacija: ' + (q.situation || '')"></p></div>
             <template x-for="(para, pi) in q.paras" :key="idx + 'p' + pi"><p x-text="para"></p></template>
             <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
               <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
@@ -1281,6 +1290,7 @@
               </button>
               <div x-show="open" x-collapse.duration.300ms>
                 <div class="ms-rexpl">
+                  <p class="ms-rsit" x-show="rq.situation"><span>Situacija:</span> <span x-text="rq.situation"></span></p>
                   <!-- Variantai: tos pačios būsenos kaip klausime -->
                   <div class="ms-ropts">
                     <template x-for="(o, oi) in rq.options" :key="'ro' + ri + oi">
@@ -1547,12 +1557,24 @@ function quiz() {
       paras: ['Į VDU įtraukiamos su darbo santykiais susijusios išmokos: darbo užmokestis, priedai, priemokos ir premijos. Kompensacinio pobūdžio išmokos, pavyzdžiui, dienpinigiai, ir socialinio draudimo pašalpos į VDU neįtraukiamos.'],
       link: { title: 'Kas įtraukiama į VDU ir kas ne', href: '#' }
     },
+    // V.2: klausimas su ilga situacija (įterpiamas kaip 4-as)
+    situationQuestion: {
+      text: 'Ar toliau nurodytoje situacijoje LT įmonė A turėtų išrašyti įmonei B PVM sąskaitą faktūrą?',
+      situation: 'LT įmonė A kitoje šalyje sumokėjo kelių mokestį už LT įmonę B, kuri neturi prieigos prie tos šalies mokėjimo už naudojimąsi keliais sistemos. Iš informacijos, pateiktos atliekant mokėjimą, galima nustatyti, kad mokėjimas atliktas už įmonę B, nurodyti jos valdomi automobiliai. LT įmonė B atlygina įmonės A patirtas išlaidas.',
+      options: ['Taip, tai paslaugos teikimas už atlygį', 'Ne, tai ne PVM objektas'],
+      correct: 1,
+      wrongLead: 'Ne visai: įmonė A paslaugos neteikia, ji tik sumoka mokestį įmonės B vardu, todėl PVM sąskaitos išrašyti nereikia.',
+      reason: null,
+      lead: 'Ne, tai ne PVM objektas: įmonė A tik sumoka mokestį už įmonę B, o B jai atlygina išlaidas.',
+      paras: ['Kai mokėjimas aiškiai atliekamas kito asmens vardu ir sąskaita (iš mokėjimo duomenų matyti, kad mokama už įmonę B ir jos automobilius), o vėliau išlaidos tiesiog atlyginamos, tai yra išlaidų kompensavimas, o ne paslaugos teikimas. Tokia kompensacija nėra PVM objektas, todėl PVM sąskaitos faktūros išrašyti nereikia, užtenka dokumento, patvirtinančio kompensuojamą sumą.'],
+      link: { title: 'Išlaidų kompensavimas ir PVM: kada išrašyti sąskaitą', href: '#' }
+    },
     get questions() {
       if (this.protoVersion !== 'v2') return this.baseQuestions;
       const q = this.baseQuestions.map(x => x);
       // V.2: „Nežinau“ variantas (kaip Mokesčių naujienų testuose) 3-iame baziniame klausime
       q[2] = { ...q[2], options: [...q[2].options, 'Nežinau'], unknown: q[2].options.length };
-      q.splice(1, 0, this.multiQuestion); return q;
+      q.splice(1, 0, this.multiQuestion); q.splice(3, 0, this.situationQuestion); return q;
     },
     get q() { return this.questions[this.idx]; },
     get isCorrect() { return this.q.multi ? this.multiResult === 'ok' : this.picked === this.q.correct; },
