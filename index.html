@@ -600,18 +600,20 @@
   /* ---------- Opcija „Gyvas“ (Airbnb tipo): pagrindas #038389 ir #4DAAAF spotlight: ramybėje viršuje kairėje,
      užvedus pelę seka žymeklį. Tekstas visada ant #038389 zonos (kontrastas ≥ 4.5:1) ---------- */
   @property --hl { syntax: '<number>'; inherits: false; initial-value: 0; }
+  @property --mx { syntax: '<percentage>'; inherits: false; initial-value: 22%; }
+  @property --my { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
   html.cta-live:not(.theme-new) { --ms-link: #006a6e; }
   html.cta-live:not(.theme-new) .ms-btn {
     border-color: transparent;
     /* ramybės būsenoje spotlight stovi viršuje kairėje, užvedus pelę jis ryškėja ir seka žymeklį */
     background:
-      radial-gradient(120px circle at var(--mx, 22%) var(--my, 0%), rgba(77, 170, 175, calc(.5 + var(--hl) * .2)) 0%, rgba(77, 170, 175, 0) 100%),
+      radial-gradient(120px circle at var(--mx) var(--my), rgba(77, 170, 175, calc(.5 + var(--hl) * .2)) 0%, rgba(77, 170, 175, 0) 100%),
       #038389;
     box-shadow: none;
-    transition: --hl .3s ease, transform .15s;
+    /* nuėjus pelei spotlight sklandžiai nurimsta ir grįžta į kampą */
+    transition: --hl .7s var(--ms-ease), --mx .9s var(--ms-ease), --my .9s var(--ms-ease), transform .15s;
   }
-  html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; }
-  html.cta-live:not(.theme-new) .ms-btn:not(:hover) { --mx: 22% !important; --my: 0% !important; }
+  html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; transition: --hl .35s ease, --mx .12s linear, --my .12s linear, transform .15s; }
   html.cta-live:not(.theme-new) .ms-btn:active { transform: translateY(1px) scale(.99); }
   html.cta-live:not(.theme-new) .ms-btn:focus-visible { outline: 3px solid rgba(77, 170, 175, .55); outline-offset: 3px; }
   html.cta-live:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; box-shadow: none; }
@@ -1446,6 +1448,10 @@ function quiz() {
         const r = b.getBoundingClientRect();
         b.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
         b.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+      }, { passive: true });
+      document.addEventListener('pointerout', e => {
+        const b = e.target.closest && e.target.closest('.ms-btn'); if (!b || b.contains(e.relatedTarget)) return;
+        b.style.removeProperty('--mx'); b.style.removeProperty('--my');
       }, { passive: true });
       applyCta(); this.$watch('ctaStyle', () => { applyCta(); persist(); });
       this.$watch('bg', persist, { deep: true });
