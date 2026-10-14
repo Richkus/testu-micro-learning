@@ -657,6 +657,22 @@
   html.cta-live:not(.theme-new) .ms-btn-outline:hover { background: rgba(77, 170, 175, .1); }
   @media (prefers-reduced-motion: reduce) { html.cta-live:not(.theme-new) .ms-btn:hover { --hl: 0; } }
 
+  /* ---------- V.2: klausimas su vaizdo įrašu (rodomas tik teste, ne rezultatuose) ---------- */
+  .ms-video { margin: -4px 0 22px; }
+  .ms-video-frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--ms-radius-md); overflow: hidden; background: var(--ms-teal-dark); }
+  .ms-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .ms-video-poster { position: absolute; inset: 0; width: 100%; border: 0; padding: 0; cursor: pointer; color: #fff; text-align: left;
+    background: radial-gradient(120% 90% at 85% 10%, rgba(77, 170, 175, .55) 0%, rgba(77, 170, 175, 0) 60%), linear-gradient(135deg, #0f5354 0%, #038389 100%); }
+  .ms-video-poster:focus-visible { outline: 3px solid rgba(83,169,177,.5); outline-offset: 2px; }
+  .ms-video-play { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; background: #fff; color: #038389; display: grid; place-items: center; padding-left: 4px; box-shadow: 0 6px 20px rgba(0, 0, 0, .18); transition: transform .25s var(--ms-ease); }
+  .ms-video-poster:hover .ms-video-play { transform: scale(1.08); }
+  .ms-video-meta { position: absolute; left: 20px; right: 20px; bottom: 16px; display: flex; flex-direction: column; gap: 2px; }
+  .ms-video-meta small { font-size: 12px; line-height: 16px; letter-spacing: .05em; text-transform: uppercase; opacity: .8; }
+  .ms-video-meta b { font-size: 16px; line-height: 22px; font-weight: 600; }
+  .ms-video-meta span { font-size: 13px; line-height: 18px; opacity: .8; }
+  .ms-video-note { margin: 10px 0 0; font-size: 14px; line-height: 21px; color: var(--ms-sub); }
+  @media (max-width: 575.98px) { .ms-video-play { width: 52px; height: 52px; margin: -26px 0 0 -26px; } .ms-video-meta { left: 14px; right: 14px; bottom: 10px; } .ms-video-meta b { font-size: 14px; line-height: 19px; } .ms-video-meta span, .ms-video-meta small { display: none; } }
+
   /* ---------- V.2: klausimai su keliais teisingais atsakymais ---------- */
   /* tarp kitko: be fono ir rėmelio, smulkus pilkas tekstas su ikonėle */
   .ms-multi-hint { display: flex; align-items: center; gap: 6px; margin: -10px 0 14px; font-size: 13px; line-height: 18px; color: var(--ms-sub); }
@@ -1165,6 +1181,18 @@
               <div class="ms-qbody" x-ref="qbody" :class="{ 'is-leaving': leaving }">
               <h2 class="ms-question" x-text="q.text"></h2>
               <p class="ms-situation" x-show="q.situation"><span>Situacija:</span> <span x-text="q.situation"></span></p>
+              <template x-if="q.video">
+                <div class="ms-video" x-data="{ playing: false }" x-effect="idx; playing = false">
+                  <div class="ms-video-frame">
+                    <template x-if="playing"><iframe :src="`https://player.vimeo.com/video/${q.video.vimeo}?autoplay=1`" title="Vaizdo įrašas" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></template>
+                    <button type="button" class="ms-video-poster" x-show="!playing" @click="canEmbedVideo ? playing = true : window.open(q.video.page, '_blank', 'noopener')" :aria-label="`Paleisti vaizdo įrašą: ${q.video.title}`">
+                      <span class="ms-video-play" aria-hidden="true"><svg width="18" height="20" viewBox="0 0 18 20"><path d="M2 1.6v16.8a1 1 0 0 0 1.5.86l14-8.4a1 1 0 0 0 0-1.72l-14-8.4A1 1 0 0 0 2 1.6z" fill="currentColor"/></svg></span>
+                      <span class="ms-video-meta"><small x-text="q.video.eyebrow"></small><b x-text="q.video.title"></b><span x-text="q.video.speaker"></span></span>
+                    </button>
+                  </div>
+                  <p class="ms-video-note" x-text="q.video.note"></p>
+                </div>
+              </template>
               <!-- V.2: keli teisingi atsakymai -->
               <template x-if="q.multi">
                 <div class="ms-multi">
@@ -1630,6 +1658,24 @@ function quiz() {
       paras: ['Kai mokėjimas aiškiai atliekamas kito asmens vardu ir sąskaita (iš mokėjimo duomenų matyti, kad mokama už įmonę B ir jos automobilius), o vėliau išlaidos tiesiog atlyginamos, tai yra išlaidų kompensavimas, o ne paslaugos teikimas. Tokia kompensacija nėra PVM objektas, todėl PVM sąskaitos faktūros išrašyti nereikia, užtenka dokumento, patvirtinančio kompensuojamą sumą.'],
       link: { title: 'Išlaidų kompensavimas ir PVM: kada išrašyti sąskaitą', href: '#' }
     },
+    videoQuestion: {
+      text: 'Koks standartinis PVM tarifas taikomas Lietuvoje?',
+      video: {
+        vimeo: '1233462543',
+        page: 'https://www.mokesciu-sufleris.lt/renginiai/vaizdo-irasai/mokesciu-apskaitos-ir-teises-naujienos-9.html?videoId=4036',
+        eyebrow: 'Seminaras · Įvadas',
+        title: 'Mokesčių, apskaitos ir teisės naujienos',
+        speaker: 'Rūta Zaikauskienė, Mokesčių SUFLERIO ekspertė',
+        note: 'Panašią situaciją seminare detaliau pristato Rūta Zaikauskienė.'
+      },
+      options: ['9 %', '21 %', '5 %'],
+      correct: 1,
+      wrongLead: 'Ne visai: lengvatiniai 9 % ir 5 % tarifai taikomi tik tam tikroms prekėms ir paslaugoms, o standartinis tarifas yra 21 %.',
+      reason: null,
+      lead: 'Standartinis PVM tarifas Lietuvoje yra 21 %.',
+      paras: ['Standartinis 21 % PVM tarifas taikomas visoms prekėms ir paslaugoms, kurioms PVM įstatymas nenumato lengvatinio tarifo ar neapmokestinimo. Lengvatiniai 9 % ir 5 % tarifai taikomi tik įstatyme išvardytiems atvejams, todėl prieš juos taikant verta pasitikrinti, ar konkreti prekė ar paslauga tikrai patenka į sąrašą.'],
+      link: { title: 'PVM tarifai: kada taikomas lengvatinis tarifas', href: '#' }
+    },
     longLead: 'Ne, premija neįtraukiama, nes ji paskirta dar 2024-12-31. Pagal naują VDU tvarką (nuo 2025-10-31) premijos vertinamos pagal paskyrimo, o ne išmokėjimo datą, todėl atostoginiams už 2026 m. vasario 2-13 d. jos įtraukti nereikia.',
     get questions() {
       if (this.protoVersion !== 'v2') return this.baseQuestions;
@@ -1639,9 +1685,13 @@ function quiz() {
       q.splice(1, 0, this.multiQuestion); q.splice(3, 0, this.situationQuestion);
       // V.2: 6-ojo klausimo trumpas išaiškinimas ~4 kartus ilgesnis (ilgo teksto UX bandymui)
       q[5] = { ...q[5], lead: this.longLead };
+      // V.2: klausimas su vaizdo įrašu po klausimo tekstu (3-ias)
+      q.splice(2, 0, this.videoQuestion);
       return q;
     },
     get q() { return this.questions[this.idx]; },
+    // Vimeo įrašas leidžiamas tik Suflerio domene; prototipe (artifact, GitHub Pages) atidarom įrašo puslapį naujame lange
+    get canEmbedVideo() { return /(^|\.)mokesciu-sufleris\.lt$/.test(location.hostname); },
     get isCorrect() { return this.q.multi ? this.multiResult === 'ok' : this.picked === this.q.correct; },
     // V.1: išaiškinimas visada po teisingu variantu; V.2: po pasirinktu (ir kai neteisingas)
     get pickedUnknown() { return this.q.unknown !== undefined && this.picked === this.q.unknown; },
