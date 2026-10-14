@@ -849,8 +849,8 @@
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="default" id="ms-theme-default" x-model="theme"><span>Default (dabartinė)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="new" id="ms-theme-new" x-model="theme"><span>New (iliustruota)</span></label>
       <div class="ms-admin-group">Mygtukai ir nuorodos (Default temai)</div>
-      <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="gradient" id="ms-cta-gradient" x-model="ctaStyle"><span>Gradientas (dabartinis)</span></label>
-      <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="solid" id="ms-cta-solid" x-model="ctaStyle"><span>Vientisas #038389, nuoroda #006A6E</span></label>
+      <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="solid" id="ms-cta-solid" x-model="ctaStyle"><span>Vientisas #038389, nuoroda #006A6E (dabartinis)</span></label>
+      <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="gradient" id="ms-cta-gradient" x-model="ctaStyle"><span>Gradientas</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="live" id="ms-cta-live" x-model="ctaStyle"><span>Gyvas (Airbnb tipo): #038389 + #4DAAAF šviesa</span></label>
       <div class="ms-admin-group">Naujienos vieta intro ekrane</div>
       <template x-for="v in introVariants" :key="v.id">
@@ -1506,7 +1506,7 @@ function quiz() {
     tipSeen: false,
     protoVersion: 'v2',
     theme: 'default',
-    ctaStyle: 'gradient',
+    ctaStyle: 'solid',
     illoBooks: `<svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#1f2323" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><defs><pattern id="msdots" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.1" fill="#e8907e" stroke="none"/></pattern></defs><path d="M70 114L126 142L168 121L112 93Z" fill="url(#msdots)" stroke="none"/><path d="M100 74L156 102L116 122L60 94Z" fill="#9fc3c4"/><path d="M60 94L116 122L116 136L60 108Z" fill="#9fc3c4"/><path d="M156 102L116 122L116 136L156 116Z" fill="#fffdf9"/><path d="M118 126L154 108M118 129L154 111M118 132L154 114" stroke-width="1.1"/><path d="M104 58L160 86L120 106L64 78Z" fill="#fffdf9"/><path d="M64 78L120 106L120 120L64 92Z" fill="#f1c9bd"/><path d="M160 86L120 106L120 120L160 100Z" fill="#fffdf9"/><path d="M122 110L158 92M122 113L158 95M122 116L158 98" stroke-width="1.1"/><path d="M98 42L154 70L114 90L58 62Z" fill="#9fc3c4"/><path d="M58 62L114 90L114 104L58 76Z" fill="#9fc3c4"/><path d="M154 70L114 90L114 104L154 84Z" fill="#fffdf9"/><path d="M116 94L152 76M116 97L152 79M116 100L152 82" stroke-width="1.1"/><path d="M84 60L104 70" stroke-width="2.4"/><rect x="132" y="17" width="48" height="32" rx="11" fill="#1f2323" stroke="none"/><rect x="132" y="13" width="48" height="32" rx="11" fill="#fffdf9"/><path d="M146 45l-4 9 12-9" fill="#fffdf9"/><path d="M147 29l6 6 12-12" stroke="#2f6e72" stroke-width="3"/><path d="M38 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#9fc3c4" stroke-width="1.4"/><circle cx="60" cy="22" r="3" fill="#f1c9bd" stroke-width="1.2"/></svg>`,
     coachOpen: false,
     coachSeen: false,
@@ -1686,7 +1686,7 @@ function quiz() {
 
     init() {
       try {
-        const saved = JSON.parse(localStorage.getItem('ms-proto-v3') || '{}');
+        const saved = JSON.parse(localStorage.getItem('ms-proto-v4') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
         if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
         if (saved.protoVersion === 'v1' || saved.protoVersion === 'v2') this.protoVersion = saved.protoVersion;
@@ -1694,7 +1694,7 @@ function quiz() {
         this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
         ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
       } catch (e) { this.bg = { ...this.bgDefaults }; }
-      const persist = () => { try { localStorage.setItem('ms-proto-v3', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion })); } catch (e) {} };
+      const persist = () => { try { localStorage.setItem('ms-proto-v4', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion })); } catch (e) {} };
       this.$watch('introVariant', persist);
       const applyTheme = () => document.documentElement.classList.toggle('theme-new', this.theme === 'new');
       applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
