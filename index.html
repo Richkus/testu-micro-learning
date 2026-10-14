@@ -1630,7 +1630,7 @@ function quiz() {
       paras: ['Kai mokėjimas aiškiai atliekamas kito asmens vardu ir sąskaita (iš mokėjimo duomenų matyti, kad mokama už įmonę B ir jos automobilius), o vėliau išlaidos tiesiog atlyginamos, tai yra išlaidų kompensavimas, o ne paslaugos teikimas. Tokia kompensacija nėra PVM objektas, todėl PVM sąskaitos faktūros išrašyti nereikia, užtenka dokumento, patvirtinančio kompensuojamą sumą.'],
       link: { title: 'Išlaidų kompensavimas ir PVM: kada išrašyti sąskaitą', href: '#' }
     },
-    longLead: 'Ne, premija neįtraukiama, nes ji paskirta dar 2024-12-31. Nuo 2025-10-31 taikoma nauja VDU skaičiavimo tvarka, pagal kurią ketvirtinės ir metinės premijos įtraukiamos atsižvelgiant į tai, kada jos buvo paskirtos, o ne kada faktiškai išmokėtos. Šiuo atveju premija paskirta dar galiojant senajai tvarkai, todėl apskaičiuojant atostoginius už 2026 m. vasario 2-13 dienas jos įtraukti nereikia. Praktikoje dažniausiai suklystama būtent tada, kai premija paskiriama vienais metais, o išmokama kitais, todėl pirmiausia verta pasitikrinti įsakymo ar sprendimo dėl premijos skyrimo datą. Jei abejojate, išsisaugokite sprendimo kopiją kartu su darbo užmokesčio apskaitos dokumentais, kad patikrinimo metu galėtumėte pagrįsti, kodėl premija į VDU nebuvo įtraukta.',
+    longLead: 'Ne, premija neįtraukiama, nes ji paskirta dar 2024-12-31. Pagal naują VDU tvarką (nuo 2025-10-31) premijos vertinamos pagal paskyrimo, o ne išmokėjimo datą, todėl atostoginiams už 2026 m. vasario 2-13 d. jos įtraukti nereikia.',
     get questions() {
       if (this.protoVersion !== 'v2') return this.baseQuestions;
       const q = this.baseQuestions.map(x => x);
