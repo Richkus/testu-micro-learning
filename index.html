@@ -678,8 +678,9 @@
   .ms-situation { margin: -8px 0 20px; font-size: 15px; line-height: 23px; color: var(--ms-ink-soft); }
   .ms-situation > span:first-child { color: var(--ms-sub); }
   .ms-modal-sit { margin: 6px 0 0; font-size: 13px; line-height: 20px; color: var(--ms-sub); }
-  .ms-rsit { margin: 0; padding: 10px 14px 12px; border-radius: 8px; background: var(--ms-howto-bg); font-size: 14px; line-height: 22px; color: var(--ms-ink-soft); }
-  .ms-rsit > span:first-child { font-weight: 600; color: var(--ms-sub); }
+  /* rezultatuose situacija matoma visada (ir suskleidus), be fono, po klausimu */
+  .ms-rsit { display: block; margin-top: 4px; font-size: 14px; font-weight: 400; line-height: 22px; color: var(--ms-ink-soft); }
+  .ms-rsit > span:first-child { color: var(--ms-sub); }
   @media (max-width: 991.98px) { .ms-situation { font-size: 14px; line-height: 22px; } }
 
   /* ---------- Vaidos pastabos ---------- */
@@ -1301,13 +1302,13 @@
                   <svg x-show="!isRightAnswer(ri) && !isUnknownAns(ri)" width="10" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
                 </span>
                 <span class="ms-rq"><span x-text="`${ri + 1}. ${rq.text}`"></span>
+                  <span class="ms-rsit" x-show="rq.situation"><span>Situacija:</span> <span x-text="rq.situation"></span></span>
                   <small class="ms-rsel" :class="{ 'is-hidden': open }" x-text="`Jūsų atsakymas: ${answerText(ri)}`"></small>
                 </span>
                 <svg class="ms-chev" :class="{ 'is-open': open }" width="12" height="8" fill="none" stroke="#5f7a7e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l5 5 5-5"/></svg>
               </button>
               <div x-show="open" x-collapse.duration.300ms>
                 <div class="ms-rexpl">
-                  <p class="ms-rsit" x-show="rq.situation"><span>Situacija:</span> <span x-text="rq.situation"></span></p>
                   <!-- Variantai: tos pačios būsenos kaip klausime -->
                   <div class="ms-ropts">
                     <template x-for="(o, oi) in rq.options" :key="'ro' + ri + oi">
