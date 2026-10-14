@@ -602,18 +602,21 @@
   @property --hl { syntax: '<number>'; inherits: false; initial-value: 0; }
   @property --mx { syntax: '<percentage>'; inherits: false; initial-value: 22%; }
   @property --my { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+  @property --sa { syntax: '<number>'; inherits: false; initial-value: 1; }
   html.cta-live:not(.theme-new) { --ms-link: #006a6e; }
   html.cta-live:not(.theme-new) .ms-btn {
     border-color: transparent;
     /* ramybės būsenoje spotlight stovi viršuje kairėje, užvedus pelę jis ryškėja ir seka žymeklį */
     background:
-      radial-gradient(120px circle at var(--mx) var(--my), rgba(77, 170, 175, calc(.5 + var(--hl) * .2)) 0%, rgba(77, 170, 175, 0) 100%),
+      radial-gradient(120px circle at var(--mx) var(--my), rgba(77, 170, 175, calc(var(--sa) * (.5 + var(--hl) * .2))) 0%, rgba(77, 170, 175, 0) 100%),
       #038389;
     box-shadow: none;
-    /* spotlight padėtį sklandžiai (lerp) valdo JS: atplaukia iki žymeklio ir nuėjus pelei grįžta į kampą */
-    transition: --hl .7s var(--ms-ease), transform .15s;
+    /* spotlight padėtį sklandžiai (lerp) valdo JS: atplaukia iki žymeklio; nuėjus pelei užgęsta vietoje */
+    transition: --hl .7s var(--ms-ease), --sa .55s ease, transform .15s;
   }
-  html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; transition: --hl .4s ease, transform .15s; }
+  html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; transition: --hl .4s ease, --sa .3s ease, transform .15s; }
+  /* nuėjus pelei: spotlight užgęsta ten, kur buvo, ir be judesio vėl įsižiebia ramybės vietoje */
+  html.cta-live:not(.theme-new) .ms-btn.is-spot-out { transition: --hl .35s ease, --sa .35s ease, transform .15s; }
   html.cta-live:not(.theme-new) .ms-btn:active { transform: translateY(1px) scale(.99); }
   html.cta-live:not(.theme-new) .ms-btn:focus-visible { outline: 3px solid rgba(77, 170, 175, .55); outline-offset: 3px; }
   html.cta-live:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; box-shadow: none; }
@@ -1459,14 +1462,21 @@ function quiz() {
       document.addEventListener('pointermove', e => {
         const b = e.target.closest && e.target.closest('.ms-btn'); if (!b) return;
         const r = b.getBoundingClientRect();
+        if (b._spotT) { clearTimeout(b._spotT); b._spotT = null; b.classList.remove('is-spot-out'); b.style.removeProperty('--sa'); }
         const p = spots.get(b) || { x: REST.x, y: REST.y };
         p.tx = (e.clientX - r.left) / r.width * 100; p.ty = (e.clientY - r.top) / r.height * 100; p.leaving = false;
         spots.set(b, p); run();
       }, { passive: true });
       document.addEventListener('pointerout', e => {
         const b = e.target.closest && e.target.closest('.ms-btn'); if (!b || b.contains(e.relatedTarget)) return;
-        const p = spots.get(b); if (!p) return;
-        p.tx = REST.x; p.ty = REST.y; p.leaving = true; run();
+        spots.delete(b);
+        // užgesinam ten, kur yra; kai užgęsta, be judesio perkeliam į ramybės vietą ir švelniai įžiebiam
+        b.classList.add('is-spot-out'); b.style.setProperty('--sa', '0');
+        clearTimeout(b._spotT);
+        b._spotT = setTimeout(() => {
+          b.style.removeProperty('--mx'); b.style.removeProperty('--my');
+          b.classList.remove('is-spot-out'); b.style.removeProperty('--sa');
+        }, 380);
       }, { passive: true });
       applyCta(); this.$watch('ctaStyle', () => { applyCta(); persist(); });
       this.$watch('bg', persist, { deep: true });
