@@ -646,18 +646,16 @@
   .ms-moption.is-selected .ms-mbox { background: var(--ms-teal); border-color: var(--ms-teal); }
   .ms-moption.is-correct .ms-mbox { background: var(--ms-ok-icon-bg); border-color: var(--ms-ok-icon-bg); color: var(--ms-ok); }
   .ms-moption.is-wrong .ms-mbox { background: var(--ms-bad-icon-bg); border-color: var(--ms-bad-icon-bg); color: var(--ms-bad); }
-  .ms-moption.is-missed { background: var(--ms-surface); border: 1.5px dashed var(--ms-ok); }
-  .ms-moption.is-missed .ms-mbox { background: var(--ms-surface); border: 1.5px dashed var(--ms-ok); color: var(--ms-ok); }
+  .ms-moption.is-missed { background: var(--ms-surface); border: 1px dashed var(--ms-ok-line); }
+  .ms-moption.is-missed .ms-mbox { background: var(--ms-surface); border: 1.5px dashed var(--ms-ok-line); color: var(--ms-ok-line); }
   .ms-tag.is-missed { color: var(--ms-ok-text); background: var(--ms-ok-bg); }
   .ms-mcheck { display: flex; align-items: center; gap: 16px; padding-top: 18px; }
   .ms-mcheck .ms-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
   .ms-mcount { font-size: 14px; color: var(--ms-sub); }
-  .ms-mexpl { margin-top: 16px; padding: 16px 18px 18px; border-radius: var(--ms-radius-md); border: 1.5px solid var(--ms-ok-line); background: var(--ms-ok-bg); }
-  .ms-mexpl.is-partial { border-color: #fad6b3; background: #fdf5ec; }
-  .ms-mexpl.is-bad { border-color: var(--ms-bad-line); background: var(--ms-bad-bg); }
-  .ms-inline-status.is-partial { color: #ac5b0c; }
-  .ms-mexpl .ms-btn { display: flex; width: fit-content; min-width: 200px; }
-  @media (max-width: 991.98px) { .ms-mexpl .ms-btn { width: 100%; } .ms-mcheck { flex-wrap: wrap; } .ms-mcheck .ms-btn { width: 100%; } }
+  .ms-mexpl { margin-top: 16px; padding: 18px 20px 20px; border-radius: var(--ms-radius-md); background: var(--ms-surface-soft); }
+  .ms-mexpl .ms-more { margin-bottom: 0; }
+  .ms-mnext { display: flex; width: fit-content; min-width: 200px; margin-top: 16px; }
+  @media (max-width: 991.98px) { .ms-mnext { width: 100%; } .ms-mcheck { flex-wrap: wrap; } .ms-mcheck .ms-btn { width: 100%; } }
   html.theme-new .ms-mbox { border-color: var(--ink-line); }
   html.theme-new .ms-moption.is-selected { box-shadow: 0 3px 0 var(--ink-line); background: #e3efee; }
   html.theme-new .ms-mexpl { border-color: var(--ink-line); }
@@ -1159,8 +1157,8 @@
                             <svg x-show="answered && multiSel.includes(i) && !q.correct.includes(i)" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
                           </span>
                           <span class="ms-option-text" x-text="o"></span>
-                          <span class="ms-tag" x-show="answered && multiSel.includes(i) && !q.correct.includes(i)" x-transition.opacity.duration.250ms>Jūsų atsakymas</span>
-                          <span class="ms-tag is-missed" x-show="answered && !multiSel.includes(i) && q.correct.includes(i)" x-transition.opacity.duration.250ms>Praleistas teisingas</span>
+                          <span class="ms-tag" x-show="answered && multiSel.includes(i) && !q.correct.includes(i)" x-transition.opacity.duration.250ms>Jūsų pasirinkimas</span>
+                          <span class="ms-tag is-missed" x-show="answered && !multiSel.includes(i) && q.correct.includes(i)" x-transition.opacity.duration.250ms>Praleidote</span>
                         </button>
                       </div>
                     </template>
@@ -1171,11 +1169,11 @@
                   </div>
                   <div x-show="answered && !leaving" x-collapse.duration.400ms>
                     <div class="ms-mexpl" :class="'is-' + multiResult" aria-live="polite">
-                      <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-partial': multiResult === 'partial' }" x-text="multiResult === 'ok' ? 'Teisingai!' : (multiResult === 'partial' ? `Iš dalies teisingai: pažymėjote ${multiHits} iš ${q.correct.length} teisingų` : 'Neteisingai')"></div>
+                      <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-bad': multiResult === 'bad', 'is-neutral': multiResult === 'partial' }" x-text="multiResult === 'ok' ? 'Teisingai!' : (multiResult === 'partial' ? `Iš dalies teisingai: ${multiHits} iš ${q.correct.length}` : 'Neteisingai')"></div>
                       <p class="ms-inline-lead" x-text="q.lead"></p>
                       <button type="button" class="ms-more" @click="openModal()">Platesnis išaiškinimas</button>
-                      <button class="ms-btn" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span></button>
                     </div>
+                    <button class="ms-btn ms-mnext" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span></button>
                   </div>
                 </div>
               </template>
@@ -1644,7 +1642,7 @@ function quiz() {
       if (this.answered || !this.multiSel.length) return;
       this.answers[this.idx] = this.multiSel.slice().sort();
       this.answered = true;
-      setTimeout(() => { const b = this.$root.querySelector('.ms-mexpl .ms-btn'); if (b) { b.focus({ preventScroll: true }); const r = b.getBoundingClientRect(); if (r.bottom > window.innerHeight - 16) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }, 420);
+      setTimeout(() => { const b = this.$root.querySelector('.ms-mnext'); if (b) { b.focus({ preventScroll: true }); const r = b.getBoundingClientRect(); if (r.bottom > window.innerHeight - 16) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }, 420);
     },
     get multiHits() { return this.multiSel.filter(i => this.q.correct.includes(i)).length; },
     get multiResult() {
