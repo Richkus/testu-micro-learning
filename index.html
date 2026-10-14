@@ -664,6 +664,14 @@
   .ms-proto-ver button:hover { opacity: 1; }
   .ms-proto-ver button.is-on { background: #fff; opacity: 1; box-shadow: 0 1px 2px rgba(49, 83, 135, .2); }
 
+  /* ilgas trumpas išaiškinimas kortelėje: ribotas aukštis, fade apačioje rodo, kad yra daugiau teksto */
+  .ms-inline-scroll { max-height: 176px; overflow-y: auto; margin-right: -8px; padding-right: 8px; scrollbar-width: thin; scrollbar-color: rgba(15, 83, 84, .25) transparent;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); }
+  .ms-inline-scroll:not(.is-top):not(.is-end) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); }
+  .ms-inline-scroll.is-end:not(.is-top) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px); mask-image: linear-gradient(to bottom, transparent 0, #000 40px); }
+  .ms-inline-scroll.is-end.is-top { -webkit-mask-image: none; mask-image: none; }
+  .ms-inline-scroll .ms-inline-lead { margin-bottom: 4px; }
+
   /* klausimas su ilga situacija */
   .ms-situation { margin: -8px 0 20px; font-size: 15px; line-height: 23px; color: var(--ms-ink-soft); }
   .ms-situation > span:first-child { color: var(--ms-sub); }
@@ -1181,7 +1189,12 @@
                       <div class="ms-inline" aria-live="polite">
                         <div class="ms-inline-body">
                           <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-neutral': pickedUnknown, 'is-bad': !isCorrect && !pickedUnknown && protoVersion === 'v2' }" x-text="isCorrect ? 'Teisingai!' : (pickedUnknown ? 'Teisingas atsakymas' : (protoVersion === 'v2' ? 'Kodėl neteisingai?' : 'Kodėl taip?'))"></div>
-                          <p class="ms-inline-lead" x-text="(!isCorrect && !pickedUnknown && protoVersion === 'v2' && q.wrongLead) ? q.wrongLead : q.lead"></p>
+                          <!-- ilgas trumpas išaiškinimas: ribotas aukštis, vidinis slinkimas ir fade apačioje, CTA visada matomas po juo -->
+                          <div class="ms-inline-scroll" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }"
+                               x-effect="answered; idx; setTimeout(() => { end = $el.scrollHeight <= $el.clientHeight + 2 }, 450)"
+                               @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2">
+                            <p class="ms-inline-lead" x-text="(!isCorrect && !pickedUnknown && protoVersion === 'v2' && q.wrongLead) ? q.wrongLead : q.lead"></p>
+                          </div>
                           <button type="button" class="ms-more" @click="openModal()">
                             Skaityti visą išaiškinimą
                           </button>
@@ -1569,12 +1582,16 @@ function quiz() {
       paras: ['Kai mokėjimas aiškiai atliekamas kito asmens vardu ir sąskaita (iš mokėjimo duomenų matyti, kad mokama už įmonę B ir jos automobilius), o vėliau išlaidos tiesiog atlyginamos, tai yra išlaidų kompensavimas, o ne paslaugos teikimas. Tokia kompensacija nėra PVM objektas, todėl PVM sąskaitos faktūros išrašyti nereikia, užtenka dokumento, patvirtinančio kompensuojamą sumą.'],
       link: { title: 'Išlaidų kompensavimas ir PVM: kada išrašyti sąskaitą', href: '#' }
     },
+    longLead: 'Ne, premija neįtraukiama, nes ji paskirta dar 2024-12-31. Nuo 2025-10-31 taikoma nauja VDU skaičiavimo tvarka, pagal kurią ketvirtinės ir metinės premijos įtraukiamos atsižvelgiant į tai, kada jos buvo paskirtos, o ne kada faktiškai išmokėtos. Šiuo atveju premija paskirta dar galiojant senajai tvarkai, todėl apskaičiuojant atostoginius už 2026 m. vasario 2-13 dienas jos įtraukti nereikia. Praktikoje dažniausiai suklystama būtent tada, kai premija paskiriama vienais metais, o išmokama kitais, todėl pirmiausia verta pasitikrinti įsakymo ar sprendimo dėl premijos skyrimo datą. Jei abejojate, išsisaugokite sprendimo kopiją kartu su darbo užmokesčio apskaitos dokumentais, kad patikrinimo metu galėtumėte pagrįsti, kodėl premija į VDU nebuvo įtraukta.',
     get questions() {
       if (this.protoVersion !== 'v2') return this.baseQuestions;
       const q = this.baseQuestions.map(x => x);
       // V.2: „Nežinau“ variantas (kaip Mokesčių naujienų testuose) 3-iame baziniame klausime
       q[2] = { ...q[2], options: [...q[2].options, 'Nežinau'], unknown: q[2].options.length };
-      q.splice(1, 0, this.multiQuestion); q.splice(3, 0, this.situationQuestion); return q;
+      q.splice(1, 0, this.multiQuestion); q.splice(3, 0, this.situationQuestion);
+      // V.2: 6-ojo klausimo trumpas išaiškinimas ~4 kartus ilgesnis (ilgo teksto UX bandymui)
+      q[5] = { ...q[5], lead: this.longLead };
+      return q;
     },
     get q() { return this.questions[this.idx]; },
     get isCorrect() { return this.q.multi ? this.multiResult === 'ok' : this.picked === this.q.correct; },
