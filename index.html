@@ -610,10 +610,10 @@
       radial-gradient(120px circle at var(--mx) var(--my), rgba(77, 170, 175, calc(.5 + var(--hl) * .2)) 0%, rgba(77, 170, 175, 0) 100%),
       #038389;
     box-shadow: none;
-    /* nuėjus pelei spotlight sklandžiai nurimsta ir grįžta į kampą */
-    transition: --hl .7s var(--ms-ease), --mx .9s var(--ms-ease), --my .9s var(--ms-ease), transform .15s;
+    /* spotlight padėtį sklandžiai (lerp) valdo JS: atplaukia iki žymeklio ir nuėjus pelei grįžta į kampą */
+    transition: --hl .7s var(--ms-ease), transform .15s;
   }
-  html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; transition: --hl .35s ease, --mx .12s linear, --my .12s linear, transform .15s; }
+  html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; transition: --hl .4s ease, transform .15s; }
   html.cta-live:not(.theme-new) .ms-btn:active { transform: translateY(1px) scale(.99); }
   html.cta-live:not(.theme-new) .ms-btn:focus-visible { outline: 3px solid rgba(77, 170, 175, .55); outline-offset: 3px; }
   html.cta-live:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; box-shadow: none; }
@@ -1442,16 +1442,31 @@ function quiz() {
       const applyTheme = () => document.documentElement.classList.toggle('theme-new', this.theme === 'new');
       applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
       const applyCta = () => { const c = document.documentElement.classList; c.toggle('cta-solid', this.ctaStyle === 'solid'); c.toggle('cta-live', this.ctaStyle === 'live'); };
-      // „Gyvas“ mygtukas: šviesos taškas seka pelę (Airbnb principu)
+      // „Gyvas“ mygtukas: spotlight sklandžiai (lerp) plaukia iki žymeklio, nuėjus pelei grįžta į kampą
+      const REST = { x: 22, y: 0 }, spots = new Map();
+      const tick = () => {
+        let alive = false;
+        spots.forEach((p, b) => {
+          p.x += (p.tx - p.x) * 0.14; p.y += (p.ty - p.y) * 0.14;
+          b.style.setProperty('--mx', p.x.toFixed(2) + '%'); b.style.setProperty('--my', p.y.toFixed(2) + '%');
+          if (Math.abs(p.tx - p.x) < 0.1 && Math.abs(p.ty - p.y) < 0.1) { if (p.leaving) { b.style.removeProperty('--mx'); b.style.removeProperty('--my'); spots.delete(b); } }
+          else alive = true;
+        });
+        if (alive || [...spots.values()].some(p => !p.leaving)) requestAnimationFrame(tick); else running = false;
+      };
+      let running = false;
+      const run = () => { if (!running) { running = true; requestAnimationFrame(tick); } };
       document.addEventListener('pointermove', e => {
         const b = e.target.closest && e.target.closest('.ms-btn'); if (!b) return;
         const r = b.getBoundingClientRect();
-        b.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
-        b.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+        const p = spots.get(b) || { x: REST.x, y: REST.y };
+        p.tx = (e.clientX - r.left) / r.width * 100; p.ty = (e.clientY - r.top) / r.height * 100; p.leaving = false;
+        spots.set(b, p); run();
       }, { passive: true });
       document.addEventListener('pointerout', e => {
         const b = e.target.closest && e.target.closest('.ms-btn'); if (!b || b.contains(e.relatedTarget)) return;
-        b.style.removeProperty('--mx'); b.style.removeProperty('--my');
+        const p = spots.get(b); if (!p) return;
+        p.tx = REST.x; p.ty = REST.y; p.leaving = true; run();
       }, { passive: true });
       applyCta(); this.$watch('ctaStyle', () => { applyCta(); persist(); });
       this.$watch('bg', persist, { deep: true });
