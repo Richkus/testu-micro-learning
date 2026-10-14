@@ -332,6 +332,7 @@
   .ms-inline-status { font-size: 12px; font-weight: 600; letter-spacing: .03em; margin-bottom: 4px; color: var(--ms-muted); }
   .ms-inline-status.is-ok { color: var(--ms-ok-text); }
   .ms-inline-status.is-bad { color: var(--ms-bad); }
+  .ms-option.is-wrong .ms-inline-body { border-top-color: var(--ms-bad-line); }
   .ms-inline-lead { font-size: 15px; line-height: 23px; color: var(--ms-ink); margin: 0 0 4px; }
   .ms-more { display: inline-block; background: none; border: 0; padding: 0; color: var(--ms-link); font-weight: 400; font-size: 14px; line-height: 20px; cursor: pointer; margin-bottom: 22px; text-decoration: underline dashed; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color .2s; }
   .ms-more:hover { color: var(--ms-teal-dark); text-decoration-style: solid; }
@@ -1122,7 +1123,7 @@
               </template>
               <div class="ms-options" x-show="!q.multi" role="group" aria-label="Atsakymų variantai">
                 <template x-for="(o, i) in q.options" :key="idx + '-' + i">
-                  <div class="ms-option" :class="[optClass(i), answered ? 'is-locked' : '']">
+                  <div class="ms-option" :class="[optClass(i), answered ? 'is-locked' : '', answered && i === expandIdx ? 'is-expanded' : '']">
                     <button type="button" class="ms-option-btn" :disabled="answered" @click="answer(i)">
                       <template x-if="!answered || (i !== q.correct && i !== picked)">
                         <span class="ms-key" x-text="letters[i]"></span>
@@ -1137,10 +1138,10 @@
                       <span class="ms-tag" x-show="answered && i === picked && i !== q.correct" x-transition.opacity.duration.250ms>Jūsų atsakymas</span>
                     </button>
                     <!-- Trumpas paaiškinimas + CTA tik teisingame variante -->
-                    <div x-show="answered && !leaving && i === q.correct" x-collapse.duration.400ms>
+                    <div x-show="answered && !leaving && i === expandIdx" x-collapse.duration.400ms>
                       <div class="ms-inline" aria-live="polite">
                         <div class="ms-inline-body">
-                          <div class="ms-inline-status" :class="{ 'is-ok': isCorrect }" x-text="isCorrect ? 'Teisingai!' : 'Kodėl taip?'"></div>
+                          <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-bad': !isCorrect && protoVersion === 'v2' }" x-text="isCorrect ? 'Teisingai!' : (protoVersion === 'v2' ? 'Kodėl neteisingai?' : 'Kodėl taip?')"></div>
                           <p class="ms-inline-lead" x-text="q.lead"></p>
                           <button type="button" class="ms-more" @click="openModal()">
                             Skaityti visą išaiškinimą
@@ -1505,6 +1506,8 @@ function quiz() {
     },
     get q() { return this.questions[this.idx]; },
     get isCorrect() { return this.q.multi ? this.multiResult === 'ok' : this.picked === this.q.correct; },
+    // V.1: išaiškinimas visada po teisingu variantu; V.2: po pasirinktu (ir kai neteisingas)
+    get expandIdx() { return this.protoVersion === 'v2' ? this.picked : this.q.correct; },
     isRightOpt(qq, i) { return Array.isArray(qq.correct) ? qq.correct.includes(i) : i === qq.correct; },
     wasPicked(ri, i) { const a = this.answers[ri]; return Array.isArray(a) ? a.includes(i) : a === i; },
     isRightAnswer(ri) {
@@ -1627,7 +1630,7 @@ function quiz() {
 
     /* H variantas: funkcijos pranešimas prie pirmo išsiskleidusio išaiškinimo (Slack „coachmark“ principu) */
     coachPlace() {
-      const opt = this.$root.querySelector('.ms-option.is-correct');
+      const opt = this.$root.querySelector('.ms-option.is-expanded');
       const card = this.$root.querySelector('.ms-qcard');
       if (!opt || !card) return;
       const o = opt.getBoundingClientRect(), c = card.getBoundingClientRect(), W = 300;
@@ -1651,7 +1654,7 @@ function quiz() {
         this.coachPlace(); this.coachOpen = true;
         // apačioje rodomam pranešimui pakeliam išaiškinimą aukščiau, kad liktų matomas
         if (this.coachSide === 'bottom') {
-          const opt = this.$root.querySelector('.ms-option.is-correct');
+          const opt = this.$root.querySelector('.ms-option.is-expanded');
           if (opt) window.scrollTo({ top: window.scrollY + opt.getBoundingClientRect().top - 110, behavior: 'smooth' });
         }
       }, 650);
@@ -1691,7 +1694,7 @@ function quiz() {
       if (this.idx === 3) this.fbMaybeShow(1400);
       // kai teisingas variantas išsiskleidžia, fokusas ant CTA; telefone nuslenkam, kad jis matytųsi
       setTimeout(() => {
-        const btn = this.$root.querySelector('.ms-option.is-correct .ms-btn');
+        const btn = this.$root.querySelector('.ms-option.is-expanded .ms-btn');
         if (!btn) return;
         btn.focus({ preventScroll: true });
         const r = btn.getBoundingClientRect();
