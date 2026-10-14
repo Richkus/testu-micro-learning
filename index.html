@@ -1194,7 +1194,7 @@
                     <div x-show="answered && !leaving && i === expandIdx" x-collapse.duration.400ms>
                       <div class="ms-inline" aria-live="polite">
                         <div class="ms-inline-body">
-                          <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-neutral': pickedUnknown, 'is-bad': !isCorrect && !pickedUnknown && protoVersion === 'v2' }" x-text="isCorrect ? 'Teisingai!' : (pickedUnknown ? 'Teisingas atsakymas' : (protoVersion === 'v2' ? 'Kodėl neteisingai?' : 'Kodėl taip?'))"></div>
+                          <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-neutral': pickedUnknown, 'is-bad': !isCorrect && !pickedUnknown && protoVersion === 'v2' }" x-text="isCorrect ? 'Teisingai!' : (pickedUnknown ? 'Kodėl taip?' : (protoVersion === 'v2' ? 'Kodėl neteisingai?' : 'Kodėl taip?'))"></div>
                           <!-- ilgas trumpas išaiškinimas: ribotas aukštis, vidinis slinkimas ir fade apačioje, CTA visada matomas po juo -->
                           <div class="ms-inline-scroll" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }"
                                x-effect="answered; idx; setTimeout(() => { end = $el.scrollHeight <= $el.clientHeight + 2 }, 450)"
@@ -1328,7 +1328,7 @@
                         <template x-if="inlineResult(ri) && wasPicked(ri, oi)">
                           <div class="ms-rinline">
                             <div class="ms-rinline-body">
-                              <div class="ms-inline-status" :class="isRightAnswer(ri) ? 'is-ok' : (isUnknownAns(ri) ? 'is-neutral' : 'is-bad')" x-text="isRightAnswer(ri) ? 'Teisingai!' : (isUnknownAns(ri) ? 'Teisingas atsakymas' : 'Kodėl neteisingai?')"></div>
+                              <div class="ms-inline-status" :class="isRightAnswer(ri) ? 'is-ok' : (isUnknownAns(ri) ? 'is-neutral' : 'is-bad')" x-text="isRightAnswer(ri) ? 'Teisingai!' : (isUnknownAns(ri) ? 'Kodėl taip?' : 'Kodėl neteisingai?')"></div>
                               <div class="ms-rpar" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }" x-effect="open; setTimeout(() => { top = $el.scrollTop < 2; end = $el.scrollHeight <= $el.clientHeight + 2 }, 350)" @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2"><template x-for="(para, pi) in rq.paras" :key="'rpi' + ri + pi"><p x-text="para"></p></template></div>
                               <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
                                 <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
