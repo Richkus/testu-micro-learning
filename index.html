@@ -590,6 +590,13 @@
   .ms-ibanner-wrap.is-separate .ms-ibanner { padding: 12px 12px 12px 16px; border-radius: 14px; border-bottom: 1px solid var(--ms-ok-line); }
   @media (max-width: 575.98px) { .ms-ibanner-wrap { padding: 0 12px; } .ms-ibanner { align-items: flex-start; flex-wrap: wrap; row-gap: 6px; } .ms-ibanner-text { flex-basis: calc(100% - 40px); order: 3; } .ms-ibanner-more { order: 4; flex-basis: 100%; } .ms-ibanner-close { margin-left: auto; } }
 
+  /* ---------- Papildoma opcija Default temai: vientisi CTA (#038389) ir nuorodos (#006A6E) ---------- */
+  html.cta-solid:not(.theme-new) { --ms-link: #006a6e; }
+  html.cta-solid:not(.theme-new) .ms-btn { background: #038389; border-color: #038389; }
+  html.cta-solid:not(.theme-new) .ms-btn:hover { filter: none; background: #02747a; border-color: #02747a; }
+  html.cta-solid:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; }
+  html.cta-solid:not(.theme-new) .ms-btn-outline:hover { background: var(--ms-surface-soft); color: #02747a; }
+
   /* =====================================================================
      THEME: NEW — iliustruotas, „Vocabulary“ tipo stilius: kreminis fonas, serif antraštės,
      tamsūs kontūrai su kietu šešėliu, pill mygtukai, teal + lašišinė spalva
@@ -711,6 +718,9 @@
       <div class="ms-admin-group">Tema</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="default" id="ms-theme-default" x-model="theme"><span>Default (dabartinė)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="new" id="ms-theme-new" x-model="theme"><span>New (iliustruota)</span></label>
+      <div class="ms-admin-group">Mygtukai ir nuorodos (Default temai)</div>
+      <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="gradient" id="ms-cta-gradient" x-model="ctaStyle"><span>Gradientas (dabartinis)</span></label>
+      <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="solid" id="ms-cta-solid" x-model="ctaStyle"><span>Vientisas #038389, nuoroda #006A6E</span></label>
       <div class="ms-admin-group">Naujienos vieta intro ekrane</div>
       <template x-for="v in introVariants" :key="v.id">
         <label class="ms-admin-opt"><input type="radio" name="ms-intro-variant" :value="v.id" :id="'ms-v-' + v.id" x-model="introVariant"><span><b x-text="v.id"></b> <span x-text="v.label"></span></span></label>
@@ -1291,6 +1301,7 @@ function quiz() {
     ],
     tipSeen: false,
     theme: 'default',
+    ctaStyle: 'gradient',
     illoBooks: `<svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#1f2323" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><defs><pattern id="msdots" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.1" fill="#e8907e" stroke="none"/></pattern></defs><path d="M70 114L126 142L168 121L112 93Z" fill="url(#msdots)" stroke="none"/><path d="M100 74L156 102L116 122L60 94Z" fill="#9fc3c4"/><path d="M60 94L116 122L116 136L60 108Z" fill="#9fc3c4"/><path d="M156 102L116 122L116 136L156 116Z" fill="#fffdf9"/><path d="M118 126L154 108M118 129L154 111M118 132L154 114" stroke-width="1.1"/><path d="M104 58L160 86L120 106L64 78Z" fill="#fffdf9"/><path d="M64 78L120 106L120 120L64 92Z" fill="#f1c9bd"/><path d="M160 86L120 106L120 120L160 100Z" fill="#fffdf9"/><path d="M122 110L158 92M122 113L158 95M122 116L158 98" stroke-width="1.1"/><path d="M98 42L154 70L114 90L58 62Z" fill="#9fc3c4"/><path d="M58 62L114 90L114 104L58 76Z" fill="#9fc3c4"/><path d="M154 70L114 90L114 104L154 84Z" fill="#fffdf9"/><path d="M116 94L152 76M116 97L152 79M116 100L152 82" stroke-width="1.1"/><path d="M84 60L104 70" stroke-width="2.4"/><rect x="132" y="17" width="48" height="32" rx="11" fill="#1f2323" stroke="none"/><rect x="132" y="13" width="48" height="32" rx="11" fill="#fffdf9"/><path d="M146 45l-4 9 12-9" fill="#fffdf9"/><path d="M147 29l6 6 12-12" stroke="#2f6e72" stroke-width="3"/><path d="M38 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#9fc3c4" stroke-width="1.4"/><circle cx="60" cy="22" r="3" fill="#f1c9bd" stroke-width="1.2"/></svg>`,
     coachOpen: false,
     coachSeen: false,
@@ -1398,13 +1409,16 @@ function quiz() {
         const saved = JSON.parse(localStorage.getItem('ms-proto-v2') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
         if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
+        if (saved.ctaStyle === 'solid' || saved.ctaStyle === 'gradient') this.ctaStyle = saved.ctaStyle;
         this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
         ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
       } catch (e) { this.bg = { ...this.bgDefaults }; }
-      const persist = () => { try { localStorage.setItem('ms-proto-v2', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme })); } catch (e) {} };
+      const persist = () => { try { localStorage.setItem('ms-proto-v2', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle })); } catch (e) {} };
       this.$watch('introVariant', persist);
       const applyTheme = () => document.documentElement.classList.toggle('theme-new', this.theme === 'new');
       applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
+      const applyCta = () => document.documentElement.classList.toggle('cta-solid', this.ctaStyle === 'solid');
+      applyCta(); this.$watch('ctaStyle', () => { applyCta(); persist(); });
       this.$watch('bg', persist, { deep: true });
       this.$watch('screen', v => { if (v === 'intro') this.fbOpen = false; });
       window.addEventListener('resize', () => { if (this.coachOpen) this.coachPlace(); });
