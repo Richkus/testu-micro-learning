@@ -365,6 +365,7 @@
   .ms-linkcard:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; }
   .ms-linkcard-ico { flex: 0 0 36px; height: 36px; margin-top: 2px; border-radius: 6px; border: 1px solid rgba(15, 83, 84, .22); background: transparent; display: grid; place-items: center; transition: border-color .2s; }
   .ms-linkcard:hover .ms-linkcard-ico { border-color: var(--ms-teal); }
+  .ms-linkcard-ico svg { color: var(--ms-ink-soft); } /* ikona tokios pat spalvos kaip tekstas */
   .ms-linkcard-text { flex: 1; min-width: 0; }
   .ms-linkcard-text small { display: block; font-size: 13px; line-height: 20px; font-weight: 400; text-transform: uppercase; color: var(--ms-link-eyebrow); }
   .ms-linkcard-text span { display: block; font-size: 14px; font-weight: 400; line-height: 20px; color: var(--ms-ink-soft); transition: color .2s; }
@@ -1254,7 +1255,7 @@
             <div class="ms-modal-q"><small>Klausimas</small><span x-text="q.text"></span><p class="ms-modal-sit" x-show="q.situation" x-text="'Situacija: ' + (q.situation || '')"></p></div>
             <template x-for="(para, pi) in q.paras" :key="idx + 'p' + pi"><p x-text="para"></p></template>
             <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
-              <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+              <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
               <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="q.link.title"></span></span>
               <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
             </a>
@@ -1336,7 +1337,7 @@
                               <div class="ms-inline-status" :class="isRightAnswer(ri) ? 'is-ok' : (isUnknownAns(ri) ? 'is-neutral' : 'is-bad')" x-text="isRightAnswer(ri) ? 'Teisingai!' : (isUnknownAns(ri) ? 'Kodėl taip?' : 'Kodėl neteisingai?')"></div>
                               <div class="ms-rpar" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }" x-effect="open; setTimeout(() => { top = $el.scrollTop < 2; end = $el.scrollHeight <= $el.clientHeight + 2 }, 350)" @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2"><template x-for="(para, pi) in rq.paras" :key="'rpi' + ri + pi"><p x-text="para"></p></template></div>
                               <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
-                                <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+                                <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
                                 <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
                                 <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
                               </a>
@@ -1351,7 +1352,7 @@
                     <div class="ms-inline-status">Kodėl taip?</div>
                     <div class="ms-rpar" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }" x-effect="open; setTimeout(() => { top = $el.scrollTop < 2; end = $el.scrollHeight <= $el.clientHeight + 2 }, 350)" @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2"><template x-for="(para, pi) in rq.paras" :key="'rp' + ri + pi"><p x-text="para"></p></template></div>
                     <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
-                      <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+                      <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
                       <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
                       <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
                     </a>
