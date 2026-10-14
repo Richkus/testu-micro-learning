@@ -686,6 +686,11 @@
   .ms-rsit > span:first-child { color: var(--ms-sub); }
   @media (max-width: 991.98px) { .ms-situation { font-size: 14px; line-height: 22px; } }
 
+  /* puslapio perkrovimo imitacija (sprendimas -> rezultatai) */
+  html.ms-reloading .ms-content, html.ms-reloading .ms-crumbs { visibility: hidden; }
+  html.ms-reloading body::after { content: ''; position: fixed; z-index: 400; left: 0; top: var(--ms-proto-h); height: 3px; width: 0; background: var(--ms-teal); animation: ms-load .5s ease-out forwards; }
+  @keyframes ms-load { from { width: 0; } to { width: 85%; } }
+
   /* ---------- Vaidos pastabos ---------- */
   .ms-done { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--ms-ok-text); }
   .ms-done-ico { width: 20px; height: 20px; border-radius: 50%; background: var(--ms-ok); display: grid; place-items: center; }
@@ -1811,8 +1816,14 @@ function quiz() {
       if (this.coachOpen) this.coachClose();
       if (!this.answered || this.leaving) return;
       if (this.isLast) {
-        this.leaving = true;
-        setTimeout(() => { this.answered = false; this.leaving = false; this.screen = 'results'; window.scrollTo({ top: 0, behavior: 'smooth' }); }, 300);
+        // realiame puslapyje čia bus perkrovimas: imituojam (turinys trumpam dingsta, viršuje krovimo juostelė, puslapis atsidaro viršuje be slinkimo animacijos)
+        const root = document.documentElement;
+        root.classList.add('ms-reloading');
+        setTimeout(() => {
+          this.answered = false; this.leaving = false; this.screen = 'results';
+          window.scrollTo({ top: 0, behavior: 'instant' });
+          setTimeout(() => root.classList.remove('ms-reloading'), 380);
+        }, 140);
         return;
       }
       // sklandus perėjimas: išaiškinimas susiskleidžia (x-collapse), turinys išblunka su atsakyto klausimo būsena, tik tada įdedamas naujas klausimas
