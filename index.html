@@ -670,6 +670,12 @@
   .ms-moption.is-missed { background: var(--ms-surface); border: 1px dashed var(--ms-ok-line); }
   .ms-moption.is-missed .ms-mbox { background: var(--ms-surface); border: 1.5px dashed var(--ms-ok-line); color: var(--ms-ok-line); }
   .ms-tag.is-missed { color: var(--ms-ok-text); background: var(--ms-ok-bg); }
+  /* Patikrinus: „Patikrinti“ išblunka iškart, aukščiai keičiasi tuo pačiu tempu (abu 400ms), išaiškinimas išryškėja vėliau, kad nesipjautų */
+  .ms-mcheck { transition: opacity .15s ease; }
+  .ms-mcheck.is-gone { opacity: 0; }
+  .ms-mreveal { animation: ms-mreveal .3s ease .15s both; }
+  @keyframes ms-mreveal { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .ms-mreveal { animation: none; } }
   .ms-mcheck { display: flex; align-items: center; gap: 16px; padding-top: 18px; }
   .ms-mcheck .ms-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
   .ms-mcount { font-size: 14px; color: var(--ms-sub); }
@@ -1178,18 +1184,18 @@
                       </div>
                     </template>
                   </div>
-                  <div class="ms-mcheck" x-show="!answered" x-collapse.duration.250ms>
+                  <div class="ms-mcheck" x-show="!answered" x-collapse.duration.400ms :class="{ 'is-gone': answered }">
                     <button type="button" class="ms-btn" :disabled="!multiSel.length" @click="checkMulti()">Patikrinti</button>
                     <span class="ms-mcount" x-text="multiSel.length ? `Pažymėta: ${multiSel.length}` : 'Pažymėkite bent vieną'"></span>
                   </div>
-                  <div x-show="answered && !leaving" x-collapse.duration.400ms>
+                  <div x-show="answered && !leaving" x-collapse.duration.400ms><div class="ms-mreveal">
                     <div class="ms-mexpl" :class="'is-' + multiResult" aria-live="polite">
                       <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-bad': multiResult === 'bad', 'is-neutral': multiResult === 'partial' }" x-text="multiResult === 'ok' ? 'Teisingai!' : (multiResult === 'partial' ? `Iš dalies teisingai: ${multiHits} iš ${q.correct.length}` : 'Neteisingai')"></div>
                       <p class="ms-inline-lead" x-text="q.lead"></p>
                       <button type="button" class="ms-more" @click="openModal()">Platesnis išaiškinimas</button>
                     </div>
                     <button class="ms-btn ms-mnext" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span></button>
-                  </div>
+                  </div></div>
                 </div>
               </template>
               <div class="ms-options" x-show="!q.multi" role="group" aria-label="Atsakymų variantai">
