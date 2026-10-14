@@ -616,13 +616,12 @@
   .ms-ibanner { cursor: pointer; transition: background-color .2s, border-color .2s; }
   .ms-ibanner:hover { background: #e3f2eb; border-color: #a4d5be; }
   .ms-ibanner:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; }
-  .ms-ibanner-more { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 2px; font-size: 14px; font-weight: 600; line-height: 20px; color: var(--ms-link); }
-  .ms-ibanner-more { text-underline-offset: 3px; }
-  .ms-ibanner:hover .ms-ibanner-more { text-decoration: underline; }
+  .ms-ibanner-more { font-weight: 400; color: var(--ms-link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .2s; }
+  .ms-ibanner:hover .ms-ibanner-more { color: var(--ms-teal-dark); }
   /* J variantas: ta pati juostelė kaip atskiras elementas, lygiuotas su kortele */
   .ms-ibanner-wrap.is-separate { margin-bottom: -12px; padding: 0; }
   .ms-ibanner-wrap.is-separate .ms-ibanner { padding: 12px 12px 12px 16px; border-radius: 14px; border-bottom: 1px solid var(--ms-ok-line); }
-  @media (max-width: 575.98px) { .ms-ibanner-wrap { padding: 0 12px; } .ms-ibanner { align-items: flex-start; flex-wrap: wrap; row-gap: 6px; } .ms-ibanner-text { flex-basis: calc(100% - 40px); order: 3; } .ms-ibanner-more { order: 4; flex-basis: 100%; } .ms-ibanner-close { margin-left: auto; } }
+  @media (max-width: 575.98px) { .ms-ibanner-wrap { padding: 0 12px; } .ms-ibanner { align-items: flex-start; flex-wrap: wrap; row-gap: 6px; } .ms-ibanner-text { flex-basis: calc(100% - 40px); order: 3; } .ms-ibanner-close { margin-left: auto; } }
 
   /* ---------- Papildoma opcija Default temai: vientisi CTA (#038389) ir nuorodos (#006A6E) ---------- */
   html.cta-solid:not(.theme-new) { --ms-link: #006a6e; }
@@ -1043,8 +1042,7 @@
         <div class="ms-ibanner-wrap" :class="{ 'is-separate': introVariant === 'J' }" x-show="(introVariant === 'I' || introVariant === 'J') && !tipSeen" x-collapse.duration.300ms>
           <div class="ms-ibanner" role="button" tabindex="0" aria-haspopup="dialog" @click="newsModal = true" @keydown.enter.prevent="newsModal = true" @keydown.space.prevent="newsModal = true">
             <span class="ms-announce-badge is-light">Naujiena</span>
-            <span class="ms-ibanner-text">Išaiškinimą dabar matysite iškart po atsakymo</span>
-            <span class="ms-ibanner-more">Plačiau</span>
+            <span class="ms-ibanner-text">Išaiškinimą dabar matysite iškart po atsakymo. <span class="ms-ibanner-more">Sužinoti daugiau</span></span>
             <button type="button" class="ms-ibanner-close" @click.stop="tipSeen = true" @keydown.enter.stop @keydown.space.stop aria-label="Uždaryti pranešimą"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
           </div>
         </div>
