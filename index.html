@@ -258,7 +258,7 @@
   /* Prototipo versijų jungiklis */
   /* ---------- Prototipo admin: minimalus, neutralus UI (Figma / Granola stiliumi), ne brando ---------- */
   .ms-admin, .ms-bgp { --ui-font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif; --ui-ink: #1f2323; --ui-sub: #8b9090; --ui-line: rgba(0, 0, 0, .08); --ui-hover: rgba(0, 0, 0, .045); --ui-on: rgba(0, 0, 0, .07); --ui-shadow: 0 0 0 .5px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.04), 0 12px 32px rgba(0,0,0,.10); }
-  .ms-admin { position: fixed; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 90; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-family: var(--ui-font); -webkit-font-smoothing: antialiased; }
+  .ms-admin { position: fixed; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 450; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-family: var(--ui-font); -webkit-font-smoothing: antialiased; }
   .ms-admin-btn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 8px; border: 0; background: rgba(255,255,255,.9); box-shadow: 0 0 0 .5px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.05); color: var(--ui-ink); font: 500 12px/1 var(--ui-font); cursor: pointer; opacity: .8; transition: opacity .15s, background .15s; backdrop-filter: blur(8px); }
   .ms-admin-btn svg { color: var(--ui-sub); }
   .ms-admin-btn:hover, .ms-admin-btn[aria-expanded="true"] { opacity: 1; background: #fff; }
@@ -496,7 +496,7 @@
   @media (max-width: 991.98px) { .ms-bgx { left: 0; } }
 
   .ms-admin-row { display: flex; gap: 6px; }
-  .ms-bgp { position: fixed; top: 8px; left: 8px; bottom: 8px; z-index: 95; width: 288px; max-width: calc(100vw - 16px); display: flex; flex-direction: column; background: #fff; border-radius: 12px; box-shadow: var(--ui-shadow); font: 12px/1.4 var(--ui-font); color: var(--ui-ink); -webkit-font-smoothing: antialiased; overflow: hidden; }
+  .ms-bgp { position: fixed; top: 8px; left: 8px; bottom: 8px; z-index: 500; width: 288px; max-width: calc(100vw - 16px); display: flex; flex-direction: column; background: #fff; border-radius: 12px; box-shadow: var(--ui-shadow); font: 12px/1.4 var(--ui-font); color: var(--ui-ink); -webkit-font-smoothing: antialiased; overflow: hidden; }
   .ms-bgp-anim { transition: transform .25s var(--ms-ease), opacity .2s ease; }
   .ms-bgp-from { transform: translateX(-12px); opacity: 0; }
   .ms-bgp-to { transform: none; opacity: 1; }
