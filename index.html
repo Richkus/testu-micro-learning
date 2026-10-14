@@ -667,9 +667,10 @@
   /* ilgas trumpas išaiškinimas kortelėje: ribotas aukštis, fade apačioje rodo, kad yra daugiau teksto */
   .ms-inline-scroll { max-height: 176px; overflow-y: auto; margin-right: -8px; padding-right: 8px; scrollbar-width: thin; scrollbar-color: rgba(15, 83, 84, .25) transparent;
     -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); }
-  .ms-inline-scroll:not(.is-top):not(.is-end) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); }
-  .ms-inline-scroll.is-end:not(.is-top) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px); mask-image: linear-gradient(to bottom, transparent 0, #000 40px); }
-  .ms-inline-scroll.is-end.is-top { -webkit-mask-image: none; mask-image: none; }
+  .ms-inline-scroll:not(.is-top):not(.is-end), .ms-fade-scroll:not(.is-top):not(.is-end) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, transparent 0, #000 40px, #000 calc(100% - 56px), transparent 100%); }
+  .ms-inline-scroll.is-end:not(.is-top), .ms-fade-scroll.is-end:not(.is-top) { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40px); mask-image: linear-gradient(to bottom, transparent 0, #000 40px); }
+  .ms-inline-scroll.is-end.is-top, .ms-fade-scroll.is-end.is-top { -webkit-mask-image: none; mask-image: none; }
+  .ms-fade-scroll.is-top:not(.is-end) { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - 56px), transparent 100%); }
   .ms-inline-scroll .ms-inline-lead { margin-bottom: 4px; }
 
   /* klausimas su ilga situacija */
@@ -1237,7 +1238,9 @@
             <h3 id="ms-modal-title">Atsakymo išaiškinimas</h3>
             <button class="ms-close" x-ref="close" @click="closeModal()" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
           </div>
-          <div class="ms-modal-body">
+          <div class="ms-modal-body ms-fade-scroll" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }"
+               x-effect="modal; idx; setTimeout(() => { $el.scrollTop = 0; top = true; end = $el.scrollHeight <= $el.clientHeight + 2 }, 300)"
+               @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2">
             <div class="ms-modal-q"><small>Klausimas</small><span x-text="q.text"></span><p class="ms-modal-sit" x-show="q.situation" x-text="'Situacija: ' + (q.situation || '')"></p></div>
             <template x-for="(para, pi) in q.paras" :key="idx + 'p' + pi"><p x-text="para"></p></template>
             <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
