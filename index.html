@@ -636,8 +636,9 @@
   @media (prefers-reduced-motion: reduce) { html.cta-live:not(.theme-new) .ms-btn:hover { --hl: 0; } }
 
   /* ---------- V.2: klausimai su keliais teisingais atsakymais ---------- */
-  .ms-multi-hint { display: inline-flex; align-items: center; gap: 8px; margin: -6px 0 16px; padding: 6px 12px 6px 10px; border-radius: 8px; background: var(--ms-howto-bg); border: 1px solid var(--ms-howto-line); font-size: 14px; line-height: 20px; color: var(--ms-ink-soft); }
-  .ms-multi-hint svg { flex: 0 0 auto; color: var(--ms-teal-dark); }
+  /* tarp kitko: be fono ir rėmelio, smulkus pilkas tekstas su ikonėle */
+  .ms-multi-hint { display: flex; align-items: center; gap: 6px; margin: -10px 0 14px; font-size: 13px; line-height: 18px; color: var(--ms-sub); }
+  .ms-multi-hint svg { flex: 0 0 auto; width: 14px; height: 14px; color: var(--ms-muted); }
   .ms-mbox { flex: 0 0 24px; width: 24px; height: 24px; margin: 2px 2px 0; border-radius: 6px; border: 1.5px solid var(--ms-option-line); background: var(--ms-surface); display: grid; place-items: center; color: #fff; transition: background-color .2s, border-color .2s; }
   .ms-moption:not(.is-locked):hover .ms-mbox { border-color: var(--ms-teal); }
   .ms-moption.is-selected { border-color: var(--ms-teal); background: var(--ms-surface); box-shadow: 0 0 0 1px var(--ms-teal) inset; }
@@ -1139,7 +1140,7 @@
               <!-- V.2: keli teisingi atsakymai -->
               <template x-if="q.multi">
                 <div class="ms-multi">
-                  <div class="ms-multi-hint"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3"/><path d="M4.8 8.2l2.1 2.1 4.3-4.6"/></svg><span>Pažymėkite <b>visus</b> teisingus atsakymus</span></div>
+                  <div class="ms-multi-hint"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3"/><path d="M4.8 8.2l2.1 2.1 4.3-4.6"/></svg><span>Galimi keli teisingi atsakymai</span></div>
                   <div class="ms-options" role="group" aria-label="Atsakymų variantai, galima pažymėti kelis">
                     <template x-for="(o, i) in q.options" :key="'m' + idx + '-' + i">
                       <div class="ms-option ms-moption" :class="[multiClass(i), answered ? 'is-locked' : '']">
