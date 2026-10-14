@@ -597,20 +597,21 @@
   html.cta-solid:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; }
   html.cta-solid:not(.theme-new) .ms-btn-outline:hover { background: var(--ms-surface-soft); color: #02747a; }
 
-  /* ---------- Opcija „Gyvas“ (Airbnb tipo): pagrindas #038389, gyvumas iš #4DAAAF: šviesus „blizgesys“ viršuje,
-     šviesesnis dešinys kraštas ir #4DAAAF šviesos taškas, sekantis pelę. Tekstas visada ant #038389 zonos (kontrastas ≥ 4.5:1) ---------- */
+  /* ---------- Opcija „Gyvas“ (Airbnb tipo): pagrindas #038389 ir #4DAAAF spotlight: ramybėje viršuje kairėje,
+     užvedus pelę seka žymeklį. Tekstas visada ant #038389 zonos (kontrastas ≥ 4.5:1) ---------- */
   @property --hl { syntax: '<number>'; inherits: false; initial-value: 0; }
   html.cta-live:not(.theme-new) { --ms-link: #006a6e; }
   html.cta-live:not(.theme-new) .ms-btn {
     border-color: transparent;
+    /* ramybės būsenoje spotlight stovi viršuje kairėje, užvedus pelę jis ryškėja ir seka žymeklį */
     background:
-      radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(77, 170, 175, calc(var(--hl) * .6)) 0%, rgba(77, 170, 175, 0) 60%),
-      linear-gradient(180deg, rgba(77, 170, 175, .5) 0%, rgba(77, 170, 175, 0) 55%),
-      linear-gradient(90deg, #038389 0%, #038389 55%, #1c9599 100%);
+      radial-gradient(120px circle at var(--mx, 22%) var(--my, 0%), rgba(77, 170, 175, calc(.5 + var(--hl) * .2)) 0%, rgba(77, 170, 175, 0) 100%),
+      #038389;
     box-shadow: none;
     transition: --hl .3s ease, transform .15s;
   }
   html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; }
+  html.cta-live:not(.theme-new) .ms-btn:not(:hover) { --mx: 22% !important; --my: 0% !important; }
   html.cta-live:not(.theme-new) .ms-btn:active { transform: translateY(1px) scale(.99); }
   html.cta-live:not(.theme-new) .ms-btn:focus-visible { outline: 3px solid rgba(77, 170, 175, .55); outline-offset: 3px; }
   html.cta-live:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; box-shadow: none; }
