@@ -547,8 +547,9 @@
 
   /* ---------- Prototipo juostelė: DS Blue (info) 100 / 700, kad atsiskirtų nuo teal sąsajos; centruota, kaip MagicPath ---------- */
   :root { --ms-proto-h: 34px; }
-  /* visada viršuje (sticky) ir virš modalų bei jų fono */
-  .ms-proto-bar { position: sticky; top: 0; z-index: 300; display: flex; align-items: center; justify-content: center; gap: 10px; height: var(--ms-proto-h); padding: 0 16px; font-size: 13px; background: #e1e9f4; border-bottom: 1px solid #c3d2e9; color: #315387; line-height: 18px; white-space: nowrap; overflow: hidden; }
+  /* visada viršuje (fixed, kad nebūtų tarpo, pro kurį matosi slenkantis turinys) ir virš modalų bei jų fono */
+  body { padding-top: var(--ms-proto-h); }
+  .ms-proto-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 300; display: flex; align-items: center; justify-content: center; gap: 10px; height: var(--ms-proto-h); padding: 0 16px; font-size: 13px; background: #e1e9f4; border-bottom: 1px solid #c3d2e9; color: #315387; line-height: 18px; white-space: nowrap; overflow: hidden; }
   .ms-proto-bar svg { flex: 0 0 auto; }
   .ms-proto-bar strong { font-weight: 600; }
   .ms-proto-text { overflow: hidden; text-overflow: ellipsis; opacity: .85; }
