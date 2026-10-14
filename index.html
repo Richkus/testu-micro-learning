@@ -689,7 +689,6 @@
   @media (prefers-reduced-motion: reduce) { .ms-mreveal { animation: none; } }
   .ms-mcheck { display: flex; align-items: center; gap: 16px; padding-top: 18px; }
   .ms-mcheck .ms-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
-  .ms-mcount { font-size: 14px; color: var(--ms-sub); }
   .ms-mexpl { margin-top: 16px; padding: 18px 20px 20px; border-radius: var(--ms-radius-md); background: var(--ms-surface-soft); }
   .ms-mexpl .ms-more { margin-bottom: 0; }
   .ms-mnext { display: flex; width: fit-content; min-width: 200px; margin-top: 16px; }
@@ -1207,7 +1206,6 @@
                   </div>
                   <div class="ms-mcheck" x-show="!answered" x-collapse.duration.400ms :class="{ 'is-gone': answered }">
                     <button type="button" class="ms-btn" :disabled="!multiSel.length" @click="checkMulti()">Patikrinti</button>
-                    <span class="ms-mcount" x-text="multiSel.length ? `Pažymėta: ${multiSel.length}` : 'Pažymėkite bent vieną'"></span>
                   </div>
                   <div x-show="answered && !leaving" x-collapse.duration.400ms><div class="ms-mreveal">
                     <div class="ms-mexpl" :class="'is-' + multiResult" aria-live="polite">
