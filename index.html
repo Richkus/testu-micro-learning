@@ -597,21 +597,21 @@
   html.cta-solid:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; }
   html.cta-solid:not(.theme-new) .ms-btn-outline:hover { background: var(--ms-surface-soft); color: #02747a; }
 
-  /* ---------- Opcija „Gyvas“ (Airbnb tipo): horizontalus teal → giliai mėlynai teal gradientas, švelnus spalvotas šešėlis,
-     o užvedus pelę šviesos taškas seka žymeklį. Kontrastas su baltu tekstu ≥ 4.5:1 per visą gradientą ---------- */
+  /* ---------- Opcija „Gyvas“ (Airbnb tipo): subtilus DS Teal 600 → Teal 700 gradientas be šešėlio,
+     užvedus pelę šviesos taškas seka žymeklį. Kontrastas su baltu tekstu ≥ 4.5:1 per visą gradientą ---------- */
   @property --hl { syntax: '<number>'; inherits: false; initial-value: 0; }
   html.cta-live:not(.theme-new) { --ms-link: #006a6e; }
   html.cta-live:not(.theme-new) .ms-btn {
     border-color: transparent;
     background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, calc(var(--hl) * .2)) 0%, transparent 60%),
-                linear-gradient(90deg, #038389 0%, #04748a 55%, #065f7a 100%);
-    box-shadow: 0 6px 16px -8px rgba(3, 110, 125, .65);
-    transition: --hl .3s ease, box-shadow .25s ease, transform .15s;
+                linear-gradient(90deg, #437f83 0%, #3a6d71 100%);
+    box-shadow: none;
+    transition: --hl .3s ease, transform .15s;
   }
-  html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; box-shadow: 0 10px 22px -10px rgba(3, 110, 125, .75); }
+  html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; }
   html.cta-live:not(.theme-new) .ms-btn:active { transform: translateY(1px) scale(.99); }
-  html.cta-live:not(.theme-new) .ms-btn:focus-visible { outline: 3px solid rgba(3, 131, 137, .45); outline-offset: 3px; }
-  html.cta-live:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; box-shadow: none; }
+  html.cta-live:not(.theme-new) .ms-btn:focus-visible { outline: 3px solid rgba(67, 127, 131, .45); outline-offset: 3px; }
+  html.cta-live:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #437f83; color: #437f83; }
   html.cta-live:not(.theme-new) .ms-btn-outline:hover { background: var(--ms-surface-soft); }
   @media (prefers-reduced-motion: reduce) { html.cta-live:not(.theme-new) .ms-btn:hover { --hl: 0; } }
 
@@ -739,7 +739,7 @@
       <div class="ms-admin-group">Mygtukai ir nuorodos (Default temai)</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="gradient" id="ms-cta-gradient" x-model="ctaStyle"><span>Gradientas (dabartinis)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="solid" id="ms-cta-solid" x-model="ctaStyle"><span>Vientisas #038389, nuoroda #006A6E</span></label>
-      <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="live" id="ms-cta-live" x-model="ctaStyle"><span>Gyvas (Airbnb tipo): gradientas + šviesa paskui pelę</span></label>
+      <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="live" id="ms-cta-live" x-model="ctaStyle"><span>Gyvas (Airbnb tipo): Teal 600 → 700 + šviesa paskui pelę</span></label>
       <div class="ms-admin-group">Naujienos vieta intro ekrane</div>
       <template x-for="v in introVariants" :key="v.id">
         <label class="ms-admin-opt"><input type="radio" name="ms-intro-variant" :value="v.id" :id="'ms-v-' + v.id" x-model="introVariant"><span><b x-text="v.id"></b> <span x-text="v.label"></span></span></label>
