@@ -1457,7 +1457,7 @@ function quiz() {
       this.bg.source = src;
     },
     bgReset() { this.bg = { ...this.bgDefaults }; },
-    introVariant: 'G',
+    introVariant: 'J',
     introVariants: [
       { id: 'E', label: 'Modalas paspaudus „Pradėti“' },
       { id: 'F', label: 'Naujienos kortelė su „Supratau“' },
@@ -1649,7 +1649,7 @@ function quiz() {
 
     init() {
       try {
-        const saved = JSON.parse(localStorage.getItem('ms-proto-v2') || '{}');
+        const saved = JSON.parse(localStorage.getItem('ms-proto-v3') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
         if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
         if (saved.protoVersion === 'v1' || saved.protoVersion === 'v2') this.protoVersion = saved.protoVersion;
@@ -1657,7 +1657,7 @@ function quiz() {
         this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
         ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
       } catch (e) { this.bg = { ...this.bgDefaults }; }
-      const persist = () => { try { localStorage.setItem('ms-proto-v2', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion })); } catch (e) {} };
+      const persist = () => { try { localStorage.setItem('ms-proto-v3', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion })); } catch (e) {} };
       this.$watch('introVariant', persist);
       const applyTheme = () => document.documentElement.classList.toggle('theme-new', this.theme === 'new');
       applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
