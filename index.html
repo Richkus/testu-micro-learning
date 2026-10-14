@@ -327,7 +327,7 @@
   .ms-option.is-dim { opacity: .45; }
 
   /* Trumpas paaiškinimas teisingo varianto viduje */
-  .ms-inline { padding: 0 28px 16px 56px; }
+  .ms-inline { padding: 0 28px 32px 56px; }
   .ms-inline-body { border-top: 1px solid var(--ms-ok-line); padding-top: 14px; }
   .ms-inline-status { font-size: 12px; font-weight: 600; letter-spacing: .03em; margin-bottom: 4px; color: var(--ms-muted); }
   .ms-inline-status.is-ok { color: var(--ms-ok-text); }
@@ -362,7 +362,10 @@
   .ms-modal-q-btn svg { flex: 0 0 auto; color: var(--ms-sub); transition: transform .25s var(--ms-ease); }
   .ms-modal-q.is-open .ms-modal-q-btn svg { transform: rotate(180deg); }
   .ms-modal-q-btn:hover b { color: var(--ms-ink); }
-  .ms-modal-q-full { padding: 0 14px 12px; color: var(--ms-ink-soft); }
+  .ms-modal-q-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .25s var(--ms-ease); }
+  .ms-modal-q.is-open .ms-modal-q-body { grid-template-rows: 1fr; }
+  .ms-modal-q-full { overflow: hidden; min-height: 0; padding: 0 14px; color: var(--ms-ink-soft); transition: padding .25s var(--ms-ease); }
+  .ms-modal-q.is-open .ms-modal-q-full { padding-bottom: 12px; }
   .ms-lead { font-size: 17px; font-weight: 700; line-height: 26px; color: var(--ms-ink); margin-bottom: 14px; }
   .ms-why-not { font-size: 14px; line-height: 21px; color: var(--ms-ink); background: var(--ms-bad-bg); border-radius: var(--ms-radius-sm); padding: 10px 14px; margin-bottom: 14px; }
   .ms-why-not b { color: var(--ms-bad); font-weight: 700; }
@@ -376,7 +379,7 @@
   .ms-linkcard:hover .ms-linkcard-ico { border-color: var(--ms-teal); }
   .ms-linkcard-ico svg { color: var(--ms-ink-soft); } /* ikona tokios pat spalvos kaip tekstas */
   .ms-linkcard-text { flex: 1; min-width: 0; }
-  .ms-linkcard-text small { display: block; font-size: 13px; line-height: 20px; font-weight: 400; text-transform: uppercase; color: var(--ms-link-eyebrow); }
+  .ms-linkcard-text small { display: block; font-size: 12px; line-height: 20px; font-weight: 400; text-transform: uppercase; color: var(--ms-link-eyebrow); }
   .ms-linkcard-text span { display: block; font-size: 14px; font-weight: 400; line-height: 20px; color: var(--ms-ink-soft); transition: color .2s; }
   .ms-linkcard:hover .ms-linkcard-text span { color: var(--ms-teal); }
   .ms-linkcard .ms-ext { flex: 0 0 18px; margin-top: 21px; transition: transform .2s var(--ms-ease); }
@@ -484,7 +487,7 @@
     .ms-intro-check { display: none; }
     .ms-intro-label { margin-right: 0; }
     .ms-intro h1 { margin-right: 0; }
-    .ms-inline { padding: 0 20px 14px 14px; }
+    .ms-inline { padding: 0 20px 32px 14px; }
     /* telefone „Jūsų atsakymas“ žyma po atsakymo tekstu, ne šalia */
     .ms-option-btn { flex-wrap: wrap; row-gap: 6px; }
     .ms-option-text { flex: 1 1 calc(100% - 42px); }
@@ -1277,7 +1280,7 @@
                @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2">
             <div class="ms-modal-q" x-data="{ qOpen: false }" x-effect="idx; if (modal) qOpen = false" :class="{ 'is-open': qOpen }">
               <button type="button" class="ms-modal-q-btn" @click="qOpen = !qOpen" :aria-expanded="qOpen"><b>Klausimas:</b><span class="ms-modal-q-short" x-text="q.text"></span><svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1.5l5 5 5-5"/></svg></button>
-              <div x-show="qOpen" x-collapse.duration.250ms><div class="ms-modal-q-full"><span x-text="q.text"></span><p class="ms-modal-sit" x-show="q.situation" x-text="'Situacija: ' + (q.situation || '')"></p></div></div>
+              <div class="ms-modal-q-body" :aria-hidden="!qOpen"><div class="ms-modal-q-full"><span x-text="q.text"></span><p class="ms-modal-sit" x-show="q.situation" x-text="'Situacija: ' + (q.situation || '')"></p></div></div>
             </div>
             <template x-for="(para, pi) in q.paras" :key="idx + 'p' + pi"><p x-text="para"></p></template>
             <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
@@ -1846,7 +1849,8 @@ function quiz() {
         const root = document.documentElement;
         root.classList.add('ms-reloading');
         setTimeout(() => {
-          this.answered = false; this.leaving = false; this.screen = 'results';
+          // answered neliečiam: jei išaiškinimas (x-collapse) pradėtų sktis kartu su ekrano slėpimu, Alpine laukia jo pabaigos ir klausimo ekranas lieka matomas
+          this.screen = 'results';
           window.scrollTo({ top: 0, behavior: 'instant' });
           setTimeout(() => root.classList.remove('ms-reloading'), 380);
         }, 140);
