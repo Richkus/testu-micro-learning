@@ -1170,7 +1170,7 @@
                     <div class="ms-mexpl" :class="'is-' + multiResult" aria-live="polite">
                       <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-partial': multiResult === 'partial' }" x-text="multiResult === 'ok' ? 'Teisingai!' : (multiResult === 'partial' ? `Iš dalies teisingai: pažymėjote ${multiHits} iš ${q.correct.length} teisingų` : 'Neteisingai')"></div>
                       <p class="ms-inline-lead" x-text="q.lead"></p>
-                      <button type="button" class="ms-more" @click="openModal()">Skaityti visą išaiškinimą</button>
+                      <button type="button" class="ms-more" @click="openModal()">Platesnis išaiškinimas</button>
                       <button class="ms-btn" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span></button>
                     </div>
                   </div>
@@ -1207,7 +1207,7 @@
                             <p class="ms-inline-lead" x-text="(!isCorrect && !pickedUnknown && protoVersion === 'v2' && q.wrongLead) ? q.wrongLead : q.lead"></p>
                           </div>
                           <button type="button" class="ms-more" @click="openModal()">
-                            Skaityti visą išaiškinimą
+                            Platesnis išaiškinimas
                           </button>
                           <button class="ms-btn" x-ref="next" @click="next()">
                             <span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span>
@@ -1234,7 +1234,7 @@
         <div class="ms-coach-body">
           <span class="ms-announce-badge is-light">Naujiena</span>
           <h3 id="ms-coach-title">Išaiškinimą dabar matote iškart</h3>
-          <p>Pasirinkus atsakymą teisingas variantas išsiskleidžia su trumpu paaiškinimu. Visą tekstą rasite paspaudę „Skaityti visą išaiškinimą“.</p>
+          <p>Pasirinkus atsakymą teisingas variantas išsiskleidžia su trumpu paaiškinimu. Visą tekstą rasite paspaudę „Platesnis išaiškinimas“.</p>
           <div class="ms-coach-foot">
             <button type="button" class="ms-btn ms-btn-outline" @click="coachClose()">Supratau</button>
           </div>
