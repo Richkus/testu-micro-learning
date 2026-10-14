@@ -297,7 +297,7 @@
   .ms-qbody { transition: opacity .22s ease; }
   .ms-qbody.is-leaving { opacity: 0; }
 
-  .ms-progress { display: inline-flex; align-items: center; font-size: 12px; font-weight: 400; letter-spacing: .04em; text-transform: uppercase; line-height: 16px; color: var(--ms-ink); background: var(--ms-pill); border-radius: 999px; padding: 5px 12px; margin-bottom: 18px; font-variant-numeric: tabular-nums; }
+  .ms-progress { display: inline-flex; align-items: center; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; line-height: 16px; color: var(--ms-ink); background: var(--ms-pill); border-radius: 999px; padding: 5px 12px; margin-bottom: 18px; font-variant-numeric: tabular-nums; }
   .ms-progress-track { width: 158px; height: 4px; border-radius: 5px; background: var(--ms-progress-track); overflow: hidden; }
   .ms-progress-fill { height: 100%; background: var(--ms-progress-fill); border-radius: 5px; transition: width .5s var(--ms-ease); }
 
@@ -352,7 +352,8 @@
   .ms-close:hover { background: var(--ms-surface-soft); }
   .ms-close:focus-visible { outline: 3px solid rgba(83,169,177,.35); }
   .ms-modal-body { overflow-y: auto; margin-right: -12px; padding-right: 12px; scrollbar-width: thin; scrollbar-color: #c9dada transparent; }
-  .ms-modal-q { font-size: 13px; line-height: 20px; color: var(--ms-muted); margin-bottom: 16px; }
+  .ms-modal-q { margin-bottom: 18px; padding: 10px 14px 12px; border-radius: 8px; background: var(--ms-howto-bg); border-left: 3px solid var(--ms-howto-line); font-size: 14px; line-height: 21px; color: var(--ms-ink-soft); }
+  .ms-modal-q small { display: block; margin-bottom: 2px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ms-sub); }
   .ms-lead { font-size: 17px; font-weight: 700; line-height: 26px; color: var(--ms-ink); margin-bottom: 14px; }
   .ms-why-not { font-size: 14px; line-height: 21px; color: var(--ms-ink); background: var(--ms-bad-bg); border-radius: var(--ms-radius-sm); padding: 10px 14px; margin-bottom: 14px; }
   .ms-why-not b { color: var(--ms-bad); font-weight: 700; }
@@ -662,6 +663,23 @@
   .ms-proto-ver button { border: 0; background: none; padding: 3px 9px; border-radius: 5px; font: 600 12px/1.2 inherit; font-family: inherit; color: #315387; cursor: pointer; opacity: .7; transition: background-color .15s, opacity .15s; }
   .ms-proto-ver button:hover { opacity: 1; }
   .ms-proto-ver button.is-on { background: #fff; opacity: 1; box-shadow: 0 1px 2px rgba(49, 83, 135, .2); }
+
+  /* ---------- Vaidos pastabos ---------- */
+  .ms-done { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--ms-ok-text); }
+  .ms-done-ico { width: 20px; height: 20px; border-radius: 50%; background: var(--ms-ok); display: grid; place-items: center; }
+  .ms-rsel { max-height: 60px; overflow: hidden; transition: opacity .25s ease, max-height .3s var(--ms-ease), margin .3s var(--ms-ease); }
+  .ms-rsel.is-hidden { opacity: 0; max-height: 0; margin-top: 0 !important; }
+  /* „Nežinau“: neutralus, pilkas */
+  .ms-icon.is-neutral { background: #e3e8e8; }
+  .ms-q-mark { font-size: 14px; font-weight: 700; line-height: 1; color: #556768; }
+  .ms-option.is-unknown { background: #f2f5f5; border-color: #cdd5d6; border-width: 1.5px; }
+  .ms-option.is-unknown .ms-inline-body, .ms-option.is-unknown .ms-rinline-body { border-top-color: #cdd5d6; }
+  .ms-inline-status.is-neutral { color: #556768; }
+  .ms-tag.is-neutral { color: #556768; background: #e3e8e8; }
+  .ms-chip.is-neutral { background: #f2f5f5; border-color: #cdd5d6; color: #556768; }
+  .ms-chip .ms-icon.is-neutral .ms-q-mark { font-size: 12px; }
+  html.theme-new .ms-done { color: var(--ink-line); }
+  html.theme-new .ms-done-ico { background: var(--ink-line); }
 
   /* =====================================================================
      THEME: NEW — iliustruotas, „Vocabulary“ tipo stilius: kreminis fonas, serif antraštės,
@@ -1140,18 +1158,21 @@
                       <template x-if="answered && i === q.correct">
                         <span class="ms-icon is-ok"><svg width="13" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.5 3.5L12 1"/></svg></span>
                       </template>
-                      <template x-if="answered && i === picked && i !== q.correct">
+                      <template x-if="answered && i === picked && i === q.unknown">
+                        <span class="ms-icon is-neutral" aria-label="Nežinau"><span class="ms-q-mark">?</span></span>
+                      </template>
+                      <template x-if="answered && i === picked && i !== q.correct && i !== q.unknown">
                         <span class="ms-icon is-bad" aria-label="Neteisingas atsakymas"><svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg></span>
                       </template>
                       <span class="ms-option-text" x-text="o"></span>
-                      <span class="ms-tag" x-show="answered && i === picked && i !== q.correct" x-transition.opacity.duration.250ms>Jūsų atsakymas</span>
+                      <span class="ms-tag" :class="{ 'is-neutral': i === q.unknown }" x-show="answered && i === picked && i !== q.correct" x-transition.opacity.duration.250ms>Jūsų atsakymas</span>
                     </button>
                     <!-- Trumpas paaiškinimas + CTA tik teisingame variante -->
                     <div x-show="answered && !leaving && i === expandIdx" x-collapse.duration.400ms>
                       <div class="ms-inline" aria-live="polite">
                         <div class="ms-inline-body">
-                          <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-bad': !isCorrect && protoVersion === 'v2' }" x-text="isCorrect ? 'Teisingai!' : (protoVersion === 'v2' ? 'Kodėl neteisingai?' : 'Kodėl taip?')"></div>
-                          <p class="ms-inline-lead" x-text="q.lead"></p>
+                          <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-neutral': pickedUnknown, 'is-bad': !isCorrect && !pickedUnknown && protoVersion === 'v2' }" x-text="isCorrect ? 'Teisingai!' : (pickedUnknown ? 'Teisingas atsakymas' : (protoVersion === 'v2' ? 'Kodėl neteisingai?' : 'Kodėl taip?'))"></div>
+                          <p class="ms-inline-lead" x-text="(!isCorrect && !pickedUnknown && protoVersion === 'v2' && q.wrongLead) ? q.wrongLead : q.lead"></p>
                           <button type="button" class="ms-more" @click="openModal()">
                             Skaityti visą išaiškinimą
                           </button>
@@ -1195,12 +1216,11 @@
             <button class="ms-close" x-ref="close" @click="closeModal()" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="#6c8284" stroke-width="2" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
           </div>
           <div class="ms-modal-body">
-            <div class="ms-modal-q" x-text="`${idx + 1}. ${q.text}`"></div>
-            <div class="ms-lead" x-text="q.lead"></div>
+            <div class="ms-modal-q"><small>Klausimas</small><span x-text="q.text"></span></div>
             <template x-for="(para, pi) in q.paras" :key="idx + 'p' + pi"><p x-text="para"></p></template>
             <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
               <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
-              <span class="ms-linkcard-text"><small>PRAKTINĖ SITUACIJA</small><span x-text="q.link.title"></span></span>
+              <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="q.link.title"></span></span>
               <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
             </a>
           </div>
@@ -1226,11 +1246,12 @@
           <div class="ms-results-head">
             <div class="ms-results-top">
               <div>
-                <span class="ms-progress">Testas baigtas</span>
+                <span class="ms-done"><span class="ms-done-ico" aria-hidden="true"><svg width="10" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l2.8 2.8L9 1.2"/></svg></span>Testas baigtas</span>
                 <h1>Testo rezultatai</h1>
                 <div class="ms-summary">
                   <span class="ms-chip is-ok"><span class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span><span x-text="`Teisingai: ${score}`"></span></span>
-                  <span class="ms-chip is-bad" x-show="questions.length - score > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Klaidos: ${questions.length - score}`"></span></span>
+                  <span class="ms-chip is-bad" x-show="wrongCount > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Klaidos: ${wrongCount}`"></span></span>
+                  <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">?</span></span><span x-text="`Nežinojote: ${unknownCount}`"></span></span>
                 </div>
               </div>
               <div class="ms-score">
@@ -1248,12 +1269,13 @@
           <template x-for="(rq, ri) in questions" :key="'r' + ri">
             <div class="ms-ritem" x-data="{ open: false }">
               <button class="ms-rbtn" @click="open = !open" :aria-expanded="open">
-                <span class="ms-icon" :class="isRightAnswer(ri) ? 'is-ok' : 'is-bad'">
+                <span class="ms-icon" :class="isRightAnswer(ri) ? 'is-ok' : (isUnknownAns(ri) ? 'is-neutral' : 'is-bad')">
                   <svg x-show="isRightAnswer(ri)" width="13" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.5 3.5L12 1"/></svg>
-                  <svg x-show="!isRightAnswer(ri)" width="10" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+                  <span x-show="isUnknownAns(ri)" class="ms-q-mark">?</span>
+                  <svg x-show="!isRightAnswer(ri) && !isUnknownAns(ri)" width="10" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
                 </span>
                 <span class="ms-rq"><span x-text="`${ri + 1}. ${rq.text}`"></span>
-                  <small x-text="isRightAnswer(ri) ? 'Atsakėte teisingai' : `Jūsų atsakymas: ${answerText(ri)}`"></small>
+                  <small class="ms-rsel" :class="{ 'is-hidden': open }" x-text="`Jūsų atsakymas: ${answerText(ri)}`"></small>
                 </span>
                 <svg class="ms-chev" :class="{ 'is-open': open }" width="12" height="8" fill="none" stroke="#5f7a7e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l5 5 5-5"/></svg>
               </button>
@@ -1262,24 +1284,24 @@
                   <!-- Variantai: tos pačios būsenos kaip klausime -->
                   <div class="ms-ropts">
                     <template x-for="(o, oi) in rq.options" :key="'ro' + ri + oi">
-                      <div class="ms-option is-locked" :class="isRightOpt(rq, oi) ? 'is-correct' : (wasPicked(ri, oi) ? 'is-wrong' : 'is-dim')">
+                      <div class="ms-option is-locked" :class="isRightOpt(rq, oi) ? 'is-correct' : (wasPicked(ri, oi) ? (oi === rq.unknown ? 'is-unknown' : 'is-wrong') : 'is-dim')">
                         <div class="ms-option-btn">
                           <span x-show="!isRightOpt(rq, oi) && !wasPicked(ri, oi)" class="ms-key" x-text="letters[oi]"></span>
                           <span x-show="isRightOpt(rq, oi)" class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span>
-                          <span x-show="wasPicked(ri, oi) && !isRightOpt(rq, oi)" class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span>
+                          <span x-show="wasPicked(ri, oi) && oi === rq.unknown" class="ms-icon is-neutral"><span class="ms-q-mark">?</span></span>
+                          <span x-show="wasPicked(ri, oi) && !isRightOpt(rq, oi) && oi !== rq.unknown" class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span>
                           <span class="ms-option-text" x-text="o"></span>
-                          <span class="ms-tag" x-show="wasPicked(ri, oi) && !isRightOpt(rq, oi)">Jūsų atsakymas</span>
+                          <span class="ms-tag" x-show="wasPicked(ri, oi) && !isRightOpt(rq, oi)" :class="{ 'is-neutral': oi === rq.unknown }">Jūsų atsakymas</span>
                         </div>
                         <!-- V.2: išaiškinimas pasirinkto varianto viduje (kaip sprendžiant) -->
                         <template x-if="inlineResult(ri) && wasPicked(ri, oi)">
                           <div class="ms-rinline">
                             <div class="ms-rinline-body">
-                              <div class="ms-inline-status" :class="isRightAnswer(ri) ? 'is-ok' : 'is-bad'" x-text="isRightAnswer(ri) ? 'Teisingai!' : 'Kodėl neteisingai?'"></div>
-                              <div class="ms-lead" x-text="rq.lead"></div>
+                              <div class="ms-inline-status" :class="isRightAnswer(ri) ? 'is-ok' : (isUnknownAns(ri) ? 'is-neutral' : 'is-bad')" x-text="isRightAnswer(ri) ? 'Teisingai!' : (isUnknownAns(ri) ? 'Teisingas atsakymas' : 'Kodėl neteisingai?')"></div>
                               <template x-for="(para, pi) in rq.paras" :key="'rpi' + ri + pi"><p x-text="para"></p></template>
                               <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
                                 <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
-                                <span class="ms-linkcard-text"><small>PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
+                                <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
                                 <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
                               </a>
                             </div>
@@ -1291,11 +1313,10 @@
                   <!-- Išaiškinimas po variantais (V.1, V.2 kelių atsakymų klausimai, neatsakyti) -->
                   <div class="ms-rwhy" x-show="!inlineResult(ri)">
                     <div class="ms-inline-status">Kodėl taip?</div>
-                    <div class="ms-lead" x-text="rq.lead"></div>
                     <template x-for="(para, pi) in rq.paras" :key="'rp' + ri + pi"><p x-text="para"></p></template>
                     <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
                       <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="#4c9095" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
-                      <span class="ms-linkcard-text"><small>PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
+                      <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
                       <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
                     </a>
                   </div>
@@ -1457,6 +1478,7 @@ function quiz() {
         text: 'Darbuotoja, auginanti 5 metų vaiką, pateikė darbdaviui prašymą visą darbo laiką dirbti nuotoliniu būdu. Ar darbdavys privalo tenkinti šį darbuotojos prašymą?',
         options: ['Taip, privalo', 'Taip, privalo, jeigu dėl gamybinio būtinumo ar darbo organizavimo ypatumų darbdaviui tai nesukels per didelių sąnaudų', 'Ne, neprivalo'],
         correct: 1,
+        wrongLead: 'Ne visai: darbdavys privalo tenkinti prašymą tik tada, jei tai nesukels per didelių sąnaudų.',
         reason: 'Pareiga nėra besąlygiška: darbdavys gali atsisakyti, jei tai sukeltų per dideles sąnaudas.',
         lead: 'Darbdavys privalo tenkinti prašymą, jei tai nesukels per didelių sąnaudų.',
         paras: ['Ši darbuotoja priklauso tai kategorijai darbuotojų, kurių prašymus dirbti nuotoliniu būdu darbdavys privalo tenkinti, jeigu dėl gamybinio būtinumo ar darbo organizavimo ypatumų tai jam nesukels per didelių sąnaudų.'],
@@ -1466,6 +1488,7 @@ function quiz() {
         text: 'Kiek kasmetinių atostogų per metus priklauso darbuotojui, kuris dirba penkias dienas per savaitę ir nepatenka į jokią lengvatinę kategoriją?',
         options: ['20 darbo dienų', '28 kalendorinės dienos', '25 darbo dienos'],
         correct: 0,
+        wrongLead: 'Ne, dirbant penkias dienas per savaitę minimaliai priklauso 20 darbo dienų.',
         reason: null,
         lead: 'Dirbant penkias dienas per savaitę priklauso 20 darbo dienų.',
         paras: ['Darbo kodeksas nustato, kad minimali kasmetinių atostogų trukmė yra 20 darbo dienų, kai dirbama penkias dienas per savaitę, ir 24 darbo dienos, kai dirbama šešias. Ilgesnės, 25 darbo dienų, atostogos priklauso tik tam tikroms darbuotojų grupėms, pavyzdžiui, jaunesniems nei 18 metų ar vieniems auginantiems vaiką iki 14 metų.'],
@@ -1526,11 +1549,18 @@ function quiz() {
     },
     get questions() {
       if (this.protoVersion !== 'v2') return this.baseQuestions;
-      const q = this.baseQuestions.slice(); q.splice(1, 0, this.multiQuestion); return q;
+      const q = this.baseQuestions.map(x => x);
+      // V.2: „Nežinau“ variantas (kaip Mokesčių naujienų testuose) 3-iame baziniame klausime
+      q[2] = { ...q[2], options: [...q[2].options, 'Nežinau'], unknown: q[2].options.length };
+      q.splice(1, 0, this.multiQuestion); return q;
     },
     get q() { return this.questions[this.idx]; },
     get isCorrect() { return this.q.multi ? this.multiResult === 'ok' : this.picked === this.q.correct; },
     // V.1: išaiškinimas visada po teisingu variantu; V.2: po pasirinktu (ir kai neteisingas)
+    get pickedUnknown() { return this.q.unknown !== undefined && this.picked === this.q.unknown; },
+    isUnknownAns(ri) { const qq = this.questions[ri]; return qq.unknown !== undefined && this.answers[ri] === qq.unknown; },
+    get unknownCount() { return this.questions.filter((qq, i) => this.isUnknownAns(i)).length; },
+    get wrongCount() { return this.questions.length - this.score - this.unknownCount; },
     inlineResult(ri) { const qq = this.questions[ri], a = this.answers[ri]; return this.protoVersion === 'v2' && !qq.multi && a !== undefined && a !== null; },
     get expandIdx() { return this.protoVersion === 'v2' ? this.picked : this.q.correct; },
     isRightOpt(qq, i) { return Array.isArray(qq.correct) ? qq.correct.includes(i) : i === qq.correct; },
@@ -1705,7 +1735,7 @@ function quiz() {
     optClass(i) {
       if (!this.answered) return '';
       if (i === this.q.correct) return 'is-correct';
-      if (i === this.picked) return 'is-wrong';
+      if (i === this.picked) return i === this.q.unknown ? 'is-unknown' : 'is-wrong';
       return 'is-dim';
     },
 
