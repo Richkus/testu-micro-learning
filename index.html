@@ -869,7 +869,9 @@
   .tf-question.is-pre-up { opacity: 0; transform: translateY(40px); transition: none; }
   .tf-question.is-pre-down { opacity: 0; transform: translateY(-40px); transition: none; }
 
-  /* pradžia */
+  /* pradžia (įprastame puslapyje) */
+  .tf-home { max-width: 720px; margin: 0 auto; padding: 40px 48px 44px; }
+  @media (max-width: 575.98px) { .tf-home { padding: 24px 20px 28px; } }
   .tf-welcome .ms-intro-label { margin-bottom: 0; }
   .tf-hero { font-size: 26px; line-height: 34px; font-weight: 700; color: var(--ms-ink-soft); margin: 22px 0 12px; text-wrap: balance; }
   .tf-lead { font-size: 16px; line-height: 25px; color: var(--ms-ink-soft); margin: 0 0 20px; }
@@ -1043,19 +1045,6 @@
     </div>
 
     <div class="tf-scroll" x-ref="tfScroll">
-      <!-- Pradžia -->
-      <template x-if="tfStage === 'welcome'">
-        <section class="tf-screen tf-card tf-welcome tf-in">
-          <div class="ms-intro-label"><b>ŽINIŲ TESTAS:</b> 2026-10-01</div>
-          <h1 class="tf-hero" x-text="title"></h1>
-          <p class="tf-lead">Atsakykite į <span x-text="`${questions.length} ${plural(questions.length, 'klausimą', 'klausimus', 'klausimų')}`"></span>. Po kiekvieno atsakymo iškart pamatysite, ar teisingai, ir kodėl.</p>
-          <div class="tf-news"><span class="ms-announce-badge is-light">Naujiena</span><span>Išaiškinimą dabar matysite iškart po atsakymo</span></div>
-          <div class="tf-actions">
-            <button type="button" class="ms-btn" @click="tfStart()">Pradėti testą <svg width="16" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h14M10 1l5 5-5 5"/></svg></button>
-            <span class="tf-meta"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>Užtruks apie <span x-text="Math.max(3, Math.round(questions.length * 0.6))"></span> min.</span>
-          </div>
-        </section>
-      </template>
 
       <!-- Klausimas -->
       <template x-if="tfStage === 'q'">
@@ -1429,14 +1418,27 @@
       <section x-show="screen === 'intro'" x-transition:enter.opacity.duration.300ms x-transition:leave.opacity.duration.1ms class="ms-intro-wrap" :class="'is-v' + introVariant">
 
         <!-- I / J variantai: naujienos juostelė už kortelės (I) arba atskirai virš jos (J) -->
-        <div class="ms-ibanner-wrap" :class="{ 'is-separate': introVariant === 'J' }" x-show="(introVariant === 'I' || introVariant === 'J') && !tipSeen" x-collapse.duration.300ms>
+        <div class="ms-ibanner-wrap" :class="{ 'is-separate': introVariant === 'J' }" x-show="(introVariant === 'I' || introVariant === 'J') && !tipSeen && protoVersion !== 'v3'" x-collapse.duration.300ms>
           <div class="ms-ibanner" role="button" tabindex="0" aria-haspopup="dialog" @click="newsModal = true" @keydown.enter.prevent="newsModal = true" @keydown.space.prevent="newsModal = true">
             <span class="ms-announce-badge is-light">Naujiena</span>
             <span class="ms-ibanner-text">Išaiškinimą dabar matysite iškart po atsakymo. <span class="ms-ibanner-more">Sužinoti daugiau</span></span>
             <button type="button" class="ms-ibanner-close" @click.stop="tipSeen = true" @keydown.enter.stop @keydown.space.stop aria-label="Uždaryti pranešimą"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
           </div>
         </div>
-        <div class="ms-intro-row">
+        <!-- V.3 pradžia: įprastas puslapis (sidebar + top bar), naujo tipo turinys; pradėjus atsidaro viso ekrano režimas -->
+        <template x-if="protoVersion === 'v3'">
+          <div class="ms-card tf-home tf-welcome">
+            <div class="ms-intro-label"><b>ŽINIŲ TESTAS:</b> 2026-10-01</div>
+            <h1 class="tf-hero" x-text="title"></h1>
+            <p class="tf-lead">Atsakykite į <span x-text="`${questions.length} ${plural(questions.length, 'klausimą', 'klausimus', 'klausimų')}`"></span>. Po kiekvieno atsakymo iškart pamatysite, ar teisingai, ir kodėl.</p>
+            <div class="tf-news"><span class="ms-announce-badge is-light">Naujiena</span><span>Išaiškinimą dabar matysite iškart po atsakymo</span></div>
+            <div class="tf-actions">
+              <button type="button" class="ms-btn" @click="tfStart()">Pradėti testą <svg width="16" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h14M10 1l5 5-5 5"/></svg></button>
+              <span class="tf-meta"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>Užtruks apie <span x-text="Math.max(3, Math.round(questions.length * 0.6))"></span> min.</span>
+            </div>
+          </div>
+        </template>
+        <div class="ms-intro-row" x-show="protoVersion !== 'v3'">
           <div class="ms-card ms-intro">
             <div class="ms-intro-label"><b>ŽINIŲ TESTAS:</b> 2026-10-01</div>
             <div class="ms-intro-illo" aria-hidden="true" x-html="illoBooks"></div>
@@ -2320,7 +2322,7 @@ function quiz() {
     tfRingOn: false,
     tfBlink: -1,
     tfBusy: false,
-    get tfOpen() { return this.protoVersion === 'v3' && !!this.tfStage; },
+    get tfOpen() { return this.protoVersion === 'v3' && (this.tfStage === 'q' || this.tfStage === 'end'); },
     get tfProgress() {
       if (this.tfStage === 'end') return 100;
       if (this.tfStage !== 'q') return 0;
