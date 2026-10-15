@@ -842,6 +842,14 @@
     html.theme-new .ms-question { font-size: 18px; line-height: 26px; }
   }
 
+  /* Platesnės kortelės (admin: „Kortelių dydis“), dydžiai 1:1 kaip V.3 */
+  html.cards-wide { --ms-card-w: 720px; }
+  html.cards-wide .ms-intro-wrap, html.cards-wide .ms-results { max-width: 720px; }
+  @media (min-width: 576px) {
+    html.cards-wide .ms-qcard { padding: 40px 48px 44px; }
+    html.cards-wide .ms-question { font-size: 20px; line-height: 30px; }
+  }
+
   /* ================= V.3: Typeform principu UX, Suflerio DS stilius ================= */
   html.tf-lock, html.tf-lock body { overflow: hidden; }
   .tf { position: fixed; left: 0; right: 0; bottom: 0; top: var(--ms-proto-h); z-index: 250; overflow: hidden; background: var(--ms-bg); color: var(--ms-ink); display: flex; flex-direction: column;
@@ -886,7 +894,8 @@
   .tf-hint { margin: -6px 0 14px; }
 
   /* atsakymai: tokie pat kaip V.1/V.2 (pilkas fonas, apvali raidė), būsenos tos pačios */
-  .tf-choices { display: flex; flex-direction: column; gap: 10px; }
+  /* Typeform principu: visi variantai vienodo pločio pagal ilgiausią; trumpiems (pvz. procentams) fonai trumpi */
+  .tf-choices { display: inline-flex; flex-direction: column; gap: 10px; min-width: min(240px, 100%); max-width: 100%; }
   .tf-choice { display: flex; align-items: center; gap: 14px; width: 100%; padding: 13px 28px 13px 14px; border-radius: var(--ms-radius-md); border: 1px solid var(--ms-option-line); background: var(--ms-option-bg); color: var(--ms-ink); font: inherit; font-size: 15px; line-height: 22.5px; text-align: left; cursor: pointer; transition: background-color .25s, border-color .25s, opacity .3s; }
   .tf-choice:not(:disabled):not(.tf-choice-sm):hover { background: var(--ms-option-bg-hover); border-color: var(--ms-teal); }
   .tf-choice:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; }
@@ -978,7 +987,7 @@
   .tf-rbody-in { min-height: 0; overflow: hidden; }
   .tf-rbody-in > div { padding: 0 32px 24px 74px; }
   .tf-rsit { margin: -4px 0 14px; }
-  .tf-rchoices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .tf-rchoices { display: inline-flex; flex-direction: column; gap: 8px; min-width: min(240px, 100%); max-width: 100%; margin-bottom: 14px; }
   .tf-choice-sm { padding: 10px 28px 10px 12px; font-size: 14px; line-height: 21px; cursor: default; }
   .tf-choice-sm .tf-key { flex-basis: 24px; width: 24px; height: 24px; font-size: 12px; }
   .tf-review-actions { padding: 8px 32px 0; }
@@ -1248,6 +1257,9 @@
       <div class="ms-admin-group">Tema</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="default" id="ms-theme-default" x-model="theme"><span>Default (dabartinė)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="new" id="ms-theme-new" x-model="theme"><span>New (iliustruota)</span></label>
+      <div class="ms-admin-group">Kortelių dydis</div>
+      <label class="ms-admin-opt"><input type="radio" name="ms-cards" value="std" id="ms-cards-std" x-model="cardSize"><span>Standartinės (600px)</span></label>
+      <label class="ms-admin-opt"><input type="radio" name="ms-cards" value="wide" id="ms-cards-wide" x-model="cardSize"><span>Platesnės (720px, kaip V.3)</span></label>
       <div class="ms-admin-group">Mygtukai ir nuorodos (Default temai)</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="solid" id="ms-cta-solid" x-model="ctaStyle"><span>Vientisas #038389, nuoroda #006A6E (dabartinis)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="gradient" id="ms-cta-gradient" x-model="ctaStyle"><span>Gradientas</span></label>
@@ -1929,6 +1941,7 @@ function quiz() {
     protoVersion: 'v2',
     theme: 'default',
     ctaStyle: 'solid',
+    cardSize: 'std',
     illoBooks: `<svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#1f2323" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><defs><pattern id="msdots" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.1" fill="#e8907e" stroke="none"/></pattern></defs><path d="M70 114L126 142L168 121L112 93Z" fill="url(#msdots)" stroke="none"/><path d="M100 74L156 102L116 122L60 94Z" fill="#9fc3c4"/><path d="M60 94L116 122L116 136L60 108Z" fill="#9fc3c4"/><path d="M156 102L116 122L116 136L156 116Z" fill="#fffdf9"/><path d="M118 126L154 108M118 129L154 111M118 132L154 114" stroke-width="1.1"/><path d="M104 58L160 86L120 106L64 78Z" fill="#fffdf9"/><path d="M64 78L120 106L120 120L64 92Z" fill="#f1c9bd"/><path d="M160 86L120 106L120 120L160 100Z" fill="#fffdf9"/><path d="M122 110L158 92M122 113L158 95M122 116L158 98" stroke-width="1.1"/><path d="M98 42L154 70L114 90L58 62Z" fill="#9fc3c4"/><path d="M58 62L114 90L114 104L58 76Z" fill="#9fc3c4"/><path d="M154 70L114 90L114 104L154 84Z" fill="#fffdf9"/><path d="M116 94L152 76M116 97L152 79M116 100L152 82" stroke-width="1.1"/><path d="M84 60L104 70" stroke-width="2.4"/><rect x="132" y="17" width="48" height="32" rx="11" fill="#1f2323" stroke="none"/><rect x="132" y="13" width="48" height="32" rx="11" fill="#fffdf9"/><path d="M146 45l-4 9 12-9" fill="#fffdf9"/><path d="M147 29l6 6 12-12" stroke="#2f6e72" stroke-width="3"/><path d="M38 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#9fc3c4" stroke-width="1.4"/><circle cx="60" cy="22" r="3" fill="#f1c9bd" stroke-width="1.2"/></svg>`,
     coachOpen: false,
     coachSeen: false,
@@ -2126,10 +2139,11 @@ function quiz() {
         if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
         if (['v1', 'v2', 'v3'].includes(saved.protoVersion)) this.protoVersion = saved.protoVersion;
         if (['solid', 'gradient', 'live'].includes(saved.ctaStyle)) this.ctaStyle = saved.ctaStyle;
+        if (saved.cardSize === 'wide') this.cardSize = 'wide';
         this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
         ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
       } catch (e) { this.bg = { ...this.bgDefaults }; }
-      const persist = () => { try { localStorage.setItem('ms-proto-v4', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion })); } catch (e) {} };
+      const persist = () => { try { localStorage.setItem('ms-proto-v4', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion, cardSize: this.cardSize })); } catch (e) {} };
       this.$watch('introVariant', persist);
       const applyTheme = () => document.documentElement.classList.toggle('theme-new', this.theme === 'new');
       applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
@@ -2173,6 +2187,8 @@ function quiz() {
         }, 380);
       }, { passive: true });
       applyCta(); this.$watch('ctaStyle', () => { applyCta(); persist(); });
+      const applyCards = () => document.documentElement.classList.toggle('cards-wide', this.cardSize === 'wide');
+      applyCards(); this.$watch('cardSize', () => { applyCards(); persist(); });
       this.$watch('bg', persist, { deep: true });
       this.$watch('screen', v => { if (v === 'intro') this.fbOpen = false; });
       window.addEventListener('resize', () => { if (this.coachOpen) this.coachPlace(); });
