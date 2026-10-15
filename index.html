@@ -859,6 +859,9 @@
   .tf-progress { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: #d1e6e7; z-index: 5; }
   .tf-progress span { display: block; height: 100%; background: var(--tf-accent); transition: width .5s var(--ms-ease); }
   .tf-top { position: absolute; top: 4px; left: 0; right: 0; height: 64px; display: flex; align-items: center; gap: 16px; padding: 0 32px; z-index: 4; background: var(--tf-bg); pointer-events: none; }
+  .tf-exit { pointer-events: auto; flex: 0 0 36px; width: 36px; height: 36px; margin-left: -8px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background-color .15s, color .15s; }
+  .tf-exit:hover { background: var(--tf-accent-a08); color: var(--tf-ink); }
+  .tf-exit:focus-visible { outline: 3px solid rgba(3, 131, 137, .35); }
   .tf-top::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 18px; background: linear-gradient(var(--tf-bg), rgba(245, 249, 249, 0)); }
   .tf-logo { color: var(--ms-teal); width: 85px; height: 25px; }
   .tf-top-title { font-size: 13px; color: var(--ms-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1046,6 +1049,7 @@
   <div class="tf" :class="{ 'is-open': tfOpen }" x-effect="document.documentElement.classList.toggle('tf-lock', tfOpen)" :aria-hidden="!tfOpen">
     <div class="tf-progress" aria-hidden="true"><span :style="`width: ${tfProgress}%`"></span></div>
     <div class="tf-top">
+      <button type="button" class="tf-exit" x-show="tfStage !== 'welcome'" @click="restart()" aria-label="Uždaryti testą ir grįžti į pradžią" title="Grįžti į testo pradžią"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></button>
       <span class="ms-logo-mark tf-logo" aria-label="Mokesčių SUFLERIS"></span>
       <span class="tf-top-title" x-show="tfStage === 'q'" x-text="title"></span>
     </div>
