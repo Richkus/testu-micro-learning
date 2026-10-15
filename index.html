@@ -139,6 +139,12 @@
   .ms-sb-tip { position: fixed; z-index: 600; transform: translate(-4px, -50%); padding: 6px 10px; border-radius: 8px; background: var(--ms-teal-dark); color: #fff; font-size: 13px; font-weight: 600; line-height: 18px; white-space: nowrap; box-shadow: 0 4px 14px rgba(15, 83, 84, .22); pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .15s ease, transform .15s ease, visibility 0s linear .15s; }
   .ms-sb-tip::before { content: ''; position: absolute; right: 100%; top: 50%; margin-top: -5px; border: 5px solid transparent; border-right-color: var(--ms-teal-dark); }
   .ms-sb-tip.is-on { opacity: 1; visibility: visible; transform: translate(0, -50%); transition: opacity .15s ease, transform .15s ease, visibility 0s; }
+  html.ver-v4 .tf-top, html.ver-v4 .tf-num { display: none; }
+  .tf-qtop { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: -6px 0 18px; }
+  .tf-qtop .ms-progress { margin: 0; }
+  .tf-card-x { flex: 0 0 32px; width: 32px; height: 32px; margin-right: -8px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background-color .15s, color .15s; }
+  .tf-card-x:hover { background: var(--ms-howto-bg); color: var(--ms-ink); }
+  .tf-card-x:focus-visible { outline: 3px solid rgba(83,169,177,.35); }
   html.ver-v4 .ms-bgx { left: var(--ms-sb-w); transition: left .35s var(--ms-ease); }
   /* kai testas atidarytas, puslapio scroll užrakintas: sticky meniu nebeperšoka žemyn */
   html.tf-lock .ms-sidebar { position: relative; top: 0; }
@@ -1147,6 +1153,11 @@
       <!-- Klausimas -->
       <template x-if="tfStage === 'q'">
         <section class="tf-screen tf-card tf-question" :class="tfAnim">
+          <!-- V.4: be testo juostos; žingsniai pill'e kortelėje kaip V.1/V.2, X išeiti į pradžią -->
+          <div class="tf-qtop" x-show="protoVersion === 'v4'">
+            <span class="ms-progress" x-text="`Klausimas ${idx + 1} iš ${questions.length}`"></span>
+            <button type="button" class="tf-card-x" @click="restart()" aria-label="Uždaryti testą ir grįžti į pradžią" title="Grįžti į testo pradžią"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></button>
+          </div>
           <h2 class="tf-title"><span class="tf-num" x-text="`${idx + 1}.`"></span> <span x-text="q.text"></span></h2>
           <p class="ms-situation tf-sit" x-show="q.situation"><span>Situacija:</span> <span x-text="q.situation"></span></p>
           <template x-if="q.video">
