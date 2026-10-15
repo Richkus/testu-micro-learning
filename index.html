@@ -842,6 +842,170 @@
     html.theme-new .ms-question { font-size: 18px; line-height: 26px; }
   }
 
+  /* ================= V.3: Typeform principu ================= */
+  :root {
+    --tf-accent: #038389;           /* atsakymų ir mygtukų spalva (vientiso CTA tonas) */
+    --tf-accent-dark: #006a6e;
+    --tf-accent-a08: rgba(3, 131, 137, .08);
+    --tf-accent-a16: rgba(3, 131, 137, .16);
+    --tf-accent-a60: rgba(3, 131, 137, .6);
+    --tf-bg: #f5f9f9;
+    --tf-ink: #233436;
+  }
+  html.tf-lock, html.tf-lock body { overflow: hidden; }
+  .tf { position: fixed; left: 0; right: 0; bottom: 0; top: var(--ms-proto-h); z-index: 250; overflow: hidden; background: var(--tf-bg); color: var(--tf-ink); display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
+  .tf.is-open { opacity: 1; visibility: visible; transition: opacity .3s ease, visibility 0s; }
+  .tf-progress { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: #d1e6e7; z-index: 5; }
+  .tf-progress span { display: block; height: 100%; background: var(--tf-accent); transition: width .5s var(--ms-ease); }
+  .tf-top { position: absolute; top: 4px; left: 0; right: 0; height: 64px; display: flex; align-items: center; gap: 16px; padding: 0 32px; z-index: 4; background: var(--tf-bg); pointer-events: none; }
+  .tf-top::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 18px; background: linear-gradient(var(--tf-bg), rgba(245, 249, 249, 0)); }
+  .tf-logo { color: var(--ms-teal-dark); width: 85px; height: 25px; }
+  .tf-top-title { font-size: 13px; color: var(--ms-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tf-scroll { position: relative; z-index: 1; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 96px 24px 120px; display: flex; }
+  .tf-screen { width: 100%; max-width: 720px; margin: auto; }
+
+  /* Ekranų perėjimas: išeinantis kyla aukštyn ir blunka, ateinantis iš apačios (atgal: priešingai) */
+  .tf-screen { transition: opacity .28s ease, transform .38s var(--ms-ease); }
+  .tf-in { animation: tf-in .5s var(--ms-ease) both; }
+  @keyframes tf-in { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: none; } }
+  .tf-question.is-out-up { opacity: 0; transform: translateY(-48px); }
+  .tf-question.is-out-down { opacity: 0; transform: translateY(48px); }
+  .tf-question.is-pre-up { opacity: 0; transform: translateY(48px); transition: none; }
+  .tf-question.is-pre-down { opacity: 0; transform: translateY(-48px); transition: none; }
+
+  /* Tipografija */
+  .tf-eyebrow { display: block; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--tf-accent); margin-bottom: 14px; }
+  .tf-hero { font-size: 40px; line-height: 1.2; font-weight: 700; letter-spacing: -.01em; color: var(--tf-ink); margin: 0 0 16px; text-wrap: balance; }
+  .tf-lead { font-size: 20px; line-height: 1.5; color: var(--ms-sub); margin: 0 0 24px; max-width: 600px; }
+  .tf-news { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; color: var(--ms-ink-soft); margin-bottom: 32px; }
+  .tf-meta { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-size: 14px; color: var(--ms-sub); }
+
+  .tf-qhead { position: relative; padding-left: 0; }
+  .tf-num { position: absolute; right: calc(100% + 14px); top: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 600; color: var(--tf-accent); white-space: nowrap; }
+  .tf-title { font-size: 26px; line-height: 1.38; font-weight: 400; color: var(--tf-ink); margin: 0 0 10px; text-wrap: pretty; }
+  .tf-desc { font-size: 18px; line-height: 1.55; color: var(--ms-sub); margin: 0 0 8px; }
+  .tf-video { margin: 20px 0 4px; max-width: 600px; }
+  .tf-hint { font-size: 15px; color: var(--ms-sub); margin: 18px 0 -10px; }
+
+  /* Pasirinkimai: Typeform stiliaus, vienodo pločio (pagal ilgiausią), raidė kairėje */
+  .tf-choices { display: inline-flex; flex-direction: column; gap: 10px; min-width: min(320px, 100%); max-width: 100%; margin-top: 28px; }
+  .tf-choice { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 14px 9px 10px; border-radius: 6px; border: 1px solid var(--tf-accent-a60); background: var(--tf-accent-a08); color: var(--tf-ink); font: inherit; font-size: 18px; line-height: 1.4; text-align: left; cursor: pointer; transition: background-color .15s, border-color .15s, opacity .3s, box-shadow .15s; }
+  .tf-choice:not(:disabled):hover { background: var(--tf-accent-a16); }
+  .tf-choice:focus-visible { outline: 3px solid rgba(3, 131, 137, .35); outline-offset: 2px; }
+  .tf-choice:disabled { cursor: default; }
+  .tf-key { flex: 0 0 26px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 4px; border: 1px solid var(--tf-accent-a60); background: #fff; font-size: 12px; font-weight: 700; color: var(--tf-accent); transition: background-color .15s, color .15s, border-color .15s; }
+  .tf-choice-text { flex: 1; }
+  .tf-mark { flex: 0 0 18px; display: grid; place-items: center; color: var(--tf-accent); }
+  .tf-mark svg { display: none; }
+  /* pažymėtas (prieš patikrinimą) */
+  .tf-choice.is-sel { background: var(--tf-accent-a16); border-color: var(--tf-accent); box-shadow: 0 0 0 1px var(--tf-accent) inset; }
+  .tf-choice.is-sel .tf-key { background: var(--tf-accent); border-color: var(--tf-accent); color: #fff; }
+  .tf-choice.is-sel .tf-mark-ok { display: block; }
+  /* pasirinkimo „mirktelėjimas“ kaip Typeform */
+  .tf-choice.is-blink { animation: tf-blink .32s steps(1) 2; }
+  @keyframes tf-blink { 50% { background: var(--tf-accent-a08); box-shadow: none; } }
+  /* rezultatas: spalvos tokios pat kaip V.1/V.2 */
+  .tf-choice.is-ok { background: var(--ms-ok-bg); border-color: var(--ms-ok); box-shadow: 0 0 0 1px var(--ms-ok) inset; }
+  .tf-choice.is-ok .tf-key { background: var(--ms-ok); border-color: var(--ms-ok); color: #fff; }
+  .tf-choice.is-ok .tf-mark { color: var(--ms-ok-text); } .tf-choice.is-ok .tf-mark-ok { display: block; }
+  .tf-choice.is-bad { background: var(--ms-bad-bg); border-color: var(--ms-bad); box-shadow: 0 0 0 1px var(--ms-bad) inset; }
+  .tf-choice.is-bad .tf-key { background: var(--ms-bad); border-color: var(--ms-bad); color: #fff; }
+  .tf-choice.is-bad .tf-mark { color: var(--ms-bad); } .tf-choice.is-bad .tf-mark-x { display: block; }
+  .tf-choice.is-unk { background: #f2f5f5; border-color: #9aabac; box-shadow: 0 0 0 1px #9aabac inset; }
+  .tf-choice.is-unk .tf-key { background: #6c8284; border-color: #6c8284; color: #fff; }
+  .tf-choice.is-missed { background: transparent; border: 1px dashed var(--ms-ok); }
+  .tf-choice.is-missed .tf-key { border-style: dashed; border-color: var(--ms-ok); color: var(--ms-ok-text); }
+  .tf-choice.is-missed .tf-mark { color: var(--ms-ok); } .tf-choice.is-missed .tf-mark-ok { display: block; }
+  .tf-choice.is-dim { opacity: .45; }
+
+  /* Mygtukai */
+  .tf-actions { display: flex; align-items: center; gap: 14px; margin-top: 24px; flex-wrap: wrap; }
+  .tf-btn { display: inline-flex; align-items: center; gap: 10px; border: 0; border-radius: 6px; padding: 10px 18px; background: var(--tf-accent); color: #fff; font: inherit; font-size: 18px; font-weight: 700; line-height: 1.3; cursor: pointer; box-shadow: 0 3px 12px rgba(3, 131, 137, .22); transition: background-color .15s, transform .15s, opacity .15s; }
+  .tf-btn:hover { background: var(--tf-accent-dark); }
+  .tf-btn:active { transform: translateY(1px); }
+  .tf-btn:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+  .tf-btn:focus-visible { outline: 3px solid rgba(3, 131, 137, .35); outline-offset: 2px; }
+  .tf-btn-ghost { background: transparent; color: var(--tf-accent); box-shadow: inset 0 0 0 1px var(--tf-accent-a60); }
+  .tf-btn-ghost:hover { background: var(--tf-accent-a08); }
+  .tf-enter { font-size: 13px; color: var(--ms-sub); }
+  .tf-enter b { font-weight: 600; color: var(--ms-ink-soft); }
+
+  /* Grįžtamasis ryšys */
+  .tf-feedback { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s var(--ms-ease); }
+  .tf-feedback.is-shown { grid-template-rows: 1fr; }
+  .tf-feedback-in { min-height: 0; overflow: hidden; }
+  .tf-feedback-in > div { padding-top: 28px; opacity: 0; transform: translateY(10px); transition: opacity .3s ease .2s, transform .4s var(--ms-ease) .2s; }
+  .tf-feedback.is-shown .tf-feedback-in > div { opacity: 1; transform: none; }
+  .tf-verdict { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .tf-verdict-ico { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 700; color: #fff; }
+  .tf-verdict.is-ok { color: var(--ms-ok-text); } .tf-verdict.is-ok .tf-verdict-ico { background: var(--ms-ok); }
+  .tf-verdict.is-bad { color: var(--ms-bad-text); } .tf-verdict.is-bad .tf-verdict-ico { background: var(--ms-bad); }
+  .tf-verdict.is-partial, .tf-verdict.is-unknown { color: var(--ms-ink-soft); } .tf-verdict.is-partial .tf-verdict-ico, .tf-verdict.is-unknown .tf-verdict-ico { background: #6c8284; }
+  .tf-fb-lead { font-size: 18px; line-height: 1.55; color: var(--tf-ink); margin: 0 0 10px; max-width: 640px; }
+  .tf-fb-full { max-width: 640px; }
+  .tf-fb-full p { font-size: 17px; line-height: 1.6; color: var(--tf-ink); margin: 0 0 12px; }
+  .tf-fb-full .ms-linkcard { margin-top: 6px; }
+  .tf-more { display: inline-flex; align-items: center; gap: 8px; border: 0; background: none; padding: 0; font: inherit; font-size: 16px; color: var(--tf-accent-dark); cursor: pointer; text-underline-offset: 4px; }
+  .tf-more:hover { text-decoration: underline; }
+  .tf-more svg { transition: transform .2s var(--ms-ease); } .tf-more:hover svg { transform: translateX(3px); }
+
+  /* Navigacija */
+  .tf-nav { position: absolute; right: 24px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 2px; z-index: 4; }
+  .tf-count { font-size: 13px; color: var(--ms-sub); margin-right: 12px; font-variant-numeric: tabular-nums; }
+  .tf-nav-btn { width: 36px; height: 32px; border: 0; background: var(--tf-accent); color: #fff; display: grid; place-items: center; cursor: pointer; transition: background-color .15s, opacity .15s; }
+  .tf-nav-btn:first-of-type { border-radius: 6px 0 0 6px; } .tf-nav-btn:last-of-type { border-radius: 0 6px 6px 0; }
+  .tf-nav-btn:hover:not(:disabled) { background: var(--tf-accent-dark); }
+  .tf-nav-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+  /* Pabaiga */
+  .tf-end { text-align: center; }
+  .tf-ring { width: 132px; height: 132px; flex-basis: 132px; margin: 0 auto 24px; }
+  .tf-ring b { font-size: 30px; line-height: 36px; }
+  .tf-ring circle { stroke-width: 7; }
+  .tf-summary { justify-content: center; margin-bottom: 8px; }
+  .tf-end-actions { justify-content: center; margin-top: 32px; }
+  .tf-rate { margin: 48px auto 0; padding-top: 28px; border-top: 1px solid var(--ms-line); max-width: 440px; }
+  .tf-rate p { font-size: 17px; color: var(--tf-ink); margin: 0 0 14px; }
+  .tf-rate-opts { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .tf-choice-sm { width: auto; font-size: 16px; }
+  .tf-rate-thanks { font-size: 16px; color: var(--ms-ok-text); animation: tf-in .4s var(--ms-ease) both; }
+
+  /* Platesnis išaiškinimas: šoninis skydelis */
+  .tf-drawer-bg { position: absolute; inset: 0; z-index: 6; background: rgba(15, 83, 84, .28); opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility 0s linear .3s; }
+  .tf-drawer-bg.is-open { opacity: 1; visibility: visible; transition: opacity .3s ease, visibility 0s; }
+  .tf-drawer { position: absolute; top: 0; right: 0; bottom: 0; z-index: 7; width: min(480px, 100%); background: #fff; box-shadow: -12px 0 40px rgba(15, 83, 84, .14); display: flex; flex-direction: column; transform: translateX(100%); visibility: hidden; transition: transform .4s var(--ms-ease), visibility 0s linear .4s; }
+  .tf-drawer.is-open { transform: none; visibility: visible; transition: transform .4s var(--ms-ease), visibility 0s; }
+  .tf-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 24px 28px 12px; }
+  .tf-drawer-head h3 { margin: 0; font-size: 20px; font-weight: 700; color: var(--tf-ink); }
+  .tf-drawer-body { padding: 4px 28px 32px; overflow-y: auto; }
+  .tf-drawer-body p { font-size: 16px; line-height: 1.6; color: var(--tf-ink); margin: 0 0 14px; }
+  .tf-drawer-body .tf-drawer-q { font-size: 14px; line-height: 1.5; color: var(--ms-icon-muted); background: var(--ms-howto-bg); border-radius: 8px; padding: 10px 14px; margin-bottom: 18px; }
+  .tf-drawer-q b { color: var(--ms-ink-soft); font-weight: 600; }
+
+  @media (max-width: 991.98px) {
+    .tf-num { position: static; margin-bottom: 8px; }
+  }
+  @media (max-width: 575.98px) {
+    .tf-top { padding: 0 16px; height: 52px; }
+    .tf-top-title { display: none; }
+    .tf-scroll { padding: 72px 16px 110px; }
+    .tf-hero { font-size: 30px; }
+    .tf-lead { font-size: 17px; }
+    .tf-title { font-size: 21px; }
+    .tf-desc { font-size: 16px; }
+    .tf-choice { font-size: 16px; }
+    .tf-choices { display: flex; }
+    .tf-fb-lead { font-size: 16px; }
+    .tf-fb-full p { font-size: 16px; }
+    .tf-enter { display: none; }
+    .tf-btn { font-size: 17px; }
+    .tf-feedback .tf-actions .tf-btn, .tf-question > .tf-actions .tf-btn { width: 100%; justify-content: center; }
+    .tf-nav { left: 0; right: 0; bottom: 0; justify-content: flex-end; padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--tf-bg); border-top: 1px solid var(--ms-line); }
+    .tf-count { margin-right: auto; }
+    .tf-drawer { top: auto; height: 85%; width: 100%; border-radius: 16px 16px 0 0; transform: translateY(100%); }
+  }
+  @media (prefers-reduced-motion: reduce) { .tf-in, .tf-choice.is-blink { animation: none; } .tf-screen { transition: none; } }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   }
@@ -852,11 +1016,168 @@
 <div class="ms-proto-bar" role="note">
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.5h4M6.75 1.5v4.2L2.6 12.6A1.3 1.3 0 0 0 3.7 14.5h8.6a1.3 1.3 0 0 0 1.1-1.9L9.25 5.7V1.5"/><path d="M4.4 10h7.2"/></svg>
   <span class="ms-proto-ver" role="group" aria-label="Prototipo versija">
-    <button type="button" onclick="window.msSetVersion('v1')" data-ver="v1">V.1</button><button type="button" onclick="window.msSetVersion('v2')" data-ver="v2">V.2</button>
+    <button type="button" onclick="window.msSetVersion('v1')" data-ver="v1">V.1</button><button type="button" onclick="window.msSetVersion('v2')" data-ver="v2">V.2</button><button type="button" onclick="window.msSetVersion('v3')" data-ver="v3">V.3</button>
   </span>
   <span><strong>Prototipas</strong><span class="ms-proto-sep ms-proto-mid" aria-hidden="true">/</span><span class="ms-proto-text ms-proto-mid">Testai, micro-learning</span><span class="ms-proto-sep" aria-hidden="true">/</span><span class="ms-proto-text">Work in progress</span></span>
 </div>
 <div class="ms-app" x-data="quiz()" x-init="init()" @keydown.window="onKey($event)">
+
+  <!-- ================= V.3: Typeform principu (vienas klausimas ekrane, klaviatūra, viso ekrano režimas) ================= -->
+  <div class="tf" :class="{ 'is-open': tfOpen }" x-effect="document.documentElement.classList.toggle('tf-lock', tfOpen)" :aria-hidden="!tfOpen">
+    <div class="tf-progress" aria-hidden="true"><span :style="`width: ${tfProgress}%`"></span></div>
+    <div class="tf-top">
+      <span class="ms-logo-mark tf-logo" aria-label="Mokesčių SUFLERIS"></span>
+      <span class="tf-top-title" x-show="tfStage === 'q'" x-text="title"></span>
+    </div>
+
+    <div class="tf-scroll" x-ref="tfScroll">
+      <!-- Pasisveikinimas -->
+      <template x-if="tfStage === 'welcome'">
+        <section class="tf-screen tf-welcome tf-in">
+          <span class="tf-eyebrow">Žinių testas · 2026-10-01</span>
+          <h1 class="tf-hero" x-text="title"></h1>
+          <p class="tf-lead">Atsakykite į <span x-text="`${questions.length} ${plural(questions.length, 'klausimą', 'klausimus', 'klausimų')}`"></span>. Po kiekvieno atsakymo iškart pamatysite, ar teisingai, ir kodėl.</p>
+          <div class="tf-news"><span class="ms-announce-badge is-light">Naujiena</span><span>Išaiškinimą dabar matysite iškart po atsakymo</span></div>
+          <div class="tf-actions">
+            <button type="button" class="tf-btn" @click="tfStart()">Pradėti</button>
+            <span class="tf-enter">paspauskite <b>Enter ↵</b></span>
+          </div>
+          <span class="tf-meta"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>Užtruks apie <span x-text="Math.max(3, Math.round(questions.length * 0.6))"></span> min.</span>
+        </section>
+      </template>
+
+      <!-- Klausimas -->
+      <template x-if="tfStage === 'q'">
+        <section class="tf-screen tf-question" :class="tfAnim">
+          <div class="tf-qhead">
+            <span class="tf-num"><span x-text="idx + 1"></span><svg width="14" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h13M9.5 1.5L14 6l-4.5 4.5"/></svg></span>
+            <h2 class="tf-title" x-text="q.text"></h2>
+          </div>
+          <p class="tf-desc" x-show="q.situation" x-text="q.situation"></p>
+          <template x-if="q.video">
+            <div class="tf-video" x-data="{ playing: false }">
+              <div class="ms-video-frame">
+                <video x-ref="tv" :src="q.video.src + '#t=0.1'" preload="metadata" playsinline :controls="playing" @ended="playing = false"></video>
+                <button type="button" class="ms-video-poster" x-show="!playing" @click="playing = true; $refs.tv.play().catch(() => {})" :aria-label="`Paleisti vaizdo įrašą: ${q.video.caption}`">
+                  <span class="ms-video-play" aria-hidden="true"><svg width="18" height="20" viewBox="0 0 18 20"><path d="M2 1.6v16.8a1 1 0 0 0 1.5.86l14-8.4a1 1 0 0 0 0-1.72l-14-8.4A1 1 0 0 0 2 1.6z" fill="currentColor"/></svg></span>
+                  <span class="ms-video-meta"><b x-text="q.video.caption"></b></span>
+                </button>
+              </div>
+            </div>
+          </template>
+          <p class="tf-hint" x-show="q.multi && !answered">Pasirinkite visus tinkamus atsakymus</p>
+
+          <div class="tf-choices" role="group" :aria-label="q.multi ? 'Atsakymų variantai, galima pažymėti kelis' : 'Atsakymų variantai'">
+            <template x-for="(o, i) in q.options" :key="'tfo' + idx + '-' + i">
+              <button type="button" class="tf-choice" :class="tfChoiceClass(i)" :disabled="answered" @click="tfPick(i)" :role="q.multi ? 'checkbox' : null" :aria-checked="q.multi ? multiSel.includes(i) : null">
+                <span class="tf-key" x-text="letters[i]"></span>
+                <span class="tf-choice-text" x-text="o"></span>
+                <span class="tf-mark" aria-hidden="true">
+                  <svg class="tf-mark-ok" width="16" height="13" viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.2 3.2L11 1.5"/></svg>
+                  <svg class="tf-mark-x" width="12" height="12" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+                </span>
+              </button>
+            </template>
+          </div>
+
+          <div class="tf-actions" x-show="q.multi && !answered">
+            <button type="button" class="tf-btn" :disabled="!multiSel.length" @click="tfCheck()">Patikrinti</button>
+            <span class="tf-enter" x-show="multiSel.length">paspauskite <b>Enter ↵</b></span>
+          </div>
+
+          <!-- Grįžtamasis ryšys: atsiranda iškart po atsakymo -->
+          <div class="tf-feedback" :class="{ 'is-shown': answered }" x-ref="tfFb">
+            <div class="tf-feedback-in">
+              <template x-if="answered">
+                <div>
+                  <div class="tf-verdict" :class="'is-' + tfVerdict">
+                    <span class="tf-verdict-ico" aria-hidden="true">
+                      <svg x-show="tfVerdict === 'ok'" width="14" height="11" viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.2 3.2L11 1.5"/></svg>
+                      <svg x-show="tfVerdict === 'bad'" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+                      <span x-show="tfVerdict === 'partial'">½</span>
+                      <span x-show="tfVerdict === 'unknown'">?</span>
+                    </span>
+                    <span x-text="tfVerdictText"></span>
+                  </div>
+                  <p class="tf-fb-lead" x-show="!pickedUnknown" x-text="(tfVerdict === 'bad' && q.wrongLead) ? q.wrongLead : q.lead"></p>
+                  <div class="tf-fb-full" x-show="pickedUnknown">
+                    <template x-for="(para, pi) in q.paras" :key="'tfp' + idx + pi"><p x-text="para"></p></template>
+                    <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
+                      <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+                      <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="q.link.title"></span></span>
+                      <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
+                    </a>
+                  </div>
+                  <button type="button" class="tf-more" x-show="!pickedUnknown" @click="tfDrawer = true">Platesnis išaiškinimas <svg width="14" height="10" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h13M9.5 1.5L14 6l-4.5 4.5"/></svg></button>
+                  <div class="tf-actions">
+                    <button type="button" class="tf-btn tf-next" @click="tfNext()"><span x-text="isLast ? 'Baigti testą' : 'Toliau'"></span><svg width="16" height="13" viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 5l3.2 3.2L11 1.5"/></svg></button>
+                    <span class="tf-enter">paspauskite <b>Enter ↵</b></span>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </section>
+      </template>
+
+      <!-- Pabaiga -->
+      <template x-if="tfStage === 'end'">
+        <section class="tf-screen tf-end tf-in">
+          <div class="ms-ring tf-ring" role="img" :aria-label="`Teisingai ${score} iš ${questions.length}`">
+            <svg viewBox="0 0 84 84" aria-hidden="true"><circle class="ms-ring-track" cx="42" cy="42" r="37"/><circle class="ms-ring-fill" cx="42" cy="42" r="37" pathLength="100" :style="`stroke-dasharray: ${tfRingOn ? Math.round(score / questions.length * 100) : 0} 100`"/></svg>
+            <b x-text="`${score}/${questions.length}`"></b>
+          </div>
+          <h1 class="tf-hero">Testas baigtas</h1>
+          <div class="ms-summary tf-summary">
+            <span class="ms-chip is-ok"><span class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span><span x-text="`Teisingai: ${score}`"></span></span>
+            <span class="ms-chip is-bad" x-show="questions.length - score - unknownCount > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Klaidos: ${questions.length - score - unknownCount}`"></span></span>
+            <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">–</span></span><span x-text="`Neatsakėte: ${unknownCount}`"></span></span>
+          </div>
+          <div class="tf-actions tf-end-actions">
+            <button type="button" class="tf-btn" @click="tfReview()">Peržiūrėti atsakymus</button>
+            <button type="button" class="tf-btn tf-btn-ghost" @click="restart()">Spręsti iš naujo</button>
+          </div>
+          <div class="tf-rate">
+            <template x-if="!tfRated">
+              <div>
+                <p>Ar padėjo iškart rodomi išaiškinimai?</p>
+                <div class="tf-rate-opts">
+                  <button type="button" class="tf-choice tf-choice-sm" @click="tfRated = 'ok'"><span class="tf-key">A</span><span class="tf-choice-text">Taip, padėjo</span></button>
+                  <button type="button" class="tf-choice tf-choice-sm" @click="tfRated = 'bad'"><span class="tf-key">B</span><span class="tf-choice-text">Nelabai</span></button>
+                </div>
+              </div>
+            </template>
+            <p class="tf-rate-thanks" x-show="tfRated">Ačiū, jūsų nuomonė padės tobulinti testus.</p>
+          </div>
+        </section>
+      </template>
+    </div>
+
+    <!-- Navigacija apačioje dešinėje (Typeform principu) -->
+    <div class="tf-nav" x-show="tfStage === 'q'">
+      <span class="tf-count" x-text="`${idx + 1} / ${questions.length}`"></span>
+      <button type="button" class="tf-nav-btn" :disabled="idx === 0" @click="tfGo(idx - 1)" aria-label="Ankstesnis klausimas"><svg width="14" height="9" viewBox="0 0 14 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7.5l6-6 6 6"/></svg></button>
+      <button type="button" class="tf-nav-btn" :disabled="!answered" @click="tfNext()" aria-label="Kitas klausimas"><svg width="14" height="9" viewBox="0 0 14 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1.5l6 6 6-6"/></svg></button>
+    </div>
+
+    <!-- Platesnis išaiškinimas: šoninis skydelis (telefone iš apačios) -->
+    <div class="tf-drawer-bg" :class="{ 'is-open': tfDrawer }" @click="tfDrawer = false"></div>
+    <aside class="tf-drawer" :class="{ 'is-open': tfDrawer }" role="dialog" aria-label="Platesnis išaiškinimas" :aria-hidden="!tfDrawer">
+      <div class="tf-drawer-head">
+        <h3>Platesnis išaiškinimas</h3>
+        <button type="button" class="ms-close" @click="tfDrawer = false" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
+      </div>
+      <div class="tf-drawer-body" x-show="tfStage === 'q'">
+        <p class="tf-drawer-q"><b>Klausimas:</b> <span x-text="q.text"></span></p>
+        <template x-for="(para, pi) in q.paras" :key="'tfd' + idx + pi"><p x-text="para"></p></template>
+        <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
+          <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+          <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="q.link.title"></span></span>
+          <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
+        </a>
+      </div>
+    </aside>
+  </div>
 
   <!-- Prototipo versijų jungiklis (neutralus, tik peržiūrai) -->
   <div class="ms-admin" @keydown.escape.window="adminOpen = false">
@@ -1241,12 +1562,12 @@
                     <div x-show="answered && !leaving && i === expandIdx" x-collapse.duration.400ms>
                       <div class="ms-inline" aria-live="polite">
                         <div class="ms-inline-body">
-                          <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-neutral': pickedUnknown, 'is-bad': !isCorrect && !pickedUnknown && protoVersion === 'v2' }" x-text="isCorrect ? 'Teisingai!' : (pickedUnknown ? 'Kodėl taip?' : (protoVersion === 'v2' ? 'Kodėl neteisingai?' : 'Kodėl taip?'))"></div>
+                          <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-neutral': pickedUnknown, 'is-bad': !isCorrect && !pickedUnknown && protoVersion !== 'v1' }" x-text="isCorrect ? 'Teisingai!' : (pickedUnknown ? 'Kodėl taip?' : (protoVersion === 'v2' ? 'Kodėl neteisingai?' : 'Kodėl taip?'))"></div>
                           <!-- ilgas trumpas išaiškinimas: ribotas aukštis, vidinis slinkimas ir fade apačioje, CTA visada matomas po juo -->
                           <div class="ms-inline-scroll" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }"
                                x-effect="answered; idx; setTimeout(() => { end = $el.scrollHeight <= $el.clientHeight + 2 }, 450)"
                                @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2">
-                            <p class="ms-inline-lead" x-show="!pickedUnknown" x-text="(!isCorrect && !pickedUnknown && protoVersion === 'v2' && q.wrongLead) ? q.wrongLead : q.lead"></p>
+                            <p class="ms-inline-lead" x-show="!pickedUnknown" x-text="(!isCorrect && !pickedUnknown && protoVersion !== 'v1' && q.wrongLead) ? q.wrongLead : q.lead"></p>
                             <!-- „Nežinau“: iškart visas platesnis išaiškinimas (be nuorodos į modalą) -->
                             <template x-if="pickedUnknown">
                               <div class="ms-inline-full">
@@ -1664,7 +1985,7 @@ function quiz() {
     },
     longLead: 'Ne, premija neįtraukiama, nes ji paskirta dar 2024-12-31. Pagal naują VDU tvarką (nuo 2025-10-31) premijos vertinamos pagal paskyrimo, o ne išmokėjimo datą, todėl atostoginiams už 2026 m. vasario 2-13 d. jos įtraukti nereikia.',
     get questions() {
-      if (this.protoVersion !== 'v2') return this.baseQuestions;
+      if (this.protoVersion === 'v1') return this.baseQuestions;
       const q = this.baseQuestions.map(x => x);
       // V.2: „Nežinau“ variantas (kaip Mokesčių naujienų testuose) 3-iame baziniame klausime
       q[2] = { ...q[2], options: [...q[2].options, 'Nežinau'], unknown: q[2].options.length };
@@ -1681,8 +2002,8 @@ function quiz() {
     get pickedUnknown() { return this.q.unknown !== undefined && this.picked === this.q.unknown; },
     isUnknownAns(ri) { const qq = this.questions[ri]; return qq.unknown !== undefined && this.answers[ri] === qq.unknown; },
     get unknownCount() { return this.questions.filter((qq, i) => this.isUnknownAns(i)).length; },
-    inlineResult(ri) { const qq = this.questions[ri], a = this.answers[ri]; return this.protoVersion === 'v2' && !qq.multi && a !== undefined && a !== null; },
-    get expandIdx() { return this.protoVersion === 'v2' ? this.picked : this.q.correct; },
+    inlineResult(ri) { const qq = this.questions[ri], a = this.answers[ri]; return this.protoVersion !== 'v1' && !qq.multi && a !== undefined && a !== null; },
+    get expandIdx() { return this.protoVersion !== 'v1' ? this.picked : this.q.correct; },
     isRightOpt(qq, i) { return Array.isArray(qq.correct) ? qq.correct.includes(i) : i === qq.correct; },
     wasPicked(ri, i) { const a = this.answers[ri]; return Array.isArray(a) ? a.includes(i) : a === i; },
     isRightAnswer(ri) {
@@ -1728,7 +2049,7 @@ function quiz() {
         const saved = JSON.parse(localStorage.getItem('ms-proto-v4') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
         if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
-        if (saved.protoVersion === 'v1' || saved.protoVersion === 'v2') this.protoVersion = saved.protoVersion;
+        if (['v1', 'v2', 'v3'].includes(saved.protoVersion)) this.protoVersion = saved.protoVersion;
         if (['solid', 'gradient', 'live'].includes(saved.ctaStyle)) this.ctaStyle = saved.ctaStyle;
         this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
         ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
@@ -1740,6 +2061,7 @@ function quiz() {
       window.msSetVersion = v => { this.protoVersion = v; };
       const markVer = () => document.querySelectorAll('.ms-proto-ver button').forEach(b => b.classList.toggle('is-on', b.dataset.ver === this.protoVersion));
       markVer();
+      if (this.protoVersion === 'v3') this.tfStage = 'welcome';
       this.$watch('protoVersion', () => { markVer(); persist(); this.restart(); this.screen = 'intro'; window.scrollTo({ top: 0 }); });
       const applyCta = () => { const c = document.documentElement.classList; c.toggle('cta-solid', this.ctaStyle === 'solid'); c.toggle('cta-live', this.ctaStyle === 'live'); };
       // „Gyvas“ mygtukas: spotlight sklandžiai (lerp) plaukia iki žymeklio, nuėjus pelei grįžta į kampą
@@ -1913,9 +2235,108 @@ function quiz() {
       this.picked = null; this.multiSel = [];
       this.answered = false;
       this.screen = 'intro';
+      this.tfStage = this.protoVersion === 'v3' ? 'welcome' : null;
+      this.tfDrawer = false; this.tfAnim = ''; this.tfRated = null; this.tfRingOn = false;
+    },
+
+    /* ---------- V.3: Typeform principu ---------- */
+    tfStage: null,
+    tfAnim: '',
+    tfDrawer: false,
+    tfRated: null,
+    tfRingOn: false,
+    tfBlink: -1,
+    tfBusy: false,
+    get tfOpen() { return this.protoVersion === 'v3' && !!this.tfStage; },
+    get tfProgress() {
+      if (this.tfStage === 'end') return 100;
+      if (this.tfStage !== 'q') return 0;
+      return Math.round(this.answers.filter(a => a !== undefined && a !== null).length / this.questions.length * 100);
+    },
+    get tfVerdict() {
+      if (this.pickedUnknown) return 'unknown';
+      if (this.q.multi) return this.multiResult;
+      return this.isCorrect ? 'ok' : 'bad';
+    },
+    get tfVerdictText() {
+      return { ok: 'Teisingai!', bad: 'Neteisingai', partial: `Iš dalies teisingai: ${this.multiHits} iš ${this.q.correct.length}`, unknown: `Teisingas atsakymas: ${this.q.options[this.q.correct]}` }[this.tfVerdict];
+    },
+    tfChoiceClass(i) {
+      const q = this.q;
+      if (!this.answered) return (this.tfBlink === i ? 'is-sel is-blink' : '') + (q.multi && this.multiSel.includes(i) ? ' is-sel' : '');
+      if (q.multi) return { 'is-correct': 'is-ok', 'is-missed': 'is-missed', 'is-wrong': 'is-bad', 'is-dim': 'is-dim' }[this.multiClass(i)] || '';
+      if (i === q.correct) return 'is-ok';
+      if (i === this.picked) return i === q.unknown ? 'is-unk' : 'is-bad';
+      return 'is-dim';
+    },
+    tfLoad(i) {
+      this.idx = i; this.tfDrawer = false;
+      const a = this.answers[i];
+      if (a !== undefined && a !== null) { this.answered = true; if (Array.isArray(a)) { this.multiSel = a.slice(); this.picked = null; } else { this.picked = a; this.multiSel = []; } }
+      else { this.answered = false; this.picked = null; this.multiSel = []; }
+    },
+    // išeinantis ekranas kyla (pirmyn) arba leidžiasi (atgal), naujas atplaukia iš priešingos pusės
+    tfTransition(dir, fn) {
+      this.tfAnim = dir === 'up' ? 'is-out-up' : 'is-out-down';
+      setTimeout(() => {
+        fn();
+        this.tfAnim = dir === 'up' ? 'is-pre-up' : 'is-pre-down';
+        if (this.$refs.tfScroll) this.$refs.tfScroll.scrollTop = 0;
+        setTimeout(() => { this.tfAnim = ''; }, 30);
+      }, 260);
+    },
+    tfStart() { this.tfLoad(0); this.tfAnim = 'tf-in'; this.tfStage = 'q'; },
+    tfGo(i) { if (i < 0 || i >= this.questions.length || i === this.idx || this.tfBusy) return; this.tfTransition(i > this.idx ? 'up' : 'down', () => this.tfLoad(i)); },
+    tfReveal() {
+      // po atsakymo: nuslenkam iki „Toliau“ ir perkeliam fokusą (Enter iškart veikia)
+      setTimeout(() => {
+        const b = this.$root.querySelector('.tf-feedback.is-shown .tf-next');
+        if (!b) return;
+        b.focus({ preventScroll: true });
+        const sc = this.$refs.tfScroll, r = b.getBoundingClientRect();
+        if (sc && r.bottom > window.innerHeight - 90) sc.scrollBy({ top: r.bottom - window.innerHeight + 120, behavior: 'smooth' });
+      }, 560);
+    },
+    tfPick(i) {
+      if (this.answered || this.tfBusy) return;
+      if (this.q.multi) { this.toggleMulti(i); return; }
+      // Typeform: pasirinkimas trumpai sumirksi, tik tada parodomas rezultatas
+      this.tfBusy = true; this.tfBlink = i;
+      setTimeout(() => {
+        this.tfBlink = -1; this.tfBusy = false;
+        this.picked = i; this.answers[this.idx] = i; this.answered = true;
+        this.tfReveal();
+      }, 640);
+    },
+    tfCheck() {
+      if (this.answered || !this.multiSel.length) return;
+      this.answers[this.idx] = this.multiSel.slice().sort();
+      this.answered = true;
+      this.tfReveal();
+    },
+    tfNext() {
+      if (!this.answered || this.tfBusy) return;
+      if (!this.isLast) { this.tfGo(this.idx + 1); return; }
+      this.tfTransition('up', () => { this.tfStage = 'end'; this.screen = 'results'; this.tfRingOn = false; setTimeout(() => { this.tfRingOn = true; }, 350); });
+    },
+    tfReview() { this.tfStage = null; window.scrollTo({ top: 0, behavior: 'instant' }); },
+    tfKey(e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (this.tfDrawer) { if (e.key === 'Escape') { e.preventDefault(); this.tfDrawer = false; } return; }
+      const t = e.target.closest && e.target.closest('input, textarea, .ms-admin, .ms-bgp');
+      if (t) return;
+      const onCtl = document.activeElement && document.activeElement.closest('button, a, video') && !document.activeElement.classList.contains('tf-next');
+      if (this.tfStage === 'welcome' && e.key === 'Enter' && !onCtl) { e.preventDefault(); this.tfStart(); return; }
+      if (this.tfStage !== 'q') return;
+      if (!this.answered) {
+        const i = this.letters.indexOf(e.key.toUpperCase());
+        if (i > -1 && i < this.q.options.length) { e.preventDefault(); this.tfPick(i); return; }
+        if (e.key === 'Enter' && this.q.multi && this.multiSel.length && !onCtl) { e.preventDefault(); this.tfCheck(); }
+      } else if (e.key === 'Enter' && !onCtl) { e.preventDefault(); this.tfNext(); }
     },
 
     onKey(e) {
+      if (this.tfOpen) { this.tfKey(e); return; }
       if (this.screen !== 'quiz' || this.modal || e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.target.closest && e.target.closest('input, textarea, .ms-fb')) return;
       if (!this.answered) {
