@@ -141,6 +141,11 @@
   html.tf-lock .ms-sidebar { position: relative; top: 0; }
   /* testas atsidaro šalia susitraukusio meniu, ne per visą langą */
   @media (min-width: 992px) {
+    /* Suflerio top bar lieka matomas, testo juosta po juo */
+    html.ver-v4 .tf { top: calc(var(--ms-proto-h) + 60px); }
+    html.ver-v4 .tf-top { height: 52px; border-top: 0; border-bottom: 1px solid var(--ms-line); background: rgba(241, 247, 247, .7); }
+    html.ver-v4 .tf-logo { display: none; }
+    html.ver-v4.tf-lock .ms-topbar { position: relative; top: 0; }
     html.ver-v4 .tf { left: var(--ms-sb-w); transition: opacity .3s ease, visibility 0s linear .3s, left .35s var(--ms-ease); }
     html.ver-v4 .tf.is-open { transition: opacity .3s ease, visibility 0s, left .35s var(--ms-ease); }
   }
@@ -2520,7 +2525,7 @@ function quiz() {
     // pradėjus: viso ekrano režimas atsidaro su trumpu skeletu, tada įplaukia pirmas klausimas
     tfStart() {
       this.tfLoad(0); this.tfStage = 'loading';
-      if (this.protoVersion === 'v4') { this.sbPrev = this.sbCollapsed; this.sbCollapsed = true; }
+      if (this.protoVersion === 'v4') { this.sbPrev = this.sbCollapsed; this.sbCollapsed = true; window.scrollTo({ top: 0, behavior: 'instant' }); }
       clearTimeout(this._tfLoadT);
       this._tfLoadT = setTimeout(() => { if (this.tfStage !== 'loading') return; this.tfAnim = 'tf-in'; this.tfStage = 'q'; }, 750);
     },
