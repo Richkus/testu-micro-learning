@@ -907,8 +907,7 @@
   .tf-hint { margin: -6px 0 14px; }
 
   /* atsakymai: tokie pat kaip V.1/V.2 (pilkas fonas, apvali raidė), būsenos tos pačios */
-  /* Typeform principu: visi variantai vienodo pločio pagal ilgiausią; trumpiems (pvz. procentams) fonai trumpi */
-  .tf-choices { display: inline-flex; flex-direction: column; gap: 10px; min-width: min(240px, 100%); max-width: 100%; }
+  .tf-choices { display: flex; flex-direction: column; gap: 10px; }
   .tf-choice { display: flex; align-items: center; gap: 14px; width: 100%; padding: 13px 28px 13px 14px; border-radius: var(--ms-radius-md); border: 1px solid var(--ms-option-line); background: var(--ms-option-bg); color: var(--ms-ink); font: inherit; font-size: 15px; line-height: 22.5px; text-align: left; cursor: pointer; transition: background-color .25s, border-color .25s, opacity .3s; }
   .tf-choice:not(:disabled):not(.tf-choice-sm):hover { background: var(--ms-option-bg-hover); border-color: var(--ms-teal); }
   .tf-choice:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; }
@@ -1000,7 +999,7 @@
   .tf-rbody-in { min-height: 0; overflow: hidden; }
   .tf-rbody-in > div { padding: 0 32px 24px 74px; }
   .tf-rsit { margin: -4px 0 14px; }
-  .tf-rchoices { display: inline-flex; flex-direction: column; gap: 8px; min-width: min(240px, 100%); max-width: 100%; margin-bottom: 14px; }
+  .tf-rchoices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
   .tf-choice-sm { padding: 10px 28px 10px 12px; font-size: 14px; line-height: 21px; cursor: default; }
   .tf-choice-sm .tf-key { flex-basis: 24px; width: 24px; height: 24px; font-size: 12px; }
   .tf-review-actions { padding: 8px 32px 0; }
