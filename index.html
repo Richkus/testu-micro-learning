@@ -145,6 +145,15 @@
   .tf-card-x { flex: 0 0 32px; width: 32px; height: 32px; margin-right: -8px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background-color .15s, color .15s; }
   .tf-card-x:hover { background: var(--ms-howto-bg); color: var(--ms-ink); }
   .tf-card-x:focus-visible { outline: 3px solid rgba(83,169,177,.35); }
+  /* V.4: kaip tikrame Suflerio maket'e: žalias rėmas viršuje ir dešinėje, top bar su apvaliais viršutiniais kampais */
+  @media (min-width: 992px) {
+    html.ver-v4 .ms-app { background: var(--ms-sidebar); }
+    html.ver-v4 .ms-main { margin-right: 8px; }
+    html.ver-v4 .ms-topbar { border-top: 0; padding-top: 6px; background: var(--ms-sidebar); }
+    html.ver-v4 .ms-topbar::before { content: ''; position: absolute; inset: 6px 0 0 0; z-index: -1; background: var(--ms-topbar); border-radius: 12px 12px 0 0; }
+    html.ver-v4 .ms-bgx { right: 8px; }
+    html.ver-v4 .tf { right: 8px; }
+  }
   html.ver-v4 .ms-bgx { left: var(--ms-sb-w); transition: left .35s var(--ms-ease); }
   /* kai testas atidarytas, puslapio scroll užrakintas: sticky meniu nebeperšoka žemyn */
   html.tf-lock .ms-sidebar { position: relative; top: 0; }
