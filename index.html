@@ -842,6 +842,19 @@
     html.theme-new .ms-question { font-size: 18px; line-height: 26px; }
   }
 
+  /* „Atsakymo išaiškinimas“: modalas (numatyta) arba šoninis skydelis dešinėje (admin), kaip V.3 */
+  .ms-mt-anim { transition: opacity .25s ease, transform .25s var(--ms-ease); }
+  .ms-mt-from { opacity: 0; transform: scale(.96); }
+  .ms-mt-to { opacity: 1; transform: none; }
+  @media (min-width: 576px) {
+    html.explain-side .ms-modal-backdrop { top: var(--ms-proto-h); justify-content: flex-end; align-items: stretch; padding: 0; }
+    html.explain-side .ms-modal { max-width: 500px; max-height: none; height: 100%; border: 0; border-radius: 0; padding: 28px 32px; box-shadow: -12px 0 40px rgba(15, 83, 84, .18); }
+    html.explain-side .ms-modal-head h3 { font-size: 18px; }
+    html.explain-side .ms-modal-body { flex: 1; }
+    html.explain-side .ms-mt-anim { transition: transform .4s var(--ms-ease); }
+    html.explain-side .ms-mt-from { opacity: 1; transform: translateX(100%); }
+  }
+
   /* Platesnės kortelės (admin: „Kortelių dydis“), dydžiai 1:1 kaip V.3 */
   html.cards-wide { --ms-card-w: 720px; }
   html.cards-wide .ms-intro-wrap, html.cards-wide .ms-results { max-width: 720px; }
@@ -1260,6 +1273,9 @@
       <div class="ms-admin-group">Kortelių dydis</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-cards" value="std" id="ms-cards-std" x-model="cardSize"><span>Standartinės (600px)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-cards" value="wide" id="ms-cards-wide" x-model="cardSize"><span>Platesnės (720px, kaip V.3)</span></label>
+      <div class="ms-admin-group">Platesnis išaiškinimas</div>
+      <label class="ms-admin-opt"><input type="radio" name="ms-explain" value="modal" id="ms-explain-modal" x-model="explainStyle"><span>Modalas (dabartinis)</span></label>
+      <label class="ms-admin-opt"><input type="radio" name="ms-explain" value="side" id="ms-explain-side" x-model="explainStyle"><span>Šoninis skydelis dešinėje (kaip V.3)</span></label>
       <div class="ms-admin-group">Mygtukai ir nuorodos (Default temai)</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="solid" id="ms-cta-solid" x-model="ctaStyle"><span>Vientisas #038389, nuoroda #006A6E (dabartinis)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-cta" value="gradient" id="ms-cta-gradient" x-model="ctaStyle"><span>Gradientas</span></label>
@@ -1704,7 +1720,9 @@
 
       <!-- MODALAS: pilnas išaiškinimas -->
       <div class="ms-modal-backdrop" x-show="modal" x-cloak x-transition.opacity.duration.250ms @click.self="closeModal()" @keydown.escape.window="closeModal()">
-        <div class="ms-modal" role="dialog" aria-modal="true" aria-labelledby="ms-modal-title" x-show="modal" x-transition.scale.96.opacity.duration.250ms>
+        <div class="ms-modal" role="dialog" aria-modal="true" aria-labelledby="ms-modal-title" x-show="modal"
+             x-transition:enter="ms-mt-anim" x-transition:enter-start="ms-mt-from" x-transition:enter-end="ms-mt-to"
+             x-transition:leave="ms-mt-anim" x-transition:leave-start="ms-mt-to" x-transition:leave-end="ms-mt-from">
           <div class="ms-modal-head">
             <h3 id="ms-modal-title">Atsakymo išaiškinimas</h3>
             <button class="ms-close" x-ref="close" @click="closeModal()" aria-label="Uždaryti"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
@@ -1942,6 +1960,7 @@ function quiz() {
     theme: 'default',
     ctaStyle: 'solid',
     cardSize: 'std',
+    explainStyle: 'modal',
     illoBooks: `<svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#1f2323" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><defs><pattern id="msdots" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.1" fill="#e8907e" stroke="none"/></pattern></defs><path d="M70 114L126 142L168 121L112 93Z" fill="url(#msdots)" stroke="none"/><path d="M100 74L156 102L116 122L60 94Z" fill="#9fc3c4"/><path d="M60 94L116 122L116 136L60 108Z" fill="#9fc3c4"/><path d="M156 102L116 122L116 136L156 116Z" fill="#fffdf9"/><path d="M118 126L154 108M118 129L154 111M118 132L154 114" stroke-width="1.1"/><path d="M104 58L160 86L120 106L64 78Z" fill="#fffdf9"/><path d="M64 78L120 106L120 120L64 92Z" fill="#f1c9bd"/><path d="M160 86L120 106L120 120L160 100Z" fill="#fffdf9"/><path d="M122 110L158 92M122 113L158 95M122 116L158 98" stroke-width="1.1"/><path d="M98 42L154 70L114 90L58 62Z" fill="#9fc3c4"/><path d="M58 62L114 90L114 104L58 76Z" fill="#9fc3c4"/><path d="M154 70L114 90L114 104L154 84Z" fill="#fffdf9"/><path d="M116 94L152 76M116 97L152 79M116 100L152 82" stroke-width="1.1"/><path d="M84 60L104 70" stroke-width="2.4"/><rect x="132" y="17" width="48" height="32" rx="11" fill="#1f2323" stroke="none"/><rect x="132" y="13" width="48" height="32" rx="11" fill="#fffdf9"/><path d="M146 45l-4 9 12-9" fill="#fffdf9"/><path d="M147 29l6 6 12-12" stroke="#2f6e72" stroke-width="3"/><path d="M38 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#9fc3c4" stroke-width="1.4"/><circle cx="60" cy="22" r="3" fill="#f1c9bd" stroke-width="1.2"/></svg>`,
     coachOpen: false,
     coachSeen: false,
@@ -2140,10 +2159,11 @@ function quiz() {
         if (['v1', 'v2', 'v3'].includes(saved.protoVersion)) this.protoVersion = saved.protoVersion;
         if (['solid', 'gradient', 'live'].includes(saved.ctaStyle)) this.ctaStyle = saved.ctaStyle;
         if (saved.cardSize === 'wide') this.cardSize = 'wide';
+        if (saved.explainStyle === 'side') this.explainStyle = 'side';
         this.bg = { ...this.bgDefaults, ...(saved.bg || {}) };
         ['baseColor', 'patternColor'].forEach(k => { if (this.dsName(this.bg[k]) === 'Ne DS spalva') this.bg[k] = this.bgDefaults[k]; });
       } catch (e) { this.bg = { ...this.bgDefaults }; }
-      const persist = () => { try { localStorage.setItem('ms-proto-v4', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion, cardSize: this.cardSize })); } catch (e) {} };
+      const persist = () => { try { localStorage.setItem('ms-proto-v4', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion, cardSize: this.cardSize, explainStyle: this.explainStyle })); } catch (e) {} };
       this.$watch('introVariant', persist);
       const applyTheme = () => document.documentElement.classList.toggle('theme-new', this.theme === 'new');
       applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
@@ -2189,6 +2209,8 @@ function quiz() {
       applyCta(); this.$watch('ctaStyle', () => { applyCta(); persist(); });
       const applyCards = () => document.documentElement.classList.toggle('cards-wide', this.cardSize === 'wide');
       applyCards(); this.$watch('cardSize', () => { applyCards(); persist(); });
+      const applyExplain = () => document.documentElement.classList.toggle('explain-side', this.explainStyle === 'side');
+      applyExplain(); this.$watch('explainStyle', () => { applyExplain(); persist(); });
       this.$watch('bg', persist, { deep: true });
       this.$watch('screen', v => { if (v === 'intro') this.fbOpen = false; });
       window.addEventListener('resize', () => { if (this.coachOpen) this.coachPlace(); });
