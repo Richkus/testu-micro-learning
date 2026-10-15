@@ -890,6 +890,15 @@
   .tf-question.is-pre-up { opacity: 0; transform: translateY(40px); transition: none; }
   .tf-question.is-pre-down { opacity: 0; transform: translateY(-40px); transition: none; }
 
+  /* krovimo skeletas */
+  .tf-skel { display: flex; flex-direction: column; gap: 10px; animation: tf-skel-in .3s ease both; }
+  @keyframes tf-skel-in { from { opacity: 0; } to { opacity: 1; } }
+  .tf-skel-line, .tf-skel-opt { display: block; border-radius: 6px; background: linear-gradient(90deg, #eef3f3 0%, #e1eaea 40%, #eef3f3 80%) 0 0 / 200% 100%; animation: tf-shimmer 1.2s linear infinite; }
+  .tf-skel-line { height: 18px; }
+  .tf-skel-opt { height: 50px; border-radius: var(--ms-radius-md); }
+  @keyframes tf-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+  @media (prefers-reduced-motion: reduce) { .tf-skel-line, .tf-skel-opt { animation: none; } }
+
   /* pradžia (įprastame puslapyje) */
   .tf-home { width: 100%; margin: 0 auto; padding: 40px 48px 44px; }
   @media (max-width: 575.98px) { .tf-home { padding: 24px 20px 28px; } }
@@ -1075,10 +1084,19 @@
       <button type="button" class="tf-exit" x-show="tfStage !== 'welcome'" @click="restart()" aria-label="Uždaryti testą ir grįžti į pradžią" title="Grįžti į testo pradžią"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></button>
       <span class="ms-logo-mark tf-logo" aria-label="Mokesčių SUFLERIS"></span>
       <span class="tf-top-title" x-show="tfStage !== 'welcome'" x-text="title"></span>
-      <div class="tf-progress" x-show="tfStage === 'q'" aria-hidden="true"><span :style="`width: ${tfProgress}%`"></span></div>
+      <div class="tf-progress" x-show="tfStage === 'q' || tfStage === 'loading'" aria-hidden="true"><span :style="`width: ${tfProgress}%`"></span></div>
     </div>
 
     <div class="tf-scroll" x-ref="tfScroll">
+
+      <!-- Trumpas krovimo vaizdas: kortelės skeletas, kol „atsidaro“ testas -->
+      <template x-if="tfStage === 'loading'">
+        <section class="tf-screen tf-card tf-skel" aria-busy="true" aria-label="Kraunamas testas">
+          <span class="tf-skel-line" style="width: 92%"></span>
+          <span class="tf-skel-line" style="width: 64%; margin-bottom: 26px"></span>
+          <span class="tf-skel-opt"></span><span class="tf-skel-opt"></span><span class="tf-skel-opt"></span>
+        </section>
+      </template>
 
       <!-- Klausimas -->
       <template x-if="tfStage === 'q'">
@@ -2412,7 +2430,7 @@ function quiz() {
     tfRingOn: false,
     tfBlink: -1,
     tfBusy: false,
-    get tfOpen() { return this.protoVersion === 'v3' && (this.tfStage === 'q' || this.tfStage === 'end'); },
+    get tfOpen() { return this.protoVersion === 'v3' && ['loading', 'q', 'end'].includes(this.tfStage); },
     get tfProgress() {
       if (this.tfStage === 'end') return 100;
       if (this.tfStage !== 'q') return 0;
@@ -2451,7 +2469,12 @@ function quiz() {
         setTimeout(() => { this.tfAnim = ''; }, 30);
       }, 260);
     },
-    tfStart() { this.tfLoad(0); this.tfAnim = 'tf-in'; this.tfStage = 'q'; },
+    // pradėjus: viso ekrano režimas atsidaro su trumpu skeletu, tada įplaukia pirmas klausimas
+    tfStart() {
+      this.tfLoad(0); this.tfStage = 'loading';
+      clearTimeout(this._tfLoadT);
+      this._tfLoadT = setTimeout(() => { if (this.tfStage !== 'loading') return; this.tfAnim = 'tf-in'; this.tfStage = 'q'; }, 750);
+    },
     tfGo(i) { if (i < 0 || i >= this.questions.length || i === this.idx || this.tfBusy) return; this.tfTransition(i > this.idx ? 'up' : 'down', () => this.tfLoad(i)); },
     tfReveal() {
       // po atsakymo: nuslenkam iki „Toliau“ ir perkeliam fokusą (Enter iškart veikia)
