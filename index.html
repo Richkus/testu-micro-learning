@@ -178,7 +178,7 @@
   /* V.5: kai testas atidarytas, Suflerio paieškos juosta paslepiama, o testo juosta tampa pagrindine (ta pati vieta ir forma kaip top bar'o) */
   @media (min-width: 992px) {
     html.ver-v5 .tf { top: calc(var(--ms-proto-h) + 6px); border-radius: 12px 12px 0 0; }
-    html.ver-v5 .v5-bar { padding-top: 10px; background: rgba(241, 247, 247, .55); }
+    html.ver-v5 .v5-bar { padding-top: 10px; background: rgba(241, 247, 247, .82); }
     html.ver-v5 .v5-bar-in { min-height: 34px; }
   }
 
@@ -1143,7 +1143,7 @@
   html.ver-v5 .tf-num { display: inline; }
   .v5 { width: 100%; }
   /* lipni viršutinė juosta: X kairėje, testo pavadinimas, progresas */
-  .v5-bar { position: sticky; top: 0; z-index: 3; margin: 0 -24px; padding: 12px 24px 0; background: rgba(241, 247, 247, .55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(15, 83, 84, .06); }
+  .v5-bar { position: sticky; top: 0; z-index: 3; margin: 0 -24px; padding: 12px 24px 0; background: rgba(241, 247, 247, .82); border-bottom: 1px solid rgba(15, 83, 84, .06); }
   /* juostos fonas lengvas, bet X ir testo pavadinimas aiškiai matomi */
   .v5-bar .v5-x { color: var(--ms-ink); }
   .v5-bar .v5-bar-title { font-weight: 600; color: var(--ms-ink-soft); }
@@ -1213,7 +1213,7 @@
     <!-- V.4: X kairiajame viršutiniame kampe, ant žalio fono (už kortelės ribų) -->
     <button type="button" class="tf-corner-x" x-show="protoVersion === 'v4' && tfStage !== 'welcome'" @click="restart()" aria-label="Uždaryti testą ir grįžti į pradžią" title="Grįžti į testo pradžią"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></button>
 
-    <div class="tf-scroll" x-ref="tfScroll" @scroll.passive="tfScrollY = $el.scrollTop">
+    <div class="tf-scroll" x-ref="tfScroll" @scroll.passive="if (($el.scrollTop > 480) !== tfScrolled) tfScrolled = !tfScrolled">
 
       <!-- Trumpas krovimo vaizdas: kortelės skeletas, kol „atsidaro“ testas -->
       <template x-if="tfStage === 'loading'">
@@ -1563,7 +1563,7 @@
 
     <!-- Navigacija apačioje dešinėje -->
     <!-- V.5: grįžti į viršų (istorija) -->
-    <button type="button" class="v5-top" x-show="protoVersion === 'v5' && tfStage === 'q' && tfScrollY > 480" x-transition.opacity.duration.200ms @click="v5Top()">
+    <button type="button" class="v5-top" x-show="protoVersion === 'v5' && tfStage === 'q' && tfScrolled" x-transition.opacity.duration.200ms @click="v5Top()">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10.5v-9M2 5.5l4-4 4 4"/></svg>
       Į pradžią
     </button>
@@ -2695,7 +2695,7 @@ function quiz() {
       // V.4: išėjus iš testo meniu grįžta į tokią būseną, kokia buvo prieš pradedant
       if (this.sbPrev !== null) { this.sbCollapsed = this.sbPrev; this.sbPrev = null; }
       this.tfDrawer = false; this.tfAnim = ''; this.tfRated = null; this.tfRingOn = false; this.tfReviewOn = false; if (this.$refs.tfScroll) this.$refs.tfScroll.scrollTop = 0;
-      this.v5Done = false; this.v5DrawerIdx = null; this.tfScrollY = 0;
+      this.v5Done = false; this.v5DrawerIdx = null; this.tfScrolled = false;
     },
 
     /* ---------- V.3: Typeform principu ---------- */
@@ -2805,7 +2805,7 @@ function quiz() {
     /* ---------- V.5: vienas ilgas puslapis ---------- */
     v5Done: false,
     v5DrawerIdx: null,
-    tfScrollY: 0,
+    tfScrolled: false,
     get v5Range() { return Array.from({ length: this.idx + 1 }, (_, i) => i); },
     // išaiškinimo skydelis rodo tą klausimą, kurio „Platesnis išaiškinimas“ paspaustas (V.5 gali būti istorinis)
     get dq() { return this.protoVersion === 'v5' && this.v5DrawerIdx !== null ? this.questions[this.v5DrawerIdx] : this.q; },
