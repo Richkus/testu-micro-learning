@@ -176,7 +176,7 @@
   /* V.5: kai testas atidarytas, Suflerio paieškos juosta paslepiama, o testo juosta tampa pagrindine (ta pati vieta ir forma kaip top bar'o) */
   @media (min-width: 992px) {
     html.ver-v5 .tf { top: calc(var(--ms-proto-h) + 6px); border-radius: 12px 12px 0 0; }
-    html.ver-v5 .v5-bar { padding-top: 10px; background: rgba(241, 247, 247, .94); }
+    html.ver-v5 .v5-bar { padding-top: 10px; background: rgba(241, 247, 247, .55); }
     html.ver-v5 .v5-bar-in { min-height: 34px; }
   }
 
@@ -1141,7 +1141,11 @@
   html.ver-v5 .tf-num { display: inline; }
   .v5 { width: 100%; }
   /* lipni viršutinė juosta: X kairėje, testo pavadinimas, progresas */
-  .v5-bar { position: sticky; top: 0; z-index: 3; margin: 0 -24px; padding: 12px 24px 0; background: rgba(241, 247, 247, .86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--ms-line); }
+  .v5-bar { position: sticky; top: 0; z-index: 3; margin: 0 -24px; padding: 12px 24px 0; background: rgba(241, 247, 247, .55); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(15, 83, 84, .06); }
+  /* juosta antraeilė: turinys kiek blankesnis, ryškėja užvedus pelę */
+  .v5-bar-in { opacity: .7; transition: opacity .2s ease; }
+  .v5-bar:hover .v5-bar-in, .v5-bar:focus-within .v5-bar-in { opacity: 1; }
+  .v5-bar .ms-progress { background: rgba(255, 255, 255, .5); }
   .v5-bar-in { max-width: none; margin: 0; display: flex; align-items: center; gap: 10px; padding-bottom: 10px; }
   .v5-x { margin-left: -8px; }
   .v5-bar-title { flex: 1; min-width: 0; font-size: 13px; color: var(--ms-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
