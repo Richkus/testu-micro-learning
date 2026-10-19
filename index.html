@@ -1157,44 +1157,18 @@
   .v5-bar-progress span { display: block; height: 100%; border-radius: 3px; background: var(--ms-progress-fill); transition: width .5s var(--ms-ease); }
   .v5-stack { width: 100%; max-width: 720px; margin: 24px auto 0; display: flex; flex-direction: column; gap: 20px; padding-bottom: 55vh; }
   .v5-q { animation: tf-in .5s var(--ms-ease) both; transition: box-shadow .45s ease, background-color .45s ease; }
-  /* Istorinis (praėjęs) klausimas: atskira „nublankusi“ paletė su konkrečiais atspalviais, kaip tamsioje temoje,
-     o ne opacity (opacity per permatomą kortelę atrodo purvinai). „Platesnis išaiškinimas“ lieka aktyvi nuoroda. */
-  .v5-q {
-    --past-card: #eaf2f2; --past-line: #dbe6e6;
-    --past-title: #6b8386; --past-num: #8db4b6; --past-on-card: #7d9193; --past-text: #7d9193; --past-text-soft: #97a8aa;
-    --past-opt-bg: #f1f6f6; --past-opt-line: #e0e8e8; --past-key-line: #d6e0e0;
-    --past-ok-bg: #e9f3ee; --past-ok-line: #cfe3d8; --past-ok-key: #d6eadf; --past-ok-ico: #6fa88b; --past-ok-text: #5f8f78;
-    --past-bad-bg: #f6ecea; --past-bad-line: #ead3d0; --past-bad-key: #f0dcd9; --past-bad-ico: #c48a85; --past-bad-text: #a8716c;
-  }
-  .v5-q.is-past { background: var(--past-card); box-shadow: inset 0 0 0 1px var(--past-line); content-visibility: auto; contain-intrinsic-size: auto 520px; }
-  .v5-q.is-past .tf-title { color: var(--past-title); }
-  .v5-q.is-past .tf-num { color: var(--past-num); }
-  .v5-q.is-past .tf-sit, .v5-q.is-past .tf-sit span, .v5-q.is-past .tf-hint { color: var(--past-on-card); }
-  .v5-q.is-past .tf-fb-lead, .v5-q.is-past .tf-fb-full p { color: var(--past-text); }
-  .v5-q.is-past .tf-video { filter: saturate(.6); }
-  /* atsakymų variantai */
-  .v5-q.is-past .tf-choice { background: var(--past-opt-bg); border-color: var(--past-opt-line); color: var(--past-text-soft); }
-  .v5-q.is-past .tf-choice.is-dim { opacity: 1; }
-  .v5-q.is-past .tf-key { background: var(--past-opt-bg); border-color: var(--past-key-line); color: var(--past-text-soft); }
-  .v5-q.is-past .tf-choice.is-ok { background: var(--past-ok-bg); border-color: var(--past-ok-line); color: var(--past-title); }
-  .v5-q.is-past .tf-choice.is-ok .tf-key { background: var(--past-ok-key); border-color: var(--past-ok-key); color: var(--past-ok-ico); }
-  .v5-q.is-past .tf-choice.is-bad { background: var(--past-bad-bg); border-color: var(--past-bad-line); color: var(--past-title); }
-  .v5-q.is-past .tf-choice.is-bad .tf-key { background: var(--past-bad-key); border-color: var(--past-bad-key); color: var(--past-bad-ico); }
-  .v5-q.is-past .tf-choice.is-bad .ms-tag { background: var(--past-bad-key); color: var(--past-bad-text); }
-  .v5-q.is-past .tf-choice.is-missed { background: var(--past-opt-bg); border-color: var(--past-ok-line); }
-  .v5-q.is-past .tf-choice.is-missed .tf-key { background: var(--past-opt-bg); border-color: var(--past-ok-line); color: var(--past-ok-ico); }
-  .v5-q.is-past .ms-tag.is-missed { background: var(--past-ok-bg); color: var(--past-ok-text); }
-  .v5-q.is-past .tf-choice.is-unk .tf-key { background: var(--past-key-line); border-color: var(--past-key-line); color: var(--past-text); }
-  .v5-q.is-past .tf-inline-body { border-top-color: var(--past-ok-line); }
-  .v5-q.is-past .tf-choice.is-bad .tf-inline-body { border-top-color: var(--past-bad-line); }
-  .v5-q.is-past .tf-verdict { color: var(--past-text); }
-  .v5-q.is-past .tf-verdict.is-ok { color: var(--past-ok-text); }
-  .v5-q.is-past .tf-verdict.is-bad { color: var(--past-bad-text); }
-  .v5-q.is-past .tf-fb { background: var(--past-opt-bg); border-color: var(--past-opt-line); }
-  .v5-q.is-past .tf-fb.is-ok { background: var(--past-ok-bg); border-color: var(--past-ok-line); }
-  .v5-q.is-past .tf-fb.is-bad { background: var(--past-bad-bg); border-color: var(--past-bad-line); }
-  /* sklandus perėjimas iš ryškios į nublankusią būseną */
-  .v5-q, .v5-q .tf-title, .v5-q .tf-num, .v5-q .tf-choice, .v5-q .tf-key, .v5-q .tf-verdict, .v5-q .tf-fb-lead { transition: background-color .45s ease, border-color .45s ease, color .45s ease, box-shadow .45s ease; }
+  /* istorinis klausimas: šiek tiek nublankęs, bet „Platesnis išaiškinimas“ lieka aktyvi nuoroda */
+  /* praėjusi kortelė pati „ištirpsta“ į foną (permatomas baltas, be šešėlio); nuoroda viduje lieka ryški */
+  .v5-q { transition: box-shadow .45s ease, background-color .45s ease; }
+  .v5-q.is-past { background-color: rgba(255, 255, 255, .5); box-shadow: none; content-visibility: auto; contain-intrinsic-size: auto 520px; }
+  .v5-q.is-past .tf-choice:not(.is-ok):not(.is-bad):not(.is-unk):not(.is-missed) { background-color: rgba(255, 255, 255, .35); }
+  .v5-q .tf-title, .v5-q .tf-sit, .v5-q .tf-video, .v5-q .tf-choice-btn, .v5-q .tf-verdict, .v5-q .tf-fb-lead, .v5-q .tf-fb-full, .v5-q .tf-hint { transition: opacity .45s ease; }
+  .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video, .v5-q.is-past .tf-choice-btn,
+  .v5-q.is-past .tf-verdict, .v5-q.is-past .tf-fb-lead, .v5-q.is-past .tf-fb-full { opacity: .55; }
+  .v5-q.is-past .tf-choice { border-color: var(--ms-line); }
+  .v5-q.is-past .tf-choice.is-dim { opacity: .7; }
+  .v5-q.is-past .ms-more { opacity: 1; }
+  .v5-q.is-past:hover .tf-title, .v5-q.is-past:hover .tf-choice-btn, .v5-q.is-past:hover .tf-fb-lead, .v5-q.is-past:hover .tf-verdict { opacity: .8; }
   .v5-end { padding: 8px 8px 28px; animation: tf-in .5s var(--ms-ease) both; }
   .v5-end-note { margin: 18px 24px 0; font-size: 14px; line-height: 21px; color: var(--ms-sub); }
   .v5-end .tf-actions { padding: 0 24px; }
