@@ -142,7 +142,11 @@
   html.ver-v4 .tf-top, html.ver-v4 .tf-num { display: none; }
   .tf-qtop { display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin: -6px 0 18px; }
   .tf-qtop .ms-progress { margin: 0 0 0 auto; flex: 0 0 auto; }
-  .tf-qtop-title { flex: 1; min-width: 0; font-size: 13px; color: var(--ms-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tf-corner-x { position: absolute; top: 16px; left: 16px; z-index: 6; width: 38px; height: 38px; display: grid; place-items: center; border: 0; border-radius: 10px; background: rgba(255, 255, 255, .55); color: var(--ms-teal-dark); cursor: pointer; box-shadow: 0 1px 3px rgba(15, 83, 84, .08); transition: background-color .15s, box-shadow .15s; }
+  .tf-corner-x:hover { background: #fff; box-shadow: 0 4px 12px rgba(15, 83, 84, .14); }
+  .tf-corner-x:focus-visible { outline: 3px solid rgba(15, 83, 84, .3); }
+  @media (max-width: 575.98px) { .tf-corner-x { top: 10px; left: 10px; width: 34px; height: 34px; } }
+  .tf-qtop-title { flex: 1; min-width: 0; margin-left: -2px; font-size: 13px; color: var(--ms-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   @media (max-width: 575.98px) { .tf-qtop-title { display: none; } }
   .tf-card-x { flex: 0 0 32px; width: 32px; height: 32px; margin-left: -8px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background-color .15s, color .15s; }
   .tf-card-x:hover { background: var(--ms-howto-bg); color: var(--ms-ink); }
@@ -1196,6 +1200,9 @@
       <div class="tf-progress" x-show="tfStage === 'q' || tfStage === 'loading'" aria-hidden="true"><span :style="`width: ${tfProgress}%`"></span></div>
     </div>
 
+    <!-- V.4: X kairiajame viršutiniame kampe, ant žalio fono (už kortelės ribų) -->
+    <button type="button" class="tf-corner-x" x-show="protoVersion === 'v4' && tfStage !== 'welcome'" @click="restart()" aria-label="Uždaryti testą ir grįžti į pradžią" title="Grįžti į testo pradžią"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></button>
+
     <div class="tf-scroll" x-ref="tfScroll" @scroll.passive="tfScrollY = $el.scrollTop">
 
       <!-- Trumpas krovimo vaizdas: kortelės skeletas, kol „atsidaro“ testas -->
@@ -1339,7 +1346,6 @@
         <section class="tf-screen tf-card tf-question" :class="tfAnim">
           <!-- V.4: be testo juostos; žingsniai pill'e kortelėje kaip V.1/V.2, X išeiti į pradžią -->
           <div class="tf-qtop" x-show="protoVersion === 'v4'">
-            <button type="button" class="tf-card-x" @click="restart()" aria-label="Uždaryti testą ir grįžti į pradžią" title="Grįžti į testo pradžią"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></button>
             <span class="tf-qtop-title" x-text="title"></span>
             <span class="ms-progress" x-text="`Klausimas ${idx + 1} iš ${questions.length}`"></span>
           </div>
