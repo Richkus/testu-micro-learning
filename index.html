@@ -1149,9 +1149,11 @@
   .v5-bar-progress { max-width: none; height: 3px; margin: 0 -24px -1px; border-radius: 3px; background: transparent; overflow: hidden; }
   .v5-bar-progress span { display: block; height: 100%; border-radius: 3px; background: var(--ms-progress-fill); transition: width .5s var(--ms-ease); }
   .v5-stack { width: 100%; max-width: 720px; margin: 24px auto 0; display: flex; flex-direction: column; gap: 20px; padding-bottom: 55vh; }
-  .v5-q { animation: tf-in .5s var(--ms-ease) both; transition: box-shadow .4s ease; }
+  .v5-q { animation: tf-in .5s var(--ms-ease) both; transition: box-shadow .45s ease, background-color .45s ease; }
   /* istorinis klausimas: šiek tiek nublankęs, bet „Platesnis išaiškinimas“ lieka aktyvi nuoroda */
-  .v5-q.is-past { box-shadow: 0 1px 6px rgba(68, 119, 119, .07); }
+  /* praėjusi kortelė pati „ištirpsta“ į foną (permatomas baltas, be šešėlio); nuoroda viduje lieka ryški */
+  .v5-q.is-past { background-color: rgba(255, 255, 255, .5); box-shadow: none; }
+  .v5-q.is-past .tf-choice:not(.is-ok):not(.is-bad):not(.is-unk):not(.is-missed) { background-color: rgba(255, 255, 255, .35); }
   .v5-q .tf-title, .v5-q .tf-sit, .v5-q .tf-video, .v5-q .tf-choice-btn, .v5-q .tf-verdict, .v5-q .tf-fb-lead, .v5-q .tf-fb-full, .v5-q .tf-hint { transition: opacity .45s ease; }
   .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video, .v5-q.is-past .tf-choice-btn,
   .v5-q.is-past .tf-verdict, .v5-q.is-past .tf-fb-lead, .v5-q.is-past .tf-fb-full { opacity: .55; }
