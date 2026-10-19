@@ -167,6 +167,12 @@
     html.ver-v4 .tf { left: var(--ms-sb-w); transition: opacity .3s ease, visibility 0s linear .3s, left .35s var(--ms-ease); }
     html.ver-v4 .tf.is-open { transition: opacity .3s ease, visibility 0s, left .35s var(--ms-ease); }
   }
+  /* V.5: kai testas atidarytas, Suflerio paieškos juosta paslepiama, o testo juosta tampa pagrindine (ta pati vieta ir forma kaip top bar'o) */
+  @media (min-width: 992px) {
+    html.ver-v5 .tf { top: calc(var(--ms-proto-h) + 6px); border-radius: 12px 12px 0 0; }
+    html.ver-v5 .v5-bar { padding-top: 10px; background: rgba(241, 247, 247, .94); }
+    html.ver-v5 .v5-bar-in { min-height: 34px; }
+  }
 
   /* viršutinė 5px juosta virš top bar'o: šoninio meniu spalva (ne fono paveikslas) */
   .ms-topbar { height: 60px; border-top: 5px solid var(--ms-sidebar); background: var(--ms-topbar); display: flex; align-items: center; gap: 24px; padding: 0 32px; position: sticky; top: var(--ms-proto-h); z-index: 20; }
