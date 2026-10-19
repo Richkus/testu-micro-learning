@@ -1261,7 +1261,7 @@
               <span class="v5-bar-title" x-text="title"></span>
               <span class="ms-progress v5-count" x-text="v5Done ? 'Testas baigtas' : `Klausimas ${idx + 1} iš ${questions.length}`"></span>
             </div>
-            <div class="v5-bar-progress" aria-hidden="true"><span :style="`width: ${v5Done ? 100 : tfProgress}%`"></span></div>
+            <div class="v5-bar-progress" aria-hidden="true"><span :style="`width: ${v5Done ? 100 : Math.round(idx / questions.length * 100)}%`"></span></div>
           </div>
 
           <div class="v5-stack">
