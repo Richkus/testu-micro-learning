@@ -408,6 +408,14 @@
   .ms-v22-fb .ms-inline-lead { margin-bottom: 10px; }
   .ms-v22-fb .ms-more { margin-bottom: 0; }
   .ms-v22-actions { display: flex; margin-top: 20px; }
+  /* „Kitas klausimas“ po „Tikrinti“: rodyklė + trumpas atsiradimas, kad būtų aišku, jog tai naujas veiksmas */
+  .ms-next-cta { display: inline-flex; align-items: center; gap: 10px; animation: ms-next-in .35s var(--ms-ease) both; }
+  .ms-next-arrow-wrap { display: inline-flex; }
+  .ms-next-arrow { flex: 0 0 auto; transition: transform .2s var(--ms-ease); animation: ms-arrow-nudge .9s var(--ms-ease) .35s 2; }
+  .ms-next-cta:hover .ms-next-arrow, .ms-next-cta:focus-visible .ms-next-arrow { transform: translateX(3px); }
+  @keyframes ms-next-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @keyframes ms-arrow-nudge { 0%, 100% { transform: translateX(0); } 45% { transform: translateX(4px); } }
+  @media (prefers-reduced-motion: reduce) { .ms-next-cta, .ms-next-arrow { animation: none; } }
   .ms-v22-actions .ms-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; pointer-events: none; }
   .ms-v22-actions .ms-btn { transition: opacity .25s ease, background-color .2s; }
 
@@ -1334,7 +1342,7 @@
                           <button type="button" class="ms-more" x-show="!isUnknownAns(ri)" @click="v5Explain(ri)">Platesnis išaiškinimas</button>
                         </div>
                         <div class="tf-actions" x-show="ri === idx && !v5Done">
-                          <button type="button" class="ms-btn tf-next" @click="tfNext()"><span x-text="isLast ? 'Baigti testą' : 'Kitas klausimas'"></span></button>
+                          <button type="button" class="ms-btn tf-next" :class="{ 'ms-next-cta': protoVersion === 'v55' }" @click="tfNext()"><span x-text="isLast ? 'Baigti testą' : 'Kitas klausimas'"></span><template x-if="protoVersion === 'v55'"><span class="ms-next-arrow-wrap"><svg class="ms-next-arrow" width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h13M9.5 1.5L14 6l-4.5 4.5"/></svg></span></template></button>
                         </div>
                       </div>
                     </template>
@@ -2082,7 +2090,7 @@
                   </div>
                   <div class="ms-v22-actions">
                     <button type="button" class="ms-btn" x-show="!answered" :disabled="sel === null" @click="answer(sel)">Tikrinti</button>
-                    <button type="button" class="ms-btn ms-v22-next" x-show="answered" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span></button>
+                    <button type="button" class="ms-btn ms-v22-next ms-next-cta" x-show="answered" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span><svg class="ms-next-arrow" width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h13M9.5 1.5L14 6l-4.5 4.5"/></svg></button>
                   </div>
                 </div>
               </template>
