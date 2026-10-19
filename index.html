@@ -141,7 +141,9 @@
   .ms-sb-tip.is-on { opacity: 1; visibility: visible; transform: translate(0, -50%); transition: opacity .15s ease, transform .15s ease, visibility 0s; }
   html.ver-v4 .tf-top, html.ver-v4 .tf-num { display: none; }
   .tf-qtop { display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin: -6px 0 18px; }
-  .tf-qtop .ms-progress { margin: 0; }
+  .tf-qtop .ms-progress { margin: 0 0 0 auto; flex: 0 0 auto; }
+  .tf-qtop-title { flex: 1; min-width: 0; font-size: 13px; color: var(--ms-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @media (max-width: 575.98px) { .tf-qtop-title { display: none; } }
   .tf-card-x { flex: 0 0 32px; width: 32px; height: 32px; margin-left: -8px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background-color .15s, color .15s; }
   .tf-card-x:hover { background: var(--ms-howto-bg); color: var(--ms-ink); }
   .tf-card-x:focus-visible { outline: 3px solid rgba(83,169,177,.35); }
@@ -1338,6 +1340,7 @@
           <!-- V.4: be testo juostos; žingsniai pill'e kortelėje kaip V.1/V.2, X išeiti į pradžią -->
           <div class="tf-qtop" x-show="protoVersion === 'v4'">
             <button type="button" class="tf-card-x" @click="restart()" aria-label="Uždaryti testą ir grįžti į pradžią" title="Grįžti į testo pradžią"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></button>
+            <span class="tf-qtop-title" x-text="title"></span>
             <span class="ms-progress" x-text="`Klausimas ${idx + 1} iš ${questions.length}`"></span>
           </div>
           <h2 class="tf-title"><span class="tf-num" x-text="`${idx + 1}.`"></span> <span x-text="q.text"></span></h2>
