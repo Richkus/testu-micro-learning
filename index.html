@@ -1026,7 +1026,8 @@
   .tf-choice-text { flex: 1; }
   .tf-choice .ms-tag { margin-top: 0; }
   /* pažymėtas (prieš patikrinimą): fonas lieka pilkas, keičiasi tik raidės žymė */
-  .tf-choice.is-sel .tf-key { background: var(--ms-teal); border-color: var(--ms-teal); color: #fff; }
+  .tf-choice.is-sel .tf-key, .tf-choice.is-sel:not(.is-locked):hover .tf-key { background: var(--ms-teal); border-color: var(--ms-teal); color: #fff; }
+  html.ver-v5 .tf-choice.is-sel:not(.is-blink) { background: #eef7f7; border-color: var(--ms-teal); box-shadow: inset 0 0 0 1px var(--ms-teal); }
   .tf-choice.is-blink { animation: tf-blink .32s steps(1) 2; }
   @keyframes tf-blink { 50% { background: var(--ms-option-bg-hover); } }
   /* rezultatas */
@@ -1207,7 +1208,7 @@
 <div class="ms-proto-bar" role="note">
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.5h4M6.75 1.5v4.2L2.6 12.6A1.3 1.3 0 0 0 3.7 14.5h8.6a1.3 1.3 0 0 0 1.1-1.9L9.25 5.7V1.5"/><path d="M4.4 10h7.2"/></svg>
   <span class="ms-proto-ver" role="group" aria-label="Prototipo versija">
-    <button type="button" onclick="window.msSetVersion('v1')" data-ver="v1">V.1</button><button type="button" onclick="window.msSetVersion('v2')" data-ver="v2">V.2</button><button type="button" onclick="window.msSetVersion('v22')" data-ver="v22">V.2.2</button><button type="button" onclick="window.msSetVersion('v3')" data-ver="v3">V.3</button><button type="button" onclick="window.msSetVersion('v4')" data-ver="v4">V.4</button><button type="button" onclick="window.msSetVersion('v5')" data-ver="v5">V.5</button>
+    <button type="button" onclick="window.msSetVersion('v1')" data-ver="v1">V.1</button><button type="button" onclick="window.msSetVersion('v2')" data-ver="v2">V.2</button><button type="button" onclick="window.msSetVersion('v22')" data-ver="v22">V.2.2</button><button type="button" onclick="window.msSetVersion('v3')" data-ver="v3">V.3</button><button type="button" onclick="window.msSetVersion('v4')" data-ver="v4">V.4</button><button type="button" onclick="window.msSetVersion('v5')" data-ver="v5">V.5</button><button type="button" onclick="window.msSetVersion('v55')" data-ver="v55">V.5.5</button>
   </span>
   <span><strong>Prototipas</strong><span class="ms-proto-sep ms-proto-mid" aria-hidden="true">/</span><span class="ms-proto-text ms-proto-mid">Testai, micro-learning</span><span class="ms-proto-sep" aria-hidden="true">/</span><span class="ms-proto-text">Work in progress</span></span>
 </div>
@@ -1239,7 +1240,7 @@
       <!-- ================= V.5: vienas ilgas puslapis (Typeform „scroll“ principu) =================
            Atsakytas klausimas lieka viršuje kaip istorija (nublankęs), naujas atsiranda žemiau ir
            puslapis nuslenka prie jo. Bet kada galima pakilti atgal ir peržiūrėti atsakymus. -->
-      <template x-if="tfStage === 'q' && protoVersion === 'v5'">
+      <template x-if="tfStage === 'q' && isV5">
         <div class="v5">
           <div class="v5-bar">
             <div class="v5-bar-in">
@@ -1310,15 +1311,27 @@
                 <div class="tf-actions" x-show="questions[ri].multi && ri === idx && !answered">
                   <button type="button" class="ms-btn" :disabled="!multiSel.length" @click="tfCheck()">Patikrinti</button>
                 </div>
+                <!-- V.5.5: pasirinkimas + „Tikrinti“ -->
+                <div class="tf-actions v55-check" x-show="protoVersion === 'v55' && !questions[ri].multi && ri === idx && !answered && !v5Done">
+                  <button type="button" class="ms-btn" :disabled="sel === null" @click="v55Check()">Tikrinti</button>
+                </div>
 
-                <div class="tf-feedback" :class="{ 'is-shown': v5Answered(ri) && questions[ri].multi }">
+                <div class="tf-feedback" :class="{ 'is-shown': v5Block(ri) }">
                   <div class="tf-feedback-in">
-                    <template x-if="v5Answered(ri) && questions[ri].multi">
+                    <template x-if="v5Block(ri)">
                       <div>
                         <div class="tf-fb" :class="'is-' + tfRVerdict(ri)">
                           <div class="tf-verdict" :class="'is-' + tfRVerdict(ri)" x-text="v5VerdictText(ri)"></div>
-                          <p class="tf-fb-lead" x-text="v5Lead(ri)"></p>
-                          <button type="button" class="ms-more" @click="v5Explain(ri)">Platesnis išaiškinimas</button>
+                          <p class="tf-fb-lead" x-show="!isUnknownAns(ri)" x-text="v5Lead(ri)"></p>
+                          <div class="tf-fb-full" x-show="isUnknownAns(ri)">
+                            <template x-for="(para, pi) in questions[ri].paras" :key="'v55p' + ri + pi"><p x-text="para"></p></template>
+                            <a class="ms-linkcard" :href="questions[ri].link.href" target="_blank" rel="noopener">
+                              <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+                              <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="questions[ri].link.title"></span></span>
+                              <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
+                            </a>
+                          </div>
+                          <button type="button" class="ms-more" x-show="!isUnknownAns(ri)" @click="v5Explain(ri)">Platesnis išaiškinimas</button>
                         </div>
                         <div class="tf-actions" x-show="ri === idx && !v5Done">
                           <button type="button" class="ms-btn tf-next" @click="tfNext()"><span x-text="isLast ? 'Baigti testą' : 'Kitas klausimas'"></span></button>
@@ -1364,7 +1377,7 @@
       </template>
 
       <!-- Klausimas -->
-      <template x-if="tfStage === 'q' && protoVersion !== 'v5'">
+      <template x-if="tfStage === 'q' && !isV5">
         <section class="tf-screen tf-card tf-question" :class="tfAnim">
           <!-- V.4: be testo juostos; žingsniai pill'e kortelėje kaip V.1/V.2, X išeiti į pradžią -->
           <div class="tf-qtop" x-show="protoVersion === 'v4'">
@@ -1575,12 +1588,12 @@
 
     <!-- Navigacija apačioje dešinėje -->
     <!-- V.5: grįžti į viršų (istorija) -->
-    <button type="button" class="v5-top" x-show="protoVersion === 'v5' && tfStage === 'q' && tfScrolled" x-transition.opacity.duration.200ms @click="v5Top()">
+    <button type="button" class="v5-top" x-show="isV5 && tfStage === 'q' && tfScrolled" x-transition.opacity.duration.200ms @click="v5Top()">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10.5v-9M2 5.5l4-4 4 4"/></svg>
       Į pradžią
     </button>
 
-    <div class="tf-nav" x-show="tfStage === 'q' && protoVersion !== 'v5'">
+    <div class="tf-nav" x-show="tfStage === 'q' && !isV5">
       <span class="tf-count" x-text="`${idx + 1} iš ${questions.length}`"></span>
       <button type="button" class="tf-nav-btn" :disabled="idx === 0" @click="tfGo(idx - 1)" aria-label="Ankstesnis klausimas"><svg width="14" height="9" viewBox="0 0 14 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7.5l6-6 6 6"/></svg></button>
       <button type="button" class="tf-nav-btn" :disabled="!answered" @click="tfNext()" aria-label="Kitas klausimas"><svg width="14" height="9" viewBox="0 0 14 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1.5l6 6 6-6"/></svg></button>
@@ -2542,7 +2555,7 @@ function quiz() {
         const saved = JSON.parse(localStorage.getItem('ms-proto-v4') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
         if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
-        if (['v1', 'v2', 'v22', 'v3', 'v4', 'v5'].includes(saved.protoVersion)) this.protoVersion = saved.protoVersion;
+        if (['v1', 'v2', 'v22', 'v3', 'v4', 'v5', 'v55'].includes(saved.protoVersion)) this.protoVersion = saved.protoVersion;
         if (['solid', 'gradient', 'live'].includes(saved.ctaStyle)) this.ctaStyle = saved.ctaStyle;
         if (saved.cardSize === 'wide') this.cardSize = 'wide';
         if (saved.explainStyle === 'side') this.explainStyle = 'side';
@@ -2558,7 +2571,7 @@ function quiz() {
       markVer();
       if (this.isTf) this.tfStage = 'welcome';
       // V.5 naudoja tą patį Suflerio „shell'ą“ kaip V.4 (+ savo ver-v5 klasę)
-      const applySb = () => { const c = document.documentElement.classList, shell = ['v4', 'v5'].includes(this.protoVersion); c.toggle('ver-v4', shell); c.toggle('ver-v5', this.protoVersion === 'v5'); c.toggle('sb-collapsed', shell && this.sbCollapsed); };
+      const applySb = () => { const c = document.documentElement.classList, shell = ['v4', 'v5', 'v55'].includes(this.protoVersion); c.toggle('ver-v4', shell); c.toggle('ver-v5', ['v5', 'v55'].includes(this.protoVersion)); c.toggle('sb-collapsed', shell && this.sbCollapsed); };
       applySb(); this.$watch('protoVersion', applySb); this.$watch('sbCollapsed', () => { applySb(); this.sbTip.on = false; });
       this.$watch('protoVersion', () => { markVer(); persist(); this.restart(); this.screen = 'intro'; window.scrollTo({ top: 0 }); });
       const applyCta = () => { const c = document.documentElement.classList; c.toggle('cta-solid', this.ctaStyle === 'solid'); c.toggle('cta-live', this.ctaStyle === 'live'); };
@@ -2758,7 +2771,9 @@ function quiz() {
     tfRingOn: false,
     tfBlink: -1,
     tfBusy: false,
-    get isTf() { return ['v3', 'v4', 'v5'].includes(this.protoVersion); },
+    get isTf() { return ['v3', 'v4', 'v5', 'v55'].includes(this.protoVersion); },
+    // V.5 ir V.5.5 naudoja tą patį ilgą puslapį; V.5.5 atsakoma kaip V.2.2 (pasirinkimas + „Tikrinti“)
+    get isV5() { return this.protoVersion === 'v5' || this.protoVersion === 'v55'; },
     sbCollapsed: false,
     sbPrev: null,
     sbTip: { on: false, text: '', top: 0, left: 0 },
@@ -2816,7 +2831,7 @@ function quiz() {
     // pradėjus: viso ekrano režimas atsidaro su trumpu skeletu, tada įplaukia pirmas klausimas
     tfStart() {
       this.tfLoad(0); this.tfStage = 'loading';
-      if (['v4', 'v5'].includes(this.protoVersion)) { this.sbPrev = this.sbCollapsed; this.sbCollapsed = true; window.scrollTo({ top: 0, behavior: 'instant' }); }
+      if (['v4', 'v5', 'v55'].includes(this.protoVersion)) { this.sbPrev = this.sbCollapsed; this.sbCollapsed = true; window.scrollTo({ top: 0, behavior: 'instant' }); }
       clearTimeout(this._tfLoadT);
       this._tfLoadT = setTimeout(() => { if (this.tfStage !== 'loading') return; this.tfAnim = 'tf-in'; this.tfStage = 'q'; }, 750);
     },
@@ -2834,6 +2849,7 @@ function quiz() {
     tfPick(i) {
       if (this.answered || this.tfBusy) return;
       if (this.q.multi) { this.toggleMulti(i); return; }
+      if (this.protoVersion === 'v55') { this.sel = i; return; }
       // Typeform: pasirinkimas trumpai sumirksi, tik tada parodomas rezultatas
       this.tfBusy = true; this.tfBlink = i;
       setTimeout(() => {
@@ -2849,7 +2865,7 @@ function quiz() {
       this.tfReveal();
     },
     tfNext() {
-      if (this.protoVersion === 'v5') { this.v5Next(); return; }
+      if (this.isV5) { this.v5Next(); return; }
       if (!this.answered || this.tfBusy) return;
       if (!this.isLast) { this.tfGo(this.idx + 1); return; }
       this.tfTransition('up', () => { this.tfStage = 'end'; this.screen = 'results'; this.tfRingOn = false; setTimeout(() => { this.tfRingOn = true; }, 350); });
@@ -2860,10 +2876,17 @@ function quiz() {
     tfScrolled: false,
     get v5Range() { return Array.from({ length: this.idx + 1 }, (_, i) => i); },
     // išaiškinimo skydelis rodo tą klausimą, kurio „Platesnis išaiškinimas“ paspaustas (V.5 gali būti istorinis)
-    get dq() { return this.protoVersion === 'v5' && this.v5DrawerIdx !== null ? this.questions[this.v5DrawerIdx] : this.q; },
+    get dq() { return this.isV5 && this.v5DrawerIdx !== null ? this.questions[this.v5DrawerIdx] : this.q; },
     v5Answered(ri) { const a = this.answers[ri]; return a !== undefined && a !== null; },
-    v5Class(ri, i) { return (ri === this.idx && !this.answered) ? this.tfChoiceClass(i) : this.tfRClass(ri, i); },
-    v5Inline(ri, i) { const qq = this.questions[ri]; return !qq.multi && this.v5Answered(ri) && this.answers[ri] === i; },
+    v5Class(ri, i) { return (ri === this.idx && !this.answered) ? this.tfChoiceClass(i) + (this.protoVersion === 'v55' && this.sel === i ? ' is-sel' : '') : this.tfRClass(ri, i); },
+    // V.5.5: išaiškinimas ne variante, o bloke virš mygtuko
+    v5Inline(ri, i) { const qq = this.questions[ri]; return this.protoVersion !== 'v55' && !qq.multi && this.v5Answered(ri) && this.answers[ri] === i; },
+    v5Block(ri) { return this.v5Answered(ri) && (this.questions[ri].multi || this.protoVersion === 'v55'); },
+    v55Check() {
+      if (this.answered || this.sel === null || this.q.multi) return;
+      this.picked = this.sel; this.answers[this.idx] = this.sel; this.answered = true;
+      this.tfReveal();
+    },
     v5VerdictText(ri) {
       const v = this.tfRVerdict(ri), qq = this.questions[ri];
       if (v === 'partial') { const hits = (this.answers[ri] || []).filter(x => qq.correct.includes(x)).length; return `Iš dalies teisingai: ${hits} iš ${qq.correct.length}`; }
@@ -2892,7 +2915,7 @@ function quiz() {
         this.$nextTick(() => { this.v5ScrollTo(this.$root.querySelector('.v5-end')); setTimeout(() => { this.tfRingOn = true; }, 500); });
         return;
       }
-      this.idx++; this.answered = false; this.picked = null; this.multiSel = [];
+      this.idx++; this.answered = false; this.picked = null; this.multiSel = []; this.sel = null;
       this.$nextTick(() => this.v5ScrollTo(this.$root.querySelector(`.v5-q[data-v5="${this.idx}"]`)));
     },
 
@@ -2927,6 +2950,7 @@ function quiz() {
         const i = this.letters.indexOf(e.key.toUpperCase());
         if (i > -1 && i < this.q.options.length) { e.preventDefault(); this.tfPick(i); return; }
         if (e.key === 'Enter' && this.q.multi && this.multiSel.length && !onCtl) { e.preventDefault(); this.tfCheck(); }
+        else if (e.key === 'Enter' && this.protoVersion === 'v55' && this.sel !== null && !onCtl) { e.preventDefault(); this.v55Check(); }
       } else if (e.key === 'Enter' && !onCtl) { e.preventDefault(); this.tfNext(); }
     },
 
