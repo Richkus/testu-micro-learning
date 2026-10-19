@@ -2814,8 +2814,14 @@ function quiz() {
     v5Explain(ri) { this.v5DrawerIdx = ri; this.tfDrawer = true; },
     v5ScrollTo(el) {
       const sc = this.$refs.tfScroll; if (!el || !sc) return;
-      const bar = this.$root.querySelector('.v5-bar'), off = (bar ? bar.offsetHeight : 0) + 20;
-      sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - off, behavior: 'smooth' });
+      // 20px tarpas po lipnia juosta (matuojam jos tikrą apatinį kraštą ekrane)
+      const bar = this.$root.querySelector('.v5-bar'), off = (bar ? bar.getBoundingClientRect().bottom - sc.getBoundingClientRect().top : 0) + 20;
+      // offsetTop, ne getBoundingClientRect: nauja kortelė įplaukia su translateY animacija, todėl jos matoma vieta dar „netikra“
+      const target = () => { let y = 0; for (let n = el; n && n !== sc; n = n.offsetParent) y += n.offsetTop; return y - off; };
+      sc.scrollTo({ top: target(), behavior: 'smooth' });
+      // ankstesnė kortelė dar kelias dešimtis ms keičia aukštį (susitraukia išaiškinimas, dingsta mygtukas), todėl po to švelniai patikslinam
+      clearTimeout(this._v5FixT);
+      this._v5FixT = setTimeout(() => { const t = target(); if (Math.abs(sc.scrollTop - t) > 2) sc.scrollTo({ top: t, behavior: 'smooth' }); }, 700);
     },
     v5Top() { if (this.$refs.tfScroll) this.$refs.tfScroll.scrollTo({ top: 0, behavior: 'smooth' }); },
     // Kitas: atsakytas klausimas lieka viršuje, naujas įdedamas žemiau ir puslapis nuslenka prie jo
