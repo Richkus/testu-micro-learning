@@ -401,7 +401,7 @@
   .ms-option.is-dim { opacity: .45; }
   /* V.2.2: pasirinktas (dar netikrintas) variantas */
   .ms-option.is-selected { background: #eef7f7; border-color: var(--ms-teal); box-shadow: inset 0 0 0 1px var(--ms-teal); }
-  .ms-option.is-selected .ms-key { background: var(--ms-teal); border-color: var(--ms-teal); color: #fff; }
+  .ms-option.is-selected .ms-key, .ms-option.is-selected:not(.is-locked):hover .ms-key { background: var(--ms-teal); border-color: var(--ms-teal); color: #fff; }
   .ms-v22-fb { margin-top: 20px; padding: 16px 20px 18px; border-radius: var(--ms-radius-md); border: 1px solid var(--ms-line); background: var(--ms-surface-soft); }
   .ms-v22-fb.is-ok { background: var(--ms-ok-bg); border-color: var(--ms-ok-line); }
   .ms-v22-fb.is-bad { background: var(--ms-bad-bg); border-color: var(--ms-bad-line); }
