@@ -87,7 +87,9 @@
 
   /* ---------- Base ---------- */
   html, body { height: 100%; }
-  body { font-family: var(--ms-font); color: var(--ms-ink); background: var(--ms-bg); background-attachment: fixed; }
+  /* fonas atskirame fiksuotame sluoksnyje: „background-attachment: fixed“ priversdavo perpiešti visą ekraną kiekvienu slinkimo kadru */
+  body { font-family: var(--ms-font); color: var(--ms-ink); background: #b4dada; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: -1; background: var(--ms-bg); pointer-events: none; }
   [x-cloak] { display: none !important; }
   a { color: var(--ms-link); }
   button { font: inherit; }
@@ -584,7 +586,7 @@
   }
 
   /* ---------- Fonas: statiški sluoksniai (paveikslas / bangos, šydas, raštas, grūdėtumas), reguliuojami „Fonas“ skydelyje ---------- */
-  .ms-bgx { position: fixed; top: 0; right: 0; bottom: 0; left: 272px; z-index: 0; overflow: hidden; pointer-events: none; }
+  .ms-bgx { position: fixed; top: 0; right: 0; bottom: 0; left: 272px; z-index: 0; overflow: hidden; pointer-events: none; transform: translateZ(0); }
   .ms-bgx > div { position: absolute; inset: 0; }
   .ms-bgx-img { background-size: cover; background-repeat: no-repeat; }
   .ms-content { position: relative; } /* be z-index: kitaip modalai lieka po top bar'u */
@@ -1141,7 +1143,7 @@
   html.ver-v5 .tf-num { display: inline; }
   .v5 { width: 100%; }
   /* lipni viršutinė juosta: X kairėje, testo pavadinimas, progresas */
-  .v5-bar { position: sticky; top: 0; z-index: 3; margin: 0 -24px; padding: 12px 24px 0; background: rgba(241, 247, 247, .55); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(15, 83, 84, .06); }
+  .v5-bar { position: sticky; top: 0; z-index: 3; margin: 0 -24px; padding: 12px 24px 0; background: rgba(241, 247, 247, .55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-bottom: 1px solid rgba(15, 83, 84, .06); }
   /* juosta antraeilė: turinys kiek blankesnis, ryškėja užvedus pelę */
   .v5-bar-in { opacity: .7; transition: opacity .2s ease; }
   .v5-bar:hover .v5-bar-in, .v5-bar:focus-within .v5-bar-in { opacity: 1; }
@@ -2239,7 +2241,7 @@ function quiz() {
       const b = this.bg, pad = b.blur * 2 + 10;
       const src = b.source === 'waves' ? `data:image/svg+xml,${encodeURIComponent(this.bgWavesSvg)}` : b.source === 'fonas1' ? 'img/fonas-1.jpg' : 'img/testo-fonas.jpg';
       return `inset:-${pad}px;background-image:url("${src}");background-position:${b.posX}% ${b.posY}%;opacity:${b.opacity / 100};` +
-        `filter:blur(${b.blur}px) saturate(${b.saturate}%) brightness(${b.brightness}%) hue-rotate(${b.hue}deg);` +
+        ((b.blur || b.saturate !== 100 || b.brightness !== 100 || b.hue) ? `filter:blur(${b.blur}px) saturate(${b.saturate}%) brightness(${b.brightness}%) hue-rotate(${b.hue}deg);` : '') +
         `transform:scale(${(b.flip ? -1 : 1) * b.scale / 100}, ${b.scale / 100});`;
     },
     bgPatternStyle() {
