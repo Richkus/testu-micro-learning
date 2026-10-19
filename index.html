@@ -140,9 +140,9 @@
   .ms-sb-tip::before { content: ''; position: absolute; right: 100%; top: 50%; margin-top: -5px; border: 5px solid transparent; border-right-color: var(--ms-teal-dark); }
   .ms-sb-tip.is-on { opacity: 1; visibility: visible; transform: translate(0, -50%); transition: opacity .15s ease, transform .15s ease, visibility 0s; }
   html.ver-v4 .tf-top, html.ver-v4 .tf-num { display: none; }
-  .tf-qtop { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: -6px 0 18px; }
+  .tf-qtop { display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin: -6px 0 18px; }
   .tf-qtop .ms-progress { margin: 0; }
-  .tf-card-x { flex: 0 0 32px; width: 32px; height: 32px; margin-right: -8px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background-color .15s, color .15s; }
+  .tf-card-x { flex: 0 0 32px; width: 32px; height: 32px; margin-left: -8px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background-color .15s, color .15s; }
   .tf-card-x:hover { background: var(--ms-howto-bg); color: var(--ms-ink); }
   .tf-card-x:focus-visible { outline: 3px solid rgba(83,169,177,.35); }
   /* V.4: kaip tikrame Suflerio maket'e: žalias rėmas viršuje ir dešinėje, top bar su apvaliais viršutiniais kampais */
@@ -1123,6 +1123,46 @@
     .tf-drawer-foot .ms-btn { width: 100%; }
   }
   @media (prefers-reduced-motion: reduce) { .tf-in, .tf-choice.is-blink { animation: none; } .tf-screen { transition: none; } }
+
+  /* ================= V.5: vienas ilgas puslapis (Typeform „scroll“ principu) ================= */
+  html.ver-v5 .tf-scroll { flex-direction: column; padding-top: 0; scroll-behavior: auto; }
+  html.ver-v5 .tf-num { display: inline; }
+  .v5 { width: 100%; }
+  /* lipni viršutinė juosta: X kairėje, testo pavadinimas, progresas */
+  .v5-bar { position: sticky; top: 0; z-index: 3; margin: 0 -24px; padding: 12px 24px 0; background: rgba(241, 247, 247, .86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--ms-line); }
+  .v5-bar-in { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding-bottom: 10px; }
+  .v5-x { margin-left: -8px; }
+  .v5-bar-title { flex: 1; min-width: 0; font-size: 13px; color: var(--ms-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .v5-count { margin: 0; flex: 0 0 auto; }
+  .v5-bar-progress { max-width: 720px; height: 3px; margin: 0 auto -1px; border-radius: 3px; background: transparent; overflow: hidden; }
+  .v5-bar-progress span { display: block; height: 100%; border-radius: 3px; background: var(--ms-progress-fill); transition: width .5s var(--ms-ease); }
+  .v5-stack { width: 100%; max-width: 720px; margin: 24px auto 0; display: flex; flex-direction: column; gap: 20px; padding-bottom: 55vh; }
+  .v5-q { animation: tf-in .5s var(--ms-ease) both; transition: box-shadow .4s ease; }
+  /* istorinis klausimas: šiek tiek nublankęs, bet „Platesnis išaiškinimas“ lieka aktyvi nuoroda */
+  .v5-q.is-past { box-shadow: 0 1px 6px rgba(68, 119, 119, .07); }
+  .v5-q .tf-title, .v5-q .tf-sit, .v5-q .tf-video, .v5-q .tf-choice-btn, .v5-q .tf-verdict, .v5-q .tf-fb-lead, .v5-q .tf-fb-full, .v5-q .tf-hint { transition: opacity .45s ease; }
+  .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video, .v5-q.is-past .tf-choice-btn,
+  .v5-q.is-past .tf-verdict, .v5-q.is-past .tf-fb-lead, .v5-q.is-past .tf-fb-full { opacity: .55; }
+  .v5-q.is-past .tf-choice { border-color: var(--ms-line); }
+  .v5-q.is-past .tf-choice.is-dim { opacity: .7; }
+  .v5-q.is-past .ms-more { opacity: 1; }
+  .v5-q.is-past:hover .tf-title, .v5-q.is-past:hover .tf-choice-btn, .v5-q.is-past:hover .tf-fb-lead, .v5-q.is-past:hover .tf-verdict { opacity: .8; }
+  .v5-end { padding: 8px 8px 28px; animation: tf-in .5s var(--ms-ease) both; }
+  .v5-end-note { margin: 18px 24px 0; font-size: 14px; line-height: 21px; color: var(--ms-sub); }
+  .v5-end .tf-actions { padding: 0 24px; }
+  .v5-end .ms-btn svg { margin-right: 6px; }
+  /* „Į pradžią“: matosi tik nuslinkus žemiau */
+  .v5-top { position: absolute; right: 28px; bottom: 24px; z-index: 5; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid var(--ms-line); border-radius: 999px; background: var(--ms-surface); box-shadow: 0 6px 18px rgba(68, 119, 119, .14); font: inherit; font-size: 13px; font-weight: 600; color: var(--ms-teal-dark); cursor: pointer; transition: background-color .15s; }
+  .v5-top:hover { background: var(--ms-howto-bg); }
+  @media (max-width: 575.98px) {
+    .v5-bar { margin: 0 -12px; padding: 10px 12px 0; }
+    .v5-bar-title { display: none; }
+    .v5-bar-in { justify-content: space-between; }
+    .v5-stack { margin-top: 16px; gap: 14px; }
+    .v5-end-note, .v5-end .tf-actions { margin-left: 14px; margin-right: 14px; padding: 0; }
+    .v5-top { right: 14px; bottom: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .v5-q, .v5-end { animation: none; } }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   }
@@ -1133,7 +1173,7 @@
 <div class="ms-proto-bar" role="note">
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.5h4M6.75 1.5v4.2L2.6 12.6A1.3 1.3 0 0 0 3.7 14.5h8.6a1.3 1.3 0 0 0 1.1-1.9L9.25 5.7V1.5"/><path d="M4.4 10h7.2"/></svg>
   <span class="ms-proto-ver" role="group" aria-label="Prototipo versija">
-    <button type="button" onclick="window.msSetVersion('v1')" data-ver="v1">V.1</button><button type="button" onclick="window.msSetVersion('v2')" data-ver="v2">V.2</button><button type="button" onclick="window.msSetVersion('v3')" data-ver="v3">V.3</button><button type="button" onclick="window.msSetVersion('v4')" data-ver="v4">V.4</button>
+    <button type="button" onclick="window.msSetVersion('v1')" data-ver="v1">V.1</button><button type="button" onclick="window.msSetVersion('v2')" data-ver="v2">V.2</button><button type="button" onclick="window.msSetVersion('v3')" data-ver="v3">V.3</button><button type="button" onclick="window.msSetVersion('v4')" data-ver="v4">V.4</button><button type="button" onclick="window.msSetVersion('v5')" data-ver="v5">V.5</button>
   </span>
   <span><strong>Prototipas</strong><span class="ms-proto-sep ms-proto-mid" aria-hidden="true">/</span><span class="ms-proto-text ms-proto-mid">Testai, micro-learning</span><span class="ms-proto-sep" aria-hidden="true">/</span><span class="ms-proto-text">Work in progress</span></span>
 </div>
@@ -1148,7 +1188,7 @@
       <div class="tf-progress" x-show="tfStage === 'q' || tfStage === 'loading'" aria-hidden="true"><span :style="`width: ${tfProgress}%`"></span></div>
     </div>
 
-    <div class="tf-scroll" x-ref="tfScroll">
+    <div class="tf-scroll" x-ref="tfScroll" @scroll.passive="tfScrollY = $el.scrollTop">
 
       <!-- Trumpas krovimo vaizdas: kortelės skeletas, kol „atsidaro“ testas -->
       <template x-if="tfStage === 'loading'">
@@ -1159,13 +1199,140 @@
         </section>
       </template>
 
+      <!-- ================= V.5: vienas ilgas puslapis (Typeform „scroll“ principu) =================
+           Atsakytas klausimas lieka viršuje kaip istorija (nublankęs), naujas atsiranda žemiau ir
+           puslapis nuslenka prie jo. Bet kada galima pakilti atgal ir peržiūrėti atsakymus. -->
+      <template x-if="tfStage === 'q' && protoVersion === 'v5'">
+        <div class="v5">
+          <div class="v5-bar">
+            <div class="v5-bar-in">
+              <button type="button" class="tf-card-x v5-x" @click="restart()" aria-label="Uždaryti testą ir grįžti į pradžią" title="Grįžti į testo pradžią"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></button>
+              <span class="v5-bar-title" x-text="title"></span>
+              <span class="ms-progress v5-count" x-text="v5Done ? 'Testas baigtas' : `Klausimas ${idx + 1} iš ${questions.length}`"></span>
+            </div>
+            <div class="v5-bar-progress" aria-hidden="true"><span :style="`width: ${v5Done ? 100 : tfProgress}%`"></span></div>
+          </div>
+
+          <div class="v5-stack">
+            <template x-for="ri in v5Range" :key="'v5q' + ri">
+              <section class="tf-card v5-q" :data-v5="ri" :class="{ 'is-past': ri < idx || v5Done, 'is-cur': ri === idx && !v5Done }">
+                <h2 class="tf-title"><span class="tf-num" x-text="`${ri + 1}.`"></span> <span x-text="questions[ri].text"></span></h2>
+                <p class="ms-situation tf-sit" x-show="questions[ri].situation"><span>Situacija:</span> <span x-text="questions[ri].situation"></span></p>
+                <template x-if="questions[ri].video">
+                  <div class="tf-video" x-data="{ playing: false }">
+                    <div class="ms-video-frame">
+                      <video x-ref="tv" :src="questions[ri].video.src + '#t=0.1'" preload="metadata" playsinline :controls="playing" @ended="playing = false"></video>
+                      <button type="button" class="ms-video-poster" x-show="!playing" @click="playing = true; $refs.tv.play().catch(() => {})" :aria-label="`Paleisti vaizdo įrašą: ${questions[ri].video.caption}`">
+                        <span class="ms-video-play" aria-hidden="true"><svg width="18" height="20" viewBox="0 0 18 20"><path d="M2 1.6v16.8a1 1 0 0 0 1.5.86l14-8.4a1 1 0 0 0 0-1.72l-14-8.4A1 1 0 0 0 2 1.6z" fill="currentColor"/></svg></span>
+                        <span class="ms-video-meta"><b x-text="questions[ri].video.caption"></b></span>
+                      </button>
+                    </div>
+                  </div>
+                </template>
+                <div class="ms-multi-hint tf-hint" x-show="questions[ri].multi && !v5Answered(ri)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13" rx="3"/><path d="M4.8 8.2l2.1 2.1 4.3-4.6"/></svg><span>Galimi keli teisingi atsakymai</span></div>
+
+                <div class="tf-choices" role="group" :aria-label="questions[ri].multi ? 'Atsakymų variantai, galima pažymėti kelis' : 'Atsakymų variantai'">
+                  <template x-for="(o, i) in questions[ri].options" :key="'v5o' + ri + '-' + i">
+                    <div class="tf-choice" :class="[v5Class(ri, i), questions[ri].multi ? 'is-multi' : '', (v5Answered(ri) || ri !== idx) ? 'is-locked' : '', v5Inline(ri, i) ? 'is-expanded' : '']">
+                      <button type="button" class="tf-choice-btn" :disabled="v5Answered(ri) || ri !== idx || v5Done" @click="tfPick(i)" :role="questions[ri].multi ? 'checkbox' : null" :aria-checked="questions[ri].multi ? (ri === idx ? multiSel.includes(i) : wasPicked(ri, i)) : null">
+                        <span class="tf-key"><span class="tf-key-l" x-text="letters[i]"></span>
+                          <svg class="tf-key-ok" width="12" height="10" viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.2 3.2L11 1.5"/></svg>
+                          <svg class="tf-key-x" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+                          <span class="tf-key-q">?</span>
+                        </span>
+                        <span class="tf-choice-text" x-text="o"></span>
+                        <span class="ms-tag" x-show="v5Answered(ri) && v5Class(ri, i).includes('is-bad')">Jūsų atsakymas</span>
+                        <span class="ms-tag is-missed" x-show="v5Answered(ri) && v5Class(ri, i).includes('is-missed')">Praleidote</span>
+                      </button>
+                      <div class="tf-inline" :class="{ 'is-shown': v5Inline(ri, i) }">
+                        <div class="tf-inline-in">
+                          <template x-if="v5Inline(ri, i)">
+                            <div class="tf-inline-body">
+                              <div class="tf-verdict" :class="'is-' + tfRVerdict(ri)" x-text="v5VerdictText(ri)"></div>
+                              <p class="tf-fb-lead" x-show="!isUnknownAns(ri)" x-text="v5Lead(ri)"></p>
+                              <div class="tf-fb-full" x-show="isUnknownAns(ri)">
+                                <template x-for="(para, pi) in questions[ri].paras" :key="'v5p' + ri + pi"><p x-text="para"></p></template>
+                                <a class="ms-linkcard" :href="questions[ri].link.href" target="_blank" rel="noopener">
+                              <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+                              <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="questions[ri].link.title"></span></span>
+                              <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
+                            </a>
+                              </div>
+                              <button type="button" class="ms-more" x-show="!isUnknownAns(ri)" @click="v5Explain(ri)">Platesnis išaiškinimas</button>
+                              <div class="tf-actions" x-show="ri === idx && !v5Done">
+                                <button type="button" class="ms-btn tf-next" @click="tfNext()"><span x-text="isLast ? 'Baigti testą' : 'Kitas klausimas'"></span></button>
+                              </div>
+                            </div>
+                          </template>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+
+                <div class="tf-actions" x-show="questions[ri].multi && ri === idx && !answered">
+                  <button type="button" class="ms-btn" :disabled="!multiSel.length" @click="tfCheck()">Patikrinti</button>
+                </div>
+
+                <div class="tf-feedback" :class="{ 'is-shown': v5Answered(ri) && questions[ri].multi }">
+                  <div class="tf-feedback-in">
+                    <template x-if="v5Answered(ri) && questions[ri].multi">
+                      <div>
+                        <div class="tf-fb" :class="'is-' + tfRVerdict(ri)">
+                          <div class="tf-verdict" :class="'is-' + tfRVerdict(ri)" x-text="v5VerdictText(ri)"></div>
+                          <p class="tf-fb-lead" x-text="v5Lead(ri)"></p>
+                          <button type="button" class="ms-more" @click="v5Explain(ri)">Platesnis išaiškinimas</button>
+                        </div>
+                        <div class="tf-actions" x-show="ri === idx && !v5Done">
+                          <button type="button" class="ms-btn tf-next" @click="tfNext()"><span x-text="isLast ? 'Baigti testą' : 'Kitas klausimas'"></span></button>
+                        </div>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </section>
+            </template>
+
+            <!-- Pabaiga: tik įvertinimas; atsakymus galima peržiūrėti pakilus aukštyn -->
+            <template x-if="v5Done">
+              <section class="tf-card v5-end">
+                <div class="ms-results-head tf-end-head">
+                  <div class="ms-results-top">
+                    <div class="ms-ring" role="img" :aria-label="`Teisingai ${score} iš ${questions.length}`">
+                      <svg viewBox="0 0 84 84" aria-hidden="true"><circle class="ms-ring-track" cx="42" cy="42" r="37"/><circle class="ms-ring-fill" cx="42" cy="42" r="37" pathLength="100" :style="`stroke-dasharray: ${tfRingOn ? Math.round(score / questions.length * 100) : 0} 100`"/></svg>
+                      <b x-text="`${score}/${questions.length}`"></b>
+                    </div>
+                    <div class="ms-results-info">
+                      <h1>Testas baigtas</h1>
+                      <div class="ms-summary">
+                        <span class="ms-chip is-ok"><span class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span><span x-text="`Teisingai: ${score}`"></span></span>
+                        <span class="ms-chip is-bad" x-show="questions.length - score - unknownCount > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Klaidos: ${questions.length - score - unknownCount}`"></span></span>
+                        <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">–</span></span><span x-text="`Neatsakėte: ${unknownCount}`"></span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="v5-end-note">Visus atsakymus ir išaiškinimus rasite aukščiau, tiesiog pakilkite puslapiu.</p>
+                <div class="tf-actions tf-end-actions">
+                  <button type="button" class="ms-btn ms-btn-outline" @click="v5Top()">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10.5v-9M2 5.5l4-4 4 4"/></svg>
+                    Peržiūrėti atsakymus
+                  </button>
+                  <button type="button" class="ms-btn ms-btn-outline" @click="restart()">Spręsti iš naujo</button>
+                </div>
+              </section>
+            </template>
+          </div>
+        </div>
+      </template>
+
       <!-- Klausimas -->
-      <template x-if="tfStage === 'q'">
+      <template x-if="tfStage === 'q' && protoVersion !== 'v5'">
         <section class="tf-screen tf-card tf-question" :class="tfAnim">
           <!-- V.4: be testo juostos; žingsniai pill'e kortelėje kaip V.1/V.2, X išeiti į pradžią -->
           <div class="tf-qtop" x-show="protoVersion === 'v4'">
-            <span class="ms-progress" x-text="`Klausimas ${idx + 1} iš ${questions.length}`"></span>
             <button type="button" class="tf-card-x" @click="restart()" aria-label="Uždaryti testą ir grįžti į pradžią" title="Grįžti į testo pradžią"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></button>
+            <span class="ms-progress" x-text="`Klausimas ${idx + 1} iš ${questions.length}`"></span>
           </div>
           <h2 class="tf-title"><span class="tf-num" x-text="`${idx + 1}.`"></span> <span x-text="q.text"></span></h2>
           <p class="ms-situation tf-sit" x-show="q.situation"><span>Situacija:</span> <span x-text="q.situation"></span></p>
@@ -1370,7 +1537,13 @@
     </div>
 
     <!-- Navigacija apačioje dešinėje -->
-    <div class="tf-nav" x-show="tfStage === 'q'">
+    <!-- V.5: grįžti į viršų (istorija) -->
+    <button type="button" class="v5-top" x-show="protoVersion === 'v5' && tfStage === 'q' && tfScrollY > 480" x-transition.opacity.duration.200ms @click="v5Top()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 10.5v-9M2 5.5l4-4 4 4"/></svg>
+      Į pradžią
+    </button>
+
+    <div class="tf-nav" x-show="tfStage === 'q' && protoVersion !== 'v5'">
       <span class="tf-count" x-text="`${idx + 1} iš ${questions.length}`"></span>
       <button type="button" class="tf-nav-btn" :disabled="idx === 0" @click="tfGo(idx - 1)" aria-label="Ankstesnis klausimas"><svg width="14" height="9" viewBox="0 0 14 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7.5l6-6 6 6"/></svg></button>
       <button type="button" class="tf-nav-btn" :disabled="!answered" @click="tfNext()" aria-label="Kitas klausimas"><svg width="14" height="9" viewBox="0 0 14 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1.5l6 6 6-6"/></svg></button>
@@ -1385,13 +1558,13 @@
       </div>
       <div class="tf-drawer-body" x-show="tfStage === 'q'">
         <div class="ms-modal-q" x-data="{ qOpen: false }" x-effect="idx; if (tfDrawer) qOpen = false" :class="{ 'is-open': qOpen }">
-          <button type="button" class="ms-modal-q-btn" @click="qOpen = !qOpen" :aria-expanded="qOpen"><b>Klausimas:</b><span class="ms-modal-q-short" x-text="q.text"></span><svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1.5l5 5 5-5"/></svg></button>
-          <div class="ms-modal-q-body" :aria-hidden="!qOpen"><div class="ms-modal-q-full"><span x-text="q.text"></span></div></div>
+          <button type="button" class="ms-modal-q-btn" @click="qOpen = !qOpen" :aria-expanded="qOpen"><b>Klausimas:</b><span class="ms-modal-q-short" x-text="dq.text"></span><svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1.5l5 5 5-5"/></svg></button>
+          <div class="ms-modal-q-body" :aria-hidden="!qOpen"><div class="ms-modal-q-full"><span x-text="dq.text"></span></div></div>
         </div>
-        <template x-for="(para, pi) in q.paras" :key="'tfd' + idx + pi"><p x-text="para"></p></template>
-        <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
+        <template x-for="(para, pi) in dq.paras" :key="'tfd' + idx + '-' + v5DrawerIdx + pi"><p x-text="para"></p></template>
+        <a class="ms-linkcard" :href="dq.link.href" target="_blank" rel="noopener">
           <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
-          <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="q.link.title"></span></span>
+          <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="dq.link.title"></span></span>
           <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
         </a>
       </div>
@@ -1533,24 +1706,24 @@
       <button type="button" class="ms-sb-toggle" @click="sbCollapsed = !sbCollapsed" :aria-label="sbCollapsed ? 'Išskleisti meniu' : 'Suskleisti meniu'" :data-tip="sbCollapsed ? 'Išskleisti meniu' : 'Suskleisti meniu'"><span class="ms-sb-s" aria-hidden="true">S</span><svg class="ms-sb-ico" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="14" height="12" rx="2"/><path d="M7 3v12"/></svg></button>
     </div>
     <ul class="ms-nav">
-      <li><a href="#" data-tip="Šiandien SUFLERYJE" :aria-label="sbCollapsed ? \'Šiandien SUFLERYJE\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5L9 3l6.5 5.5V15a1 1 0 0 1-1 1H11v-4.5H7V16H3.5a1 1 0 0 1-1-1z"/></svg></span><span class="ms-nav-label">Šiandien SUFLERYJE</span></a></li>
-      <li><a href="#" data-tip="Mokesčių naujienos" :aria-label="sbCollapsed ? \'Mokesčių naujienos\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3" width="13" height="12" rx="1.5"/><path d="M5.5 6.5h7M5.5 9.5h7M5.5 12.5h4"/></svg></span><span class="ms-nav-label">Mokesčių naujienos</span> <span class="ms-badge">155</span></a></li>
-      <li><a href="#" data-tip="Praktinės situacijos" :aria-label="sbCollapsed ? \'Praktinės situacijos\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2h7l3.5 3.5V16H4z"/><path d="M11 2v3.5h3.5M6.5 9h5M6.5 12h5"/></svg></span><span class="ms-nav-label">Praktinės situacijos</span> <span class="ms-count">8024</span></a></li>
-      <li><a href="#" data-tip="Sąvadai ir teminiai rinkiniai" :aria-label="sbCollapsed ? \'Sąvadai ir teminiai rinkiniai\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3H15v11.5H4.5A1.5 1.5 0 0 0 3 16z"/><path d="M3 16a1.5 1.5 0 0 1 1.5-1.5H15"/></svg></span><span class="ms-nav-label">Sąvadai ir teminiai rinkiniai</span></a></li>
-      <li><a href="#" data-tip="Seminarai ir vaizdo įrašai" :aria-label="sbCollapsed ? \'Seminarai ir vaizdo įrašai\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="14" height="11" rx="2"/><path d="M7.5 6.5v5l4-2.5z"/></svg></span><span class="ms-nav-label">Seminarai ir vaizdo įrašai</span></a></li>
-      <li><a href="#" data-tip="Renginių kalendorius" :aria-label="sbCollapsed ? \'Renginių kalendorius\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="13" height="12" rx="1.5"/><path d="M2.5 7.5h13M6 2v3M12 2v3"/></svg></span><span class="ms-nav-label">Renginių kalendorius</span></a></li>
-      <li><a href="#" data-tip="Skaičiuoklės" :aria-label="sbCollapsed ? \'Skaičiuoklės\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2" width="11" height="14" rx="1.5"/><path d="M6 5h6M6.5 9h0M9 9h0M11.5 9h0M6.5 12h0M9 12h0M11.5 12h0" stroke-width="2"/></svg></span><span class="ms-nav-label">Skaičiuoklės</span></a></li>
-      <li><a href="#" class="is-active" data-tip="Testai" :aria-label="sbCollapsed ? \'Testai\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="13" height="13" rx="2.5"/><path d="M6 9.2l2.2 2.2L12.3 7"/></svg></span><span class="ms-nav-label">Testai</span></a></li>
-      <li><a href="#" data-tip="Užduokite savo klausimą" :aria-label="sbCollapsed ? \'Užduokite savo klausimą\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V11a1.5 1.5 0 0 1-1.5 1.5H8l-3.5 3v-3A1.5 1.5 0 0 1 3 11z"/><path d="M7.2 6.6a1.8 1.8 0 1 1 2.4 1.7c-.4.2-.6.5-.6.9M9 10.8h0"/></svg></span><span class="ms-nav-label">Užduokite savo klausimą</span></a></li>
+      <li><a href="#" data-tip="Šiandien SUFLERYJE" :aria-label="sbCollapsed ? 'Šiandien SUFLERYJE' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5L9 3l6.5 5.5V15a1 1 0 0 1-1 1H11v-4.5H7V16H3.5a1 1 0 0 1-1-1z"/></svg></span><span class="ms-nav-label">Šiandien SUFLERYJE</span></a></li>
+      <li><a href="#" data-tip="Mokesčių naujienos" :aria-label="sbCollapsed ? 'Mokesčių naujienos' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3" width="13" height="12" rx="1.5"/><path d="M5.5 6.5h7M5.5 9.5h7M5.5 12.5h4"/></svg></span><span class="ms-nav-label">Mokesčių naujienos</span> <span class="ms-badge">155</span></a></li>
+      <li><a href="#" data-tip="Praktinės situacijos" :aria-label="sbCollapsed ? 'Praktinės situacijos' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2h7l3.5 3.5V16H4z"/><path d="M11 2v3.5h3.5M6.5 9h5M6.5 12h5"/></svg></span><span class="ms-nav-label">Praktinės situacijos</span> <span class="ms-count">8024</span></a></li>
+      <li><a href="#" data-tip="Sąvadai ir teminiai rinkiniai" :aria-label="sbCollapsed ? 'Sąvadai ir teminiai rinkiniai' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3H15v11.5H4.5A1.5 1.5 0 0 0 3 16z"/><path d="M3 16a1.5 1.5 0 0 1 1.5-1.5H15"/></svg></span><span class="ms-nav-label">Sąvadai ir teminiai rinkiniai</span></a></li>
+      <li><a href="#" data-tip="Seminarai ir vaizdo įrašai" :aria-label="sbCollapsed ? 'Seminarai ir vaizdo įrašai' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3.5" width="14" height="11" rx="2"/><path d="M7.5 6.5v5l4-2.5z"/></svg></span><span class="ms-nav-label">Seminarai ir vaizdo įrašai</span></a></li>
+      <li><a href="#" data-tip="Renginių kalendorius" :aria-label="sbCollapsed ? 'Renginių kalendorius' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="3.5" width="13" height="12" rx="1.5"/><path d="M2.5 7.5h13M6 2v3M12 2v3"/></svg></span><span class="ms-nav-label">Renginių kalendorius</span></a></li>
+      <li><a href="#" data-tip="Skaičiuoklės" :aria-label="sbCollapsed ? 'Skaičiuoklės' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2" width="11" height="14" rx="1.5"/><path d="M6 5h6M6.5 9h0M9 9h0M11.5 9h0M6.5 12h0M9 12h0M11.5 12h0" stroke-width="2"/></svg></span><span class="ms-nav-label">Skaičiuoklės</span></a></li>
+      <li><a href="#" class="is-active" data-tip="Testai" :aria-label="sbCollapsed ? 'Testai' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="13" height="13" rx="2.5"/><path d="M6 9.2l2.2 2.2L12.3 7"/></svg></span><span class="ms-nav-label">Testai</span></a></li>
+      <li><a href="#" data-tip="Užduokite savo klausimą" :aria-label="sbCollapsed ? 'Užduokite savo klausimą' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V11a1.5 1.5 0 0 1-1.5 1.5H8l-3.5 3v-3A1.5 1.5 0 0 1 3 11z"/><path d="M7.2 6.6a1.8 1.8 0 1 1 2.4 1.7c-.4.2-.6.5-.6.9M9 10.8h0"/></svg></span><span class="ms-nav-label">Užduokite savo klausimą</span></a></li>
     </ul>
     <div class="ms-nav-sep"></div>
     <ul class="ms-nav">
-      <li><a href="#" data-tip="PRO turinys" :aria-label="sbCollapsed ? \'PRO turinys\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.5l2 4.2 4.5.6-3.3 3.1.8 4.5L9 12.7l-4 2.2.8-4.5-3.3-3.1 4.5-.6z"/></svg></span><span class="ms-nav-label"><span class="ms-pro">PRO</span><b style="font-weight:600">turinys</b></span></a></li>
-      <li><a href="#" data-tip="Geroji praktika" :aria-label="sbCollapsed ? \'Geroji praktika\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8v7.5H3V8zM5.5 8l3-5.5a1.8 1.8 0 0 1 2 2.2L10 7.5h4a1.5 1.5 0 0 1 1.5 1.8l-1.1 5A1.5 1.5 0 0 1 13 15.5H5.5"/></svg></span><span class="ms-nav-label">Geroji praktika</span></a></li>
-      <li><a href="#" data-tip="Pro mikroskopą" :aria-label="sbCollapsed ? \'Pro mikroskopą\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5"/><path d="M12 12l4 4"/></svg></span><span class="ms-nav-label">Pro mikroskopą</span></a></li>
-      <li><a href="#" data-tip="Kas geresnio?" :aria-label="sbCollapsed ? \'Kas geresnio?\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.5v13M5.5 15.5h7M3.5 5.5h11M3.5 5.5L1.8 10a1.9 1.9 0 0 0 3.4 0zM14.5 5.5L12.8 10a1.9 1.9 0 0 0 3.4 0z"/></svg></span><span class="ms-nav-label">Kas geresnio?</span></a></li>
-      <li><a href="#" data-tip="PRO komentarai" :aria-label="sbCollapsed ? \'PRO komentarai\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5A1.5 1.5 0 0 1 4 3h10a1.5 1.5 0 0 1 1.5 1.5V11a1.5 1.5 0 0 1-1.5 1.5H7l-3.5 3v-3A1.5 1.5 0 0 1 2.5 11z"/><path d="M5.5 6.5h7M5.5 9h4.5"/></svg></span><span class="ms-nav-label">PRO komentarai</span></a></li>
-      <li><a href="#" data-tip="Profilaktika" :aria-label="sbCollapsed ? \'Profilaktika\' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2l6 2.2v4.3c0 3.6-2.5 6.3-6 7.5-3.5-1.2-6-3.9-6-7.5V4.2z"/></svg></span><span class="ms-nav-label">Profilaktika</span></a></li>
+      <li><a href="#" data-tip="PRO turinys" :aria-label="sbCollapsed ? 'PRO turinys' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.5l2 4.2 4.5.6-3.3 3.1.8 4.5L9 12.7l-4 2.2.8-4.5-3.3-3.1 4.5-.6z"/></svg></span><span class="ms-nav-label"><span class="ms-pro">PRO</span><b style="font-weight:600">turinys</b></span></a></li>
+      <li><a href="#" data-tip="Geroji praktika" :aria-label="sbCollapsed ? 'Geroji praktika' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8v7.5H3V8zM5.5 8l3-5.5a1.8 1.8 0 0 1 2 2.2L10 7.5h4a1.5 1.5 0 0 1 1.5 1.8l-1.1 5A1.5 1.5 0 0 1 13 15.5H5.5"/></svg></span><span class="ms-nav-label">Geroji praktika</span></a></li>
+      <li><a href="#" data-tip="Pro mikroskopą" :aria-label="sbCollapsed ? 'Pro mikroskopą' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="5"/><path d="M12 12l4 4"/></svg></span><span class="ms-nav-label">Pro mikroskopą</span></a></li>
+      <li><a href="#" data-tip="Kas geresnio?" :aria-label="sbCollapsed ? 'Kas geresnio?' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.5v13M5.5 15.5h7M3.5 5.5h11M3.5 5.5L1.8 10a1.9 1.9 0 0 0 3.4 0zM14.5 5.5L12.8 10a1.9 1.9 0 0 0 3.4 0z"/></svg></span><span class="ms-nav-label">Kas geresnio?</span></a></li>
+      <li><a href="#" data-tip="PRO komentarai" :aria-label="sbCollapsed ? 'PRO komentarai' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5A1.5 1.5 0 0 1 4 3h10a1.5 1.5 0 0 1 1.5 1.5V11a1.5 1.5 0 0 1-1.5 1.5H7l-3.5 3v-3A1.5 1.5 0 0 1 2.5 11z"/><path d="M5.5 6.5h7M5.5 9h4.5"/></svg></span><span class="ms-nav-label">PRO komentarai</span></a></li>
+      <li><a href="#" data-tip="Profilaktika" :aria-label="sbCollapsed ? 'Profilaktika' : null"><span class="ms-nav-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2l6 2.2v4.3c0 3.6-2.5 6.3-6 7.5-3.5-1.2-6-3.9-6-7.5V4.2z"/></svg></span><span class="ms-nav-label">Profilaktika</span></a></li>
     </ul>
   </aside>
 
@@ -1761,12 +1934,12 @@
                       <div class="ms-option ms-moption" :class="[multiClass(i), answered ? 'is-locked' : '']">
                         <button type="button" class="ms-option-btn" role="checkbox" :aria-checked="multiSel.includes(i)" :disabled="answered" @click="toggleMulti(i)">
                           <span class="ms-mbox" aria-hidden="true">
-                            <svg x-show="(!answered && multiSel.includes(i)) || (answered && q.correct.includes(i))" width="12" height="10" viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.2 3.2L11 1.5"/></svg>
-                            <svg x-show="answered && multiSel.includes(i) && !q.correct.includes(i)" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
+                            <svg x-show="(!answered && multiSel.includes(i)) || (answered && isRightOpt(q, i))" width="12" height="10" viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.2 3.2L11 1.5"/></svg>
+                            <svg x-show="answered && multiSel.includes(i) && !isRightOpt(q, i)" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
                           </span>
                           <span class="ms-option-text" x-text="o"></span>
-                          <span class="ms-tag" x-show="answered && multiSel.includes(i) && !q.correct.includes(i)" x-transition.opacity.duration.250ms>Jūsų pasirinkimas</span>
-                          <span class="ms-tag is-missed" x-show="answered && !multiSel.includes(i) && q.correct.includes(i)" x-transition.opacity.duration.250ms>Praleidote</span>
+                          <span class="ms-tag" x-show="answered && multiSel.includes(i) && !isRightOpt(q, i)" x-transition.opacity.duration.250ms>Jūsų pasirinkimas</span>
+                          <span class="ms-tag is-missed" x-show="answered && !multiSel.includes(i) && isRightOpt(q, i)" x-transition.opacity.duration.250ms>Praleidote</span>
                         </button>
                       </div>
                     </template>
@@ -2270,15 +2443,15 @@ function quiz() {
       this.answered = true;
       setTimeout(() => { const b = this.$root.querySelector('.ms-mnext'); if (b) { b.focus({ preventScroll: true }); const r = b.getBoundingClientRect(); if (r.bottom > window.innerHeight - 16) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }, 420);
     },
-    get multiHits() { return this.multiSel.filter(i => this.q.correct.includes(i)).length; },
+    get multiHits() { return Array.isArray(this.q.correct) ? this.multiSel.filter(i => this.q.correct.includes(i)).length : 0; },
     get multiResult() {
       if (!this.q.multi) return null;
-      const wrong = this.multiSel.some(i => !this.q.correct.includes(i));
+      const wrong = this.multiSel.some(i => !this.isRightOpt(this.q, i));
       if (!wrong && this.multiHits === this.q.correct.length) return 'ok';
       return this.multiHits > 0 ? 'partial' : 'bad';
     },
     multiClass(i) {
-      const sel = this.multiSel.includes(i), right = this.q.correct.includes(i);
+      const sel = this.multiSel.includes(i), right = this.isRightOpt(this.q, i);
       if (!this.answered) return sel ? 'is-selected' : '';
       if (right && sel) return 'is-correct';
       if (right) return 'is-missed';
@@ -2298,7 +2471,7 @@ function quiz() {
         const saved = JSON.parse(localStorage.getItem('ms-proto-v4') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
         if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
-        if (['v1', 'v2', 'v3', 'v4'].includes(saved.protoVersion)) this.protoVersion = saved.protoVersion;
+        if (['v1', 'v2', 'v3', 'v4', 'v5'].includes(saved.protoVersion)) this.protoVersion = saved.protoVersion;
         if (['solid', 'gradient', 'live'].includes(saved.ctaStyle)) this.ctaStyle = saved.ctaStyle;
         if (saved.cardSize === 'wide') this.cardSize = 'wide';
         if (saved.explainStyle === 'side') this.explainStyle = 'side';
@@ -2313,7 +2486,8 @@ function quiz() {
       const markVer = () => document.querySelectorAll('.ms-proto-ver button').forEach(b => b.classList.toggle('is-on', b.dataset.ver === this.protoVersion));
       markVer();
       if (this.isTf) this.tfStage = 'welcome';
-      const applySb = () => { const c = document.documentElement.classList; c.toggle('ver-v4', this.protoVersion === 'v4'); c.toggle('sb-collapsed', this.protoVersion === 'v4' && this.sbCollapsed); };
+      // V.5 naudoja tą patį Suflerio „shell'ą“ kaip V.4 (+ savo ver-v5 klasę)
+      const applySb = () => { const c = document.documentElement.classList, shell = ['v4', 'v5'].includes(this.protoVersion); c.toggle('ver-v4', shell); c.toggle('ver-v5', this.protoVersion === 'v5'); c.toggle('sb-collapsed', shell && this.sbCollapsed); };
       applySb(); this.$watch('protoVersion', applySb); this.$watch('sbCollapsed', () => { applySb(); this.sbTip.on = false; });
       this.$watch('protoVersion', () => { markVer(); persist(); this.restart(); this.screen = 'intro'; window.scrollTo({ top: 0 }); });
       const applyCta = () => { const c = document.documentElement.classList; c.toggle('cta-solid', this.ctaStyle === 'solid'); c.toggle('cta-live', this.ctaStyle === 'live'); };
@@ -2496,6 +2670,7 @@ function quiz() {
       // V.4: išėjus iš testo meniu grįžta į tokią būseną, kokia buvo prieš pradedant
       if (this.sbPrev !== null) { this.sbCollapsed = this.sbPrev; this.sbPrev = null; }
       this.tfDrawer = false; this.tfAnim = ''; this.tfRated = null; this.tfRingOn = false; this.tfReviewOn = false; if (this.$refs.tfScroll) this.$refs.tfScroll.scrollTop = 0;
+      this.v5Done = false; this.v5DrawerIdx = null; this.tfScrollY = 0;
     },
 
     /* ---------- V.3: Typeform principu ---------- */
@@ -2506,7 +2681,7 @@ function quiz() {
     tfRingOn: false,
     tfBlink: -1,
     tfBusy: false,
-    get isTf() { return this.protoVersion === 'v3' || this.protoVersion === 'v4'; },
+    get isTf() { return ['v3', 'v4', 'v5'].includes(this.protoVersion); },
     sbCollapsed: false,
     sbPrev: null,
     sbTip: { on: false, text: '', top: 0, left: 0 },
@@ -2564,7 +2739,7 @@ function quiz() {
     // pradėjus: viso ekrano režimas atsidaro su trumpu skeletu, tada įplaukia pirmas klausimas
     tfStart() {
       this.tfLoad(0); this.tfStage = 'loading';
-      if (this.protoVersion === 'v4') { this.sbPrev = this.sbCollapsed; this.sbCollapsed = true; window.scrollTo({ top: 0, behavior: 'instant' }); }
+      if (['v4', 'v5'].includes(this.protoVersion)) { this.sbPrev = this.sbCollapsed; this.sbCollapsed = true; window.scrollTo({ top: 0, behavior: 'instant' }); }
       clearTimeout(this._tfLoadT);
       this._tfLoadT = setTimeout(() => { if (this.tfStage !== 'loading') return; this.tfAnim = 'tf-in'; this.tfStage = 'q'; }, 750);
     },
@@ -2572,7 +2747,7 @@ function quiz() {
     tfReveal() {
       // po atsakymo: nuslenkam iki „Toliau“ ir perkeliam fokusą (Enter iškart veikia)
       setTimeout(() => {
-        const b = this.$root.querySelector('.tf-question .tf-next');
+        const b = this.$root.querySelector('.tf-question .tf-next, .v5-q.is-cur .tf-next');
         if (!b) return;
         b.focus({ preventScroll: true });
         const sc = this.$refs.tfScroll, r = b.getBoundingClientRect();
@@ -2597,10 +2772,47 @@ function quiz() {
       this.tfReveal();
     },
     tfNext() {
+      if (this.protoVersion === 'v5') { this.v5Next(); return; }
       if (!this.answered || this.tfBusy) return;
       if (!this.isLast) { this.tfGo(this.idx + 1); return; }
       this.tfTransition('up', () => { this.tfStage = 'end'; this.screen = 'results'; this.tfRingOn = false; setTimeout(() => { this.tfRingOn = true; }, 350); });
     },
+    /* ---------- V.5: vienas ilgas puslapis ---------- */
+    v5Done: false,
+    v5DrawerIdx: null,
+    tfScrollY: 0,
+    get v5Range() { return Array.from({ length: this.idx + 1 }, (_, i) => i); },
+    // išaiškinimo skydelis rodo tą klausimą, kurio „Platesnis išaiškinimas“ paspaustas (V.5 gali būti istorinis)
+    get dq() { return this.protoVersion === 'v5' && this.v5DrawerIdx !== null ? this.questions[this.v5DrawerIdx] : this.q; },
+    v5Answered(ri) { const a = this.answers[ri]; return a !== undefined && a !== null; },
+    v5Class(ri, i) { return (ri === this.idx && !this.answered) ? this.tfChoiceClass(i) : this.tfRClass(ri, i); },
+    v5Inline(ri, i) { const qq = this.questions[ri]; return !qq.multi && this.v5Answered(ri) && this.answers[ri] === i; },
+    v5VerdictText(ri) {
+      const v = this.tfRVerdict(ri), qq = this.questions[ri];
+      if (v === 'partial') { const hits = (this.answers[ri] || []).filter(x => qq.correct.includes(x)).length; return `Iš dalies teisingai: ${hits} iš ${qq.correct.length}`; }
+      return { ok: 'Teisingai!', bad: 'Kodėl neteisingai?', unknown: 'Kodėl taip?' }[v];
+    },
+    v5Lead(ri) { const qq = this.questions[ri]; return (this.tfRVerdict(ri) === 'bad' && qq.wrongLead) ? qq.wrongLead : qq.lead; },
+    v5Explain(ri) { this.v5DrawerIdx = ri; this.tfDrawer = true; },
+    v5ScrollTo(el) {
+      const sc = this.$refs.tfScroll; if (!el || !sc) return;
+      const bar = this.$root.querySelector('.v5-bar'), off = (bar ? bar.offsetHeight : 0) + 20;
+      sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top - off, behavior: 'smooth' });
+    },
+    v5Top() { if (this.$refs.tfScroll) this.$refs.tfScroll.scrollTo({ top: 0, behavior: 'smooth' }); },
+    // Kitas: atsakytas klausimas lieka viršuje, naujas įdedamas žemiau ir puslapis nuslenka prie jo
+    v5Next() {
+      if (!this.answered || this.tfBusy || this.v5Done) return;
+      this.tfDrawer = false;
+      if (this.isLast) {
+        this.v5Done = true; this.tfRingOn = false;
+        this.$nextTick(() => { this.v5ScrollTo(this.$root.querySelector('.v5-end')); setTimeout(() => { this.tfRingOn = true; }, 500); });
+        return;
+      }
+      this.idx++; this.answered = false; this.picked = null; this.multiSel = [];
+      this.$nextTick(() => this.v5ScrollTo(this.$root.querySelector(`.v5-q[data-v5="${this.idx}"]`)));
+    },
+
     tfReviewOn: false,
     tfReview() {
       this.tfReviewOn = true;
