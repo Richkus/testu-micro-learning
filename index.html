@@ -1159,7 +1159,7 @@
   .v5-q { animation: tf-in .5s var(--ms-ease) both; transition: box-shadow .45s ease, background-color .45s ease; }
   /* istorinis klausimas: šiek tiek nublankęs, bet „Platesnis išaiškinimas“ lieka aktyvi nuoroda */
   /* praėjusi kortelė pati „ištirpsta“ į foną (permatomas baltas, be šešėlio); nuoroda viduje lieka ryški */
-  .v5-q.is-past { background-color: rgba(255, 255, 255, .5); box-shadow: none; }
+  .v5-q.is-past { background-color: rgba(255, 255, 255, .5); box-shadow: none; content-visibility: auto; contain-intrinsic-size: auto 520px; }
   .v5-q.is-past .tf-choice:not(.is-ok):not(.is-bad):not(.is-unk):not(.is-missed) { background-color: rgba(255, 255, 255, .35); }
   .v5-q .tf-title, .v5-q .tf-sit, .v5-q .tf-video, .v5-q .tf-choice-btn, .v5-q .tf-verdict, .v5-q .tf-fb-lead, .v5-q .tf-fb-full, .v5-q .tf-hint { transition: opacity .45s ease; }
   .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video, .v5-q.is-past .tf-choice-btn,
@@ -2193,6 +2193,8 @@
 
 <script>
 function quiz() {
+  // klausimų sąrašas kiekvienai versijai sukuriamas vieną kartą (V.5 jį skaito šimtus kartų per paspaudimą)
+  const questionsCache = {};
   return {
     title: '6 klausimai apie darbo santykius ir VDU',
     letters: ['A', 'B', 'C', 'D'],
@@ -2432,6 +2434,11 @@ function quiz() {
     },
     longLead: 'Ne, premija neįtraukiama, nes ji paskirta dar 2024-12-31. Pagal naują VDU tvarką (nuo 2025-10-31) premijos vertinamos pagal paskyrimo, o ne išmokėjimo datą, todėl atostoginiams už 2026 m. vasario 2-13 d. jos įtraukti nereikia.',
     get questions() {
+      const ver = this.protoVersion;
+      if (questionsCache[ver]) return questionsCache[ver];
+      return (questionsCache[ver] = this.buildQuestions());
+    },
+    buildQuestions() {
       if (this.protoVersion === 'v1') return this.baseQuestions;
       const q = this.baseQuestions.map(x => x);
       // V.2: „Nežinau“ variantas (kaip Mokesčių naujienų testuose) 3-iame baziniame klausime
