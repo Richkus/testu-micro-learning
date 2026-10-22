@@ -425,6 +425,18 @@
   /* Trumpas paaiškinimas teisingo varianto viduje */
   .ms-inline { padding: 0 28px 32px 56px; }
   .ms-inline-body { border-top: 1px solid var(--ms-ok-line); padding-top: 14px; }
+  /* V.1.2: „Mano pasižymėti“ žymė išaiškinimo kampe */
+  .ms-inline-body, .ms-mexpl { position: relative; }
+  .ms-mark { position: absolute; top: 6px; right: -8px; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 8px; background: none; color: #005a5a; cursor: pointer; transition: background-color .2s, color .2s; }
+  .ms-mexpl .ms-mark { top: 8px; right: 8px; }
+  .ms-mark:hover { background: rgba(0, 90, 90, .08); }
+  .ms-mark svg path { transition: fill .2s; }
+  .ms-mark.is-on svg path { fill: currentColor; }
+  .ms-mark.is-on svg { animation: ms-mark-pop .3s ease; }
+  @keyframes ms-mark-pop { 50% { transform: scale(1.2); } }
+  .ms-mark::after { content: attr(data-tip); position: absolute; right: calc(100% + 6px); top: 50%; padding: 5px 9px; border-radius: 6px; background: #23324a; color: #fff; font-size: 12px; font-weight: 400; line-height: 16px; white-space: nowrap; opacity: 0; visibility: hidden; transform: translate(4px, -50%); transition: opacity .15s ease, transform .15s ease, visibility 0s linear .15s; pointer-events: none; }
+  .ms-mark:hover::after, .ms-mark:focus-visible::after, .ms-mark.is-flash::after { opacity: 1; visibility: visible; transform: translate(0, -50%); transition-delay: 0s; }
+  @media (hover: none) { .ms-mark:not(.is-flash)::after { display: none; } }
   .ms-inline-status { font-size: 12px; font-weight: 600; letter-spacing: .03em; margin-bottom: 4px; color: var(--ms-muted); }
   .ms-inline-status.is-ok { color: var(--ms-ok-text); }
   .ms-inline-status.is-bad { color: var(--ms-bad); }
@@ -2068,6 +2080,7 @@
                   </div>
                   <div x-show="answered && !leaving" x-collapse.duration.400ms><div class="ms-mreveal">
                     <div class="ms-mexpl" :class="'is-' + (pickedUnknown ? 'neutral' : multiResult)" aria-live="polite">
+                      <button type="button" class="ms-mark" x-show="protoVersion === 'v12'" :class="{ 'is-on': marked[idx], 'is-flash': markFlash }" @click="toggleMark()" :aria-pressed="(!!marked[idx]).toString()" :aria-label="marked[idx] ? 'Pašalinti iš Mano pasižymėti' : 'Pridėti prie Mano pasižymėti'" :data-tip="marked[idx] ? (markFlash ? 'Pridėta prie Mano pasižymėti' : 'Pašalinti iš Mano pasižymėti') : 'Pridėti prie Mano pasižymėti'"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.75h9c.41 0 .75.34.75.75V17.2L10 13.6l-5.25 3.6V3.5c0-.41.34-.75.75-.75z"/></svg></button>
                       <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-bad': multiResult === 'bad' && !pickedUnknown, 'is-neutral': pickedUnknown }" x-text="pickedUnknown ? 'Kodėl taip?' : (multiResult === 'ok' ? 'Teisingai!' : 'Neteisingai')"></div>
                       <p class="ms-inline-lead" x-show="!pickedUnknown" x-text="q.lead"></p>
                       <template x-if="pickedUnknown">
@@ -2110,6 +2123,7 @@
                     <div x-show="answered && !leaving && i === expandIdx && protoVersion !== 'v22'" x-collapse.duration.400ms>
                       <div class="ms-inline" aria-live="polite">
                         <div class="ms-inline-body">
+                          <button type="button" class="ms-mark" x-show="protoVersion === 'v12'" :class="{ 'is-on': marked[idx], 'is-flash': markFlash }" @click="toggleMark()" :aria-pressed="(!!marked[idx]).toString()" :aria-label="marked[idx] ? 'Pašalinti iš Mano pasižymėti' : 'Pridėti prie Mano pasižymėti'" :data-tip="marked[idx] ? (markFlash ? 'Pridėta prie Mano pasižymėti' : 'Pašalinti iš Mano pasižymėti') : 'Pridėti prie Mano pasižymėti'"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.75h9c.41 0 .75.34.75.75V17.2L10 13.6l-5.25 3.6V3.5c0-.41.34-.75.75-.75z"/></svg></button>
                           <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-neutral': pickedUnknown, 'is-bad': !isCorrect && !pickedUnknown && protoVersion !== 'v1' }" x-text="isCorrect ? 'Teisingai!' : (pickedUnknown ? 'Kodėl taip?' : (protoVersion !== 'v1' ? 'Kodėl neteisingai?' : 'Kodėl taip?'))"></div>
                           <!-- ilgas trumpas išaiškinimas: ribotas aukštis, vidinis slinkimas ir fade apačioje, CTA visada matomas po juo -->
                           <div class="ms-inline-scroll" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }"
@@ -2325,6 +2339,7 @@ function quiz() {
     answered: false,
     leaving: false,
     answers: [],
+    marked: {}, markFlash: false, // V.1.2: išaiškinimai „Mano pasižymėti“
     sel: null,
     modal: false,
     // prototipo versijos
@@ -2612,6 +2627,12 @@ function quiz() {
     multiSel: [],
     toggleMulti(i) { if (this.answered) return; const k = this.multiSel.indexOf(i); k > -1 ? this.multiSel.splice(k, 1) : this.multiSel.push(i); },
     // „Nežinau, parodyk atsakymą“: rodom teisingą atsakymą su visu išaiškinimu, rezultatuose „Praleistas atsakymas“
+    toggleMark() {
+      const on = !this.marked[this.idx];
+      this.marked = { ...this.marked, [this.idx]: on };
+      clearTimeout(this._markT); this.markFlash = on;
+      if (on) this._markT = setTimeout(() => { this.markFlash = false; }, 1800);
+    },
     dontKnow() {
       if (this.answered) return;
       this.multiSel = []; this.sel = null;
@@ -2848,6 +2869,7 @@ function quiz() {
     },
 
     restart() {
+      this.marked = {}; this.markFlash = false;
       this.answers = [];
       this.idx = 0;
       this.picked = null; this.multiSel = []; this.sel = null;
