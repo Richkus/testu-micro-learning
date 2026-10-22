@@ -1207,9 +1207,9 @@
   .v5-q.is-done .ms-tag, .v5-q.is-done .tf-choice.is-bad .ms-tag { background: rgba(255, 255, 255, .6); color: var(--ms-ink-soft); }
   /* praėję klausimai dar kiek nublankę, užvedus pele ryškėja */
   .v5-q .tf-title, .v5-q .tf-sit, .v5-q .tf-video, .v5-q .tf-choice-btn, .v5-q .tf-verdict, .v5-q .tf-fb-lead, .v5-q .tf-fb-full, .v5-q .tf-hint { transition: opacity .45s ease; }
-  .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video, .v5-q.is-past .tf-choice-btn,
-  .v5-q.is-past .tf-verdict, .v5-q.is-past .tf-fb-lead, .v5-q.is-past .tf-fb-full { opacity: .7; }
-  .v5-q.is-past:hover .tf-title, .v5-q.is-past:hover .tf-choice-btn, .v5-q.is-past:hover .tf-fb-lead, .v5-q.is-past:hover .tf-verdict { opacity: 1; }
+  /* praėję: klausimas šiek tiek nublankęs, išaiškinimas visada pilnai ryškus ir skaitomas */
+  .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video { opacity: .7; }
+  .v5-q.is-done .tf-num { color: inherit; }
   .v5-ahead { margin-top: -20px; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
   .v5-deck { position: relative; width: 100%; height: 18px; }
   .v5-deck span { position: absolute; left: 50%; top: 0; height: 100%; transform: translateX(-50%); border-radius: 0 0 14px 14px; background: rgba(255, 255, 255, .55); box-shadow: 0 4px 12px rgba(15, 83, 84, .06); }
