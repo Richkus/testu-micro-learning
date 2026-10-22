@@ -524,6 +524,18 @@
   .ms-chev { flex: 0 0 auto; margin-top: 10px; transition: transform .3s var(--ms-ease); }
   .ms-chev.is-open { transform: rotate(180deg); }
   .ms-rexpl { padding: 0 40px 24px 82px; display: flex; flex-direction: column; gap: 16px; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ms-rgrp { display: flex; flex-direction: column; gap: 8px; }
+  .ms-rlab { font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #6c8284; }
+  .ms-rrow { display: flex; align-items: center; gap: 12px; padding: 11px 14px 11px 16px; border: 1px solid; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; color: #2f3d3f; }
+  .ms-rrow.is-ok { background: #eaf5ef; border-color: #bfe0cd; }
+  .ms-rrow.is-bad { background: #fdeeed; border-color: #f3c2bf; font-weight: 400; }
+  .ms-rrow.is-miss { background: #fff; border-style: dashed; border-color: #bfe0cd; }
+  .ms-rrow-t { flex: 1; min-width: 0; }
+  .ms-rrow-ic { display: grid; place-items: center; flex: none; width: 20px; height: 20px; border-radius: 50%; }
+  .ms-rrow.is-ok .ms-rrow-ic { background: #b6dfc9; color: #2e7d5b; }
+  .ms-rrow.is-miss .ms-rrow-ic { box-shadow: inset 0 0 0 1.2px #bfe0cd; color: #2e7d5b; }
+  .ms-rrow.is-bad .ms-rrow-ic { background: #f4b0ac; color: #c0392b; }
   .ms-ropts { display: flex; flex-direction: column; gap: 8px; }
   .ms-ropts .ms-option-btn { cursor: default; padding: 10px 28px 10px 12px; }
   .ms-ropts .ms-icon, .ms-ropts .ms-key { width: 24px; height: 24px; flex-basis: 24px; animation: none; font-size: 12px; }
@@ -2240,37 +2252,24 @@
               </button>
               <div x-show="open" x-collapse.duration.300ms>
                 <div class="ms-rexpl">
-                  <!-- Variantai: tos pačios būsenos kaip klausime -->
-                  <div class="ms-ropts">
-                    <template x-for="(o, oi) in rq.options" :key="'ro' + ri + oi">
-                      <div class="ms-option is-locked" :class="isRightOpt(rq, oi) ? 'is-correct' : (wasPicked(ri, oi) ? (oi === rq.unknown ? 'is-unknown' : 'is-wrong') : 'is-dim')">
-                        <div class="ms-option-btn">
-                          <span x-show="!isRightOpt(rq, oi) && !wasPicked(ri, oi)" class="ms-key" x-text="letters[oi]"></span>
-                          <span x-show="isRightOpt(rq, oi)" class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span>
-                          <span x-show="wasPicked(ri, oi) && oi === rq.unknown" class="ms-icon is-neutral"><span class="ms-q-mark">?</span></span>
-                          <span x-show="wasPicked(ri, oi) && !isRightOpt(rq, oi) && oi !== rq.unknown" class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span>
-                          <span class="ms-option-text" x-text="o"></span>
-                          <span class="ms-tag" x-show="wasPicked(ri, oi) && !isRightOpt(rq, oi)" :class="{ 'is-neutral': oi === rq.unknown }">Jūsų atsakymas</span>
+                  <!-- Tik tai, ką pasirinko (+ teisingas, jei suklydo vieno atsakymo klausime). Nepasirinktų neteisingų nerodom -->
+                  <template x-for="(g, gi) in rGroups(ri)" :key="'rg' + ri + gi">
+                    <div class="ms-rgrp">
+                      <div class="ms-rlab" x-text="g.label"></div>
+                      <template x-for="(r, rk) in g.rows" :key="'rr' + ri + gi + rk">
+                        <div class="ms-rrow" :class="'is-' + r.k">
+                          <span class="ms-rrow-t" x-text="r.t"></span>
+                          <span class="ms-rrow-ic" aria-hidden="true">
+                            <svg x-show="r.k !== 'bad'" width="11" height="8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg>
+                            <svg x-show="r.k === 'bad'" width="8" height="8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg>
+                          </span>
+                          <span class="visually-hidden" x-text="{ ok: '(teisingas)', bad: '(neteisingas)', miss: '(praleistas)' }[r.k]"></span>
                         </div>
-                        <!-- V.2: išaiškinimas pasirinkto varianto viduje (kaip sprendžiant) -->
-                        <template x-if="inlineResult(ri) && wasPicked(ri, oi)">
-                          <div class="ms-rinline">
-                            <div class="ms-rinline-body">
-                              <div class="ms-inline-status" :class="isRightAnswer(ri) ? 'is-ok' : (isUnknownAns(ri) ? 'is-neutral' : 'is-bad')" x-text="isRightAnswer(ri) ? 'Teisingai!' : (isUnknownAns(ri) ? 'Kodėl taip?' : 'Kodėl neteisingai?')"></div>
-                              <div class="ms-rpar" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }" x-effect="open; setTimeout(() => { top = $el.scrollTop < 2; end = $el.scrollHeight <= $el.clientHeight + 2 }, 350)" @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2"><template x-for="(para, pi) in rq.paras" :key="'rpi' + ri + pi"><p x-text="para"></p></template></div>
-                              <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
-                                <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
-                                <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="rq.link.title"></span></span>
-                                <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
-                              </a>
-                            </div>
-                          </div>
-                        </template>
-                      </div>
-                    </template>
-                  </div>
+                      </template>
+                    </div>
+                  </template>
                   <!-- Išaiškinimas po variantais (V.1, V.2 kelių atsakymų klausimai, neatsakyti) -->
-                  <div class="ms-rwhy" x-show="!inlineResult(ri)">
+                  <div class="ms-rwhy">
                     <div class="ms-inline-status">Kodėl taip?</div>
                     <div class="ms-rpar" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }" x-effect="open; setTimeout(() => { top = $el.scrollTop < 2; end = $el.scrollHeight <= $el.clientHeight + 2 }, 350)" @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2"><template x-for="(para, pi) in rq.paras" :key="'rp' + ri + pi"><p x-text="para"></p></template></div>
                     <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
@@ -2561,6 +2560,20 @@ function quiz() {
     get unknownCount() { return this.questions.filter((qq, i) => this.isUnknownAns(i)).length; },
     inlineResult(ri) { const qq = this.questions[ri], a = this.answers[ri]; return this.protoVersion !== 'v1' && !qq.multi && a !== undefined && a !== null; },
     get expandIdx() { return this.protoVersion !== 'v1' ? this.picked : this.q.correct; },
+    // Rezultatų sąrašas: rodom tik pasirinktus variantus; vieno atsakymo klausime suklydus, dar ir teisingą
+    rGroups(ri) {
+      const qq = this.questions[ri], a = this.answers[ri];
+      const corr = Array.isArray(qq.correct) ? qq.correct : [qq.correct];
+      const missed = list => ({ label: list.length > 1 ? 'Praleisti atsakymai' : 'Praleistas atsakymas', rows: list.map(i => ({ t: qq.options[i], k: 'miss' })) });
+      if (a === undefined || a === null || this.isUnknownAns(ri)) return [missed(corr)];
+      const picks = Array.isArray(a) ? a : [a];
+      const g = [{ label: picks.length > 1 ? 'Jūsų atsakymai' : 'Jūsų atsakymas', rows: picks.map(i => ({ t: qq.options[i], k: this.isRightOpt(qq, i) ? 'ok' : 'bad' })) }];
+      if (!qq.multi && !this.isRightOpt(qq, a)) g.push({ label: 'Teisingas atsakymas', rows: corr.map(i => ({ t: qq.options[i], k: 'ok' })) });
+      // keli atsakymai: nepasirinkti teisingi rodomi kaip „Praleistas atsakymas“, nesakant, kad jie teisingi
+      const left = qq.multi ? corr.filter(i => !picks.includes(i)) : [];
+      if (left.length) g.push(missed(left));
+      return g;
+    },
     isRightOpt(qq, i) { return Array.isArray(qq.correct) ? qq.correct.includes(i) : i === qq.correct; },
     wasPicked(ri, i) { const a = this.answers[ri]; return Array.isArray(a) ? a.includes(i) : a === i; },
     isRightAnswer(ri) {
