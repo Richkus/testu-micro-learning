@@ -1189,16 +1189,27 @@
   .v5-q { animation: tf-in .5s var(--ms-ease) both; transition: box-shadow .45s ease, background-color .45s ease; }
   /* istorinis klausimas: šiek tiek nublankęs, bet „Platesnis išaiškinimas“ lieka aktyvi nuoroda */
   /* praėjusi kortelė pati „ištirpsta“ į foną (permatomas baltas, be šešėlio); nuoroda viduje lieka ryški */
-  .v5-q { transition: box-shadow .45s ease, background-color .45s ease; }
-  .v5-q.is-past { background-color: rgba(255, 255, 255, .5); box-shadow: none; content-visibility: auto; contain-intrinsic-size: auto 520px; }
-  .v5-q.is-past .tf-choice:not(.is-ok):not(.is-bad):not(.is-unk):not(.is-missed) { background-color: rgba(255, 255, 255, .35); }
+  /* Atliktas žingsnis (Figma variantas H): kortelė tik kontūras, fonas kaip puslapio, atsakymai neutralūs, akcentas lieka tik CTA */
+  .v5-q { transition: box-shadow .45s ease, background-color .45s ease, border-color .45s ease; border: 1px solid transparent; }
+  .v5-q.is-done { background-color: transparent; box-shadow: none; border-color: rgba(127, 179, 182, .6); }
+  .v5-q.is-past { content-visibility: auto; contain-intrinsic-size: auto 520px; }
+  .v5-q.is-done .ms-progress { background: rgba(255, 255, 255, .6); }
+  .v5-q.is-done .tf-choice { background-color: rgba(255, 255, 255, .3); border-color: transparent; }
+  .v5-q.is-done .tf-choice.is-ok, .v5-q.is-done .tf-choice.is-bad, .v5-q.is-done .tf-choice.is-unk { background-color: transparent; border-color: rgba(95, 122, 126, .5); border-width: 1.5px; }
+  .v5-q.is-done .tf-choice.is-missed { background-color: transparent; border-color: rgba(79, 171, 127, .6); }
+  .v5-q.is-done .tf-choice .tf-key { background: transparent; border-color: rgba(95, 122, 126, .35); }
+  .v5-q.is-done .tf-choice.is-ok .tf-key { color: var(--ms-ok); border-color: transparent; }
+  .v5-q.is-done .tf-choice.is-bad .tf-key { color: var(--ms-bad); border-color: transparent; }
+  .v5-q.is-done .tf-choice.is-dim { opacity: .6; }
+  .v5-q.is-done .tf-inline-body, .v5-q.is-done .tf-fb { border-top-color: rgba(255, 255, 255, .8); }
+  .v5-q.is-done .tf-fb { background: transparent; border-color: rgba(95, 122, 126, .3); }
+  .v5-q.is-done .tf-verdict { color: var(--ms-ink-soft); }
+  .v5-q.is-done .ms-tag { background: rgba(255, 255, 255, .6); }
+  /* praėję klausimai dar kiek nublankę, užvedus pele ryškėja */
   .v5-q .tf-title, .v5-q .tf-sit, .v5-q .tf-video, .v5-q .tf-choice-btn, .v5-q .tf-verdict, .v5-q .tf-fb-lead, .v5-q .tf-fb-full, .v5-q .tf-hint { transition: opacity .45s ease; }
   .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video, .v5-q.is-past .tf-choice-btn,
-  .v5-q.is-past .tf-verdict, .v5-q.is-past .tf-fb-lead, .v5-q.is-past .tf-fb-full { opacity: .55; }
-  .v5-q.is-past .tf-choice { border-color: var(--ms-line); }
-  .v5-q.is-past .tf-choice.is-dim { opacity: .7; }
-  .v5-q.is-past .ms-more { opacity: 1; }
-  .v5-q.is-past:hover .tf-title, .v5-q.is-past:hover .tf-choice-btn, .v5-q.is-past:hover .tf-fb-lead, .v5-q.is-past:hover .tf-verdict { opacity: .8; }
+  .v5-q.is-past .tf-verdict, .v5-q.is-past .tf-fb-lead, .v5-q.is-past .tf-fb-full { opacity: .7; }
+  .v5-q.is-past:hover .tf-title, .v5-q.is-past:hover .tf-choice-btn, .v5-q.is-past:hover .tf-fb-lead, .v5-q.is-past:hover .tf-verdict { opacity: 1; }
   .v5-end { padding: 8px 8px 28px; animation: tf-in .5s var(--ms-ease) both; }
   .v5-end-note { margin: 18px 24px 0; font-size: 14px; line-height: 21px; color: var(--ms-sub); }
   .v5-end .tf-actions { padding: 0 24px; }
@@ -1271,7 +1282,7 @@
 
           <div class="v5-stack">
             <template x-for="ri in v5Range" :key="'v5q' + ri">
-              <section class="tf-card v5-q" :data-v5="ri" :class="{ 'is-past': ri < idx || v5Done, 'is-cur': ri === idx && !v5Done }">
+              <section class="tf-card v5-q" :data-v5="ri" :class="{ 'is-past': ri < idx || v5Done, 'is-cur': ri === idx && !v5Done, 'is-done': v5Answered(ri) }">
                 <h2 class="tf-title"><span class="tf-num" x-text="`${ri + 1}.`"></span> <span x-text="questions[ri].text"></span></h2>
                 <p class="ms-situation tf-sit" x-show="questions[ri].situation"><span>Situacija:</span> <span x-text="questions[ri].situation"></span></p>
                 <template x-if="questions[ri].video">
