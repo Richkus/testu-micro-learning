@@ -436,7 +436,8 @@
   /* V.1.2: „Mano pasižymėti“ žymė išaiškinimo kampe */
   .ms-inline-body, .ms-mexpl { position: relative; }
   .ms-mark { position: absolute; top: 6px; right: -8px; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 8px; background: none; color: #005a5a; cursor: pointer; transition: background-color .2s, color .2s; }
-  .ms-mexpl .ms-mark { top: 8px; right: 8px; }
+  .ms-mexpl .ms-mark, .ms-rwhy .ms-mark { top: 8px; right: 8px; }
+  .ms-rwhy { position: relative; }
   .ms-mark:hover { background: rgba(0, 90, 90, .08); }
   .ms-mark svg path { transition: fill .2s; }
   .ms-mark.is-on svg path { fill: currentColor; }
@@ -2093,7 +2094,7 @@
                   </div>
                   <div class="ms-grow" :class="{ 'is-open': answered && !leaving }" :inert="!(answered && !leaving)"><div class="ms-grow-in"><div class="ms-mreveal">
                     <div class="ms-mexpl" :class="'is-' + (pickedUnknown ? 'neutral' : multiResult)" aria-live="polite">
-                      <button type="button" class="ms-mark" x-show="protoVersion === 'v12'" :class="{ 'is-on': marked[idx], 'is-flash': markFlash }" @click="toggleMark()" :aria-pressed="(!!marked[idx]).toString()" :aria-label="marked[idx] ? 'Pašalinti iš Mano pasižymėti' : 'Pridėti prie Mano pasižymėti'" :data-tip="marked[idx] ? (markFlash ? 'Pridėta prie Mano pasižymėti' : 'Pašalinti iš Mano pasižymėti') : 'Pridėti prie Mano pasižymėti'"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.75h9c.41 0 .75.34.75.75V17.2L10 13.6l-5.25 3.6V3.5c0-.41.34-.75.75-.75z"/></svg></button>
+                      <button type="button" class="ms-mark" x-show="protoVersion === 'v12'" :class="{ 'is-on': marked[idx], 'is-flash': markFlash === idx }" @click="toggleMark()" :aria-pressed="(!!marked[idx]).toString()" :aria-label="marked[idx] ? 'Pašalinti iš Mano pasižymėti' : 'Pridėti prie Mano pasižymėti'" :data-tip="marked[idx] ? (markFlash === idx ? 'Pridėta prie Mano pasižymėti' : 'Pašalinti iš Mano pasižymėti') : 'Pridėti prie Mano pasižymėti'"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.75h9c.41 0 .75.34.75.75V17.2L10 13.6l-5.25 3.6V3.5c0-.41.34-.75.75-.75z"/></svg></button>
                       <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-bad': multiResult === 'bad' && !pickedUnknown, 'is-neutral': pickedUnknown }" x-text="pickedUnknown ? 'Kodėl taip?' : (multiResult === 'ok' ? 'Teisingai!' : 'Neteisingai')"></div>
                       <p class="ms-inline-lead" x-show="!pickedUnknown" x-text="q.lead"></p>
                       <template x-if="pickedUnknown">
@@ -2136,7 +2137,7 @@
                     <div class="ms-grow" :class="{ 'is-open': answered && !leaving && i === expandIdx && protoVersion !== 'v22' }" :inert="!(answered && !leaving && i === expandIdx && protoVersion !== 'v22')"><div class="ms-grow-in">
                       <div class="ms-inline" aria-live="polite">
                         <div class="ms-inline-body">
-                          <button type="button" class="ms-mark" x-show="protoVersion === 'v12'" :class="{ 'is-on': marked[idx], 'is-flash': markFlash }" @click="toggleMark()" :aria-pressed="(!!marked[idx]).toString()" :aria-label="marked[idx] ? 'Pašalinti iš Mano pasižymėti' : 'Pridėti prie Mano pasižymėti'" :data-tip="marked[idx] ? (markFlash ? 'Pridėta prie Mano pasižymėti' : 'Pašalinti iš Mano pasižymėti') : 'Pridėti prie Mano pasižymėti'"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.75h9c.41 0 .75.34.75.75V17.2L10 13.6l-5.25 3.6V3.5c0-.41.34-.75.75-.75z"/></svg></button>
+                          <button type="button" class="ms-mark" x-show="protoVersion === 'v12'" :class="{ 'is-on': marked[idx], 'is-flash': markFlash === idx }" @click="toggleMark()" :aria-pressed="(!!marked[idx]).toString()" :aria-label="marked[idx] ? 'Pašalinti iš Mano pasižymėti' : 'Pridėti prie Mano pasižymėti'" :data-tip="marked[idx] ? (markFlash === idx ? 'Pridėta prie Mano pasižymėti' : 'Pašalinti iš Mano pasižymėti') : 'Pridėti prie Mano pasižymėti'"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.75h9c.41 0 .75.34.75.75V17.2L10 13.6l-5.25 3.6V3.5c0-.41.34-.75.75-.75z"/></svg></button>
                           <div class="ms-inline-status" :class="{ 'is-ok': isCorrect, 'is-neutral': pickedUnknown, 'is-bad': !isCorrect && !pickedUnknown && protoVersion !== 'v1' }" x-text="isCorrect ? 'Teisingai!' : (pickedUnknown ? 'Kodėl taip?' : (protoVersion !== 'v1' ? 'Kodėl neteisingai?' : 'Kodėl taip?'))"></div>
                           <!-- ilgas trumpas išaiškinimas: ribotas aukštis, vidinis slinkimas ir fade apačioje, CTA visada matomas po juo -->
                           <div class="ms-inline-scroll" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }"
@@ -2317,6 +2318,7 @@
                   </template>
                   <!-- Išaiškinimas po variantais (V.1, V.2 kelių atsakymų klausimai, neatsakyti) -->
                   <div class="ms-rwhy">
+                    <button type="button" class="ms-mark" x-show="protoVersion === 'v12'" :class="{ 'is-on': marked[ri], 'is-flash': markFlash === ri }" @click="toggleMark(ri)" :aria-pressed="(!!marked[ri]).toString()" :aria-label="marked[ri] ? 'Pašalinti iš Mano pasižymėti' : 'Pridėti prie Mano pasižymėti'" :data-tip="marked[ri] ? (markFlash === ri ? 'Pridėta prie Mano pasižymėti' : 'Pašalinti iš Mano pasižymėti') : 'Pridėti prie Mano pasižymėti'"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.75h9c.41 0 .75.34.75.75V17.2L10 13.6l-5.25 3.6V3.5c0-.41.34-.75.75-.75z"/></svg></button>
                     <div class="ms-inline-status">Kodėl taip?</div>
                     <div class="ms-rpar" x-data="{ end: true, top: true }" :class="{ 'is-end': end, 'is-top': top }" x-effect="open; setTimeout(() => { top = $el.scrollTop < 2; end = $el.scrollHeight <= $el.clientHeight + 2 }, 350)" @scroll.passive="end = $el.scrollTop + $el.clientHeight >= $el.scrollHeight - 2; top = $el.scrollTop < 2"><template x-for="(para, pi) in rq.paras" :key="'rp' + ri + pi"><p x-text="para"></p></template></div>
                     <a class="ms-linkcard" :href="rq.link.href" target="_blank" rel="noopener">
@@ -2640,10 +2642,10 @@ function quiz() {
     multiSel: [],
     toggleMulti(i) { if (this.answered) return; const k = this.multiSel.indexOf(i); k > -1 ? this.multiSel.splice(k, 1) : this.multiSel.push(i); },
     // „Nežinau, parodyk atsakymą“: rodom teisingą atsakymą su visu išaiškinimu, rezultatuose „Praleistas atsakymas“
-    toggleMark() {
-      const on = !this.marked[this.idx];
-      this.marked = { ...this.marked, [this.idx]: on };
-      clearTimeout(this._markT); this.markFlash = on;
+    toggleMark(i = this.idx) {
+      const on = !this.marked[i];
+      this.marked = { ...this.marked, [i]: on };
+      clearTimeout(this._markT); this.markFlash = on ? i : false;
       if (on) this._markT = setTimeout(() => { this.markFlash = false; }, 1800);
     },
     dontKnow() {
