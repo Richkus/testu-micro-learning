@@ -407,7 +407,10 @@
   .ms-v22-fb.is-bad { background: var(--ms-bad-bg); border-color: var(--ms-bad-line); }
   .ms-v22-fb .ms-inline-lead { margin-bottom: 10px; }
   .ms-v22-fb .ms-more { margin-bottom: 0; }
-  .ms-v22-actions { display: flex; margin-top: 20px; }
+  .ms-v22-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+  .ms-dk { padding-top: 16px; }
+  .ms-dk-btn { background: none; border: 0; padding: 8px 0; color: #5f7a7e; font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: color .2s, text-decoration-color .2s; }
+  .ms-dk-btn:hover { color: var(--ms-ink); text-decoration-color: currentColor; }
   /* „Kitas klausimas“ po „Tikrinti“: rodyklė + trumpas atsiradimas, kad būtų aišku, jog tai naujas veiksmas */
   .ms-next-cta { display: inline-flex; align-items: center; gap: 10px; animation: ms-next-in .35s var(--ms-ease) both; }
   .ms-next-arrow-wrap { display: inline-flex; }
@@ -1421,7 +1424,7 @@
                       <div class="ms-summary">
                         <span class="ms-chip is-ok"><span class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span><span x-text="`Teisingai: ${score}`"></span></span>
                         <span class="ms-chip is-bad" x-show="questions.length - score - unknownCount > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Klaidos: ${questions.length - score - unknownCount}`"></span></span>
-                        <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">–</span></span><span x-text="`Neatsakėte: ${unknownCount}`"></span></span>
+                        <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">–</span></span><span x-text="`Praleista: ${unknownCount}`"></span></span>
                       </div>
                     </div>
                   </div>
@@ -1550,7 +1553,7 @@
                   <div class="ms-summary">
                     <span class="ms-chip is-ok"><span class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span><span x-text="`Teisingai: ${score}`"></span></span>
                     <span class="ms-chip is-bad" x-show="questions.length - score - unknownCount > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Klaidos: ${questions.length - score - unknownCount}`"></span></span>
-                    <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">–</span></span><span x-text="`Neatsakėte: ${unknownCount}`"></span></span>
+                    <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">–</span></span><span x-text="`Praleista: ${unknownCount}`"></span></span>
                   </div>
                 </div>
               </div>
@@ -2053,19 +2056,31 @@
                           </span>
                           <span class="ms-option-text" x-text="o"></span>
                           <span class="ms-tag" :class="{ 'is-ok': isRightOpt(q, i) }" x-show="answered && multiSel.includes(i)" x-transition.opacity.duration.250ms>Jūsų pasirinkimas</span>
-                          <span class="ms-tag is-missed" x-show="answered && !multiSel.includes(i) && isRightOpt(q, i)" x-transition.opacity.duration.250ms>Praleistas atsakymas</span>
+                          <span class="ms-tag is-missed" x-show="answered && !pickedUnknown && !multiSel.includes(i) && isRightOpt(q, i)" x-transition.opacity.duration.250ms>Praleistas atsakymas</span>
+                          <span class="ms-tag is-ok" x-show="answered && pickedUnknown && isRightOpt(q, i)" x-transition.opacity.duration.250ms>Teisingas atsakymas</span>
                         </button>
                       </div>
                     </template>
                   </div>
                   <div class="ms-mcheck" x-show="!answered" x-collapse.duration.400ms :class="{ 'is-gone': answered }">
                     <button type="button" class="ms-btn" :disabled="!multiSel.length" @click="checkMulti()">Patvirtinti atsakymą</button>
+                    <button type="button" class="ms-dk-btn" x-show="['v2', 'v22'].includes(protoVersion)" @click="dontKnow()">Nežinau, parodyk atsakymą</button>
                   </div>
                   <div x-show="answered && !leaving" x-collapse.duration.400ms><div class="ms-mreveal">
-                    <div class="ms-mexpl" :class="'is-' + multiResult" aria-live="polite">
-                      <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-bad': multiResult === 'bad', 'is-neutral': multiResult === 'partial' }" x-text="multiResult === 'ok' ? 'Teisingai!' : (multiResult === 'partial' ? `Iš dalies teisingai: ${multiHits} iš ${q.correct.length}` : 'Neteisingai')"></div>
-                      <p class="ms-inline-lead" x-text="q.lead"></p>
-                      <button type="button" class="ms-more" @click="openModal()">Platesnis išaiškinimas</button>
+                    <div class="ms-mexpl" :class="'is-' + (pickedUnknown ? 'neutral' : multiResult)" aria-live="polite">
+                      <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-bad': multiResult === 'bad' && !pickedUnknown, 'is-neutral': pickedUnknown }" x-text="pickedUnknown ? 'Kodėl taip?' : (multiResult === 'ok' ? 'Teisingai!' : 'Neteisingai')"></div>
+                      <p class="ms-inline-lead" x-show="!pickedUnknown" x-text="q.lead"></p>
+                      <template x-if="pickedUnknown">
+                        <div class="ms-inline-full">
+                          <template x-for="(para, pi) in q.paras" :key="'mf' + idx + pi"><p x-text="para"></p></template>
+                          <a class="ms-linkcard" :href="q.link.href" target="_blank" rel="noopener">
+                                  <span class="ms-linkcard-ico" aria-hidden="true"><svg width="16" height="19" viewBox="0 0 16 19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1h8l4 4v13H2z"/><path d="M10 1v4h4M5 9h6M5 12h6M5 15h4"/></svg></span>
+                                  <span class="ms-linkcard-text"><small>SUSIJUSI PRAKTINĖ SITUACIJA</small><span x-text="q.link.title"></span></span>
+                                  <svg class="ms-ext" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#005a5a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-label="Atsidarys naujame lange"><path d="M5 13L13 5"/><path d="M6.5 5H13v6.5"/></svg>
+                                </a>
+                        </div>
+                      </template>
+                      <button type="button" class="ms-more" x-show="!pickedUnknown" @click="openModal()">Platesnis išaiškinimas</button>
                     </div>
                     <button class="ms-btn ms-mnext" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span></button>
                   </div></div>
@@ -2089,6 +2104,7 @@
                       </template>
                       <span class="ms-option-text" x-text="o"></span>
                       <span class="ms-tag" :class="{ 'is-neutral': i === q.unknown }" x-show="answered && i === picked && i !== q.correct" x-transition.opacity.duration.250ms>Jūsų atsakymas</span>
+                      <span class="ms-tag is-ok" x-show="answered && pickedUnknown && i === q.correct && ['v2', 'v22'].includes(protoVersion)" x-transition.opacity.duration.250ms>Teisingas atsakymas</span>
                     </button>
                     <!-- Trumpas paaiškinimas + CTA tik teisingame variante -->
                     <div x-show="answered && !leaving && i === expandIdx && protoVersion !== 'v22'" x-collapse.duration.400ms>
@@ -2124,6 +2140,9 @@
                   </div>
                 </template>
               </div>
+              <div class="ms-dk" x-show="!q.multi && protoVersion === 'v2' && !answered" x-collapse.duration.300ms>
+                <button type="button" class="ms-dk-btn" @click="dontKnow()">Nežinau, parodyk atsakymą</button>
+              </div>
               <!-- V.2.2: pasirenki, spaudi „Patvirtinti atsakymą“; rezultatas bloke virš mygtuko, mygtukas toje pačioje vietoje tampa „Kitas klausimas“ -->
               <template x-if="protoVersion === 'v22' && !q.multi">
                 <div class="ms-v22">
@@ -2146,6 +2165,7 @@
                   </div>
                   <div class="ms-v22-actions">
                     <button type="button" class="ms-btn" x-show="!answered" :disabled="sel === null" @click="answer(sel)">Patvirtinti atsakymą</button>
+                    <button type="button" class="ms-dk-btn" x-show="!answered" @click="dontKnow()">Nežinau, parodyk atsakymą</button>
                     <button type="button" class="ms-btn ms-v22-next ms-next-cta" x-show="answered" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span><svg class="ms-next-arrow" width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h13M9.5 1.5L14 6l-4.5 4.5"/></svg></button>
                   </div>
                 </div>
@@ -2226,7 +2246,7 @@
                 <div class="ms-summary">
                   <span class="ms-chip is-ok"><span class="ms-icon is-ok"><svg width="11" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4l3 3 6-6"/></svg></span><span x-text="`Teisingai: ${score}`"></span></span>
                   <span class="ms-chip is-bad" x-show="questions.length - score - unknownCount > 0"><span class="ms-icon is-bad"><svg width="8" height="8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l6 6M7 1L1 7"/></svg></span><span x-text="`Klaidos: ${questions.length - score - unknownCount}`"></span></span>
-                  <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">–</span></span><span x-text="`Neatsakėte: ${unknownCount}`"></span></span>
+                  <span class="ms-chip is-neutral" x-show="unknownCount > 0"><span class="ms-icon is-neutral"><span class="ms-q-mark">–</span></span><span x-text="`Praleista: ${unknownCount}`"></span></span>
                 </div>
               </div>
             </div>
@@ -2542,6 +2562,12 @@ function quiz() {
       return (questionsCache[ver] = this.buildQuestions());
     },
     buildQuestions() {
+      const q = this.buildQuestionsBase();
+      if (!['v2', 'v22'].includes(this.protoVersion)) return q;
+      // V.1 / V.1.1: „Nežinau“ ne variantų sąraše, o antrinis mygtukas „Nežinau, parodyk atsakymą“ kiekviename klausime
+      return q.map(x => x.unknown !== undefined ? { ...x, options: x.options.slice(0, x.unknown) } : { ...x, unknown: x.options.length });
+    },
+    buildQuestionsBase() {
       if (this.protoVersion === 'v1') return this.baseQuestions;
       const q = this.baseQuestions.map(x => x);
       // V.2: „Nežinau“ variantas (kaip Mokesčių naujienų testuose) 3-iame baziniame klausime
@@ -2560,7 +2586,7 @@ function quiz() {
     isUnknownAns(ri) { const qq = this.questions[ri]; return qq.unknown !== undefined && this.answers[ri] === qq.unknown; },
     get unknownCount() { return this.questions.filter((qq, i) => this.isUnknownAns(i)).length; },
     inlineResult(ri) { const qq = this.questions[ri], a = this.answers[ri]; return this.protoVersion !== 'v1' && !qq.multi && a !== undefined && a !== null; },
-    get expandIdx() { return this.protoVersion !== 'v1' ? this.picked : this.q.correct; },
+    get expandIdx() { return this.protoVersion !== 'v1' && !this.pickedUnknown ? this.picked : this.q.correct; },
     // Rezultatų sąrašas: rodom tik pasirinktus variantus; vieno atsakymo klausime suklydus, dar ir teisingą
     rGroups(ri) {
       const qq = this.questions[ri], a = this.answers[ri];
@@ -2582,10 +2608,17 @@ function quiz() {
       if (!Array.isArray(qq.correct)) return a === qq.correct;
       return Array.isArray(a) && a.length === qq.correct.length && qq.correct.every(c => a.includes(c));
     },
-    answerText(ri) { const qq = this.questions[ri], a = this.answers[ri]; if (a === undefined || a === null) return '-'; return Array.isArray(a) ? a.map(i => qq.options[i]).join('; ') : (qq.options[a] ?? '-'); },
+    answerText(ri) { const qq = this.questions[ri], a = this.answers[ri]; if (a === undefined || a === null) return '-'; return Array.isArray(a) ? a.map(i => qq.options[i]).join('; ') : (qq.options[a] ?? (a === qq.unknown ? 'Nežinau' : '-')); },
     // multi: pažymėjimas, patikrinimas, rezultatas
     multiSel: [],
     toggleMulti(i) { if (this.answered) return; const k = this.multiSel.indexOf(i); k > -1 ? this.multiSel.splice(k, 1) : this.multiSel.push(i); },
+    // „Nežinau, parodyk atsakymą“: rodom teisingą atsakymą su visu išaiškinimu, rezultatuose „Praleistas atsakymas“
+    dontKnow() {
+      if (this.answered) return;
+      this.multiSel = []; this.sel = null;
+      this.answer(this.q.unknown);
+      if (this.q.multi) setTimeout(() => { const b = this.$root.querySelector('.ms-mnext'); if (b) b.focus({ preventScroll: true }); }, 420);
+    },
     checkMulti() {
       if (this.answered || !this.multiSel.length) return;
       this.answers[this.idx] = this.multiSel.slice().sort();
@@ -2602,7 +2635,7 @@ function quiz() {
     multiClass(i) {
       const sel = this.multiSel.includes(i), right = this.isRightOpt(this.q, i);
       if (!this.answered) return sel ? 'is-selected' : '';
-      if (right && sel) return 'is-correct';
+      if (right && (sel || this.pickedUnknown)) return 'is-correct';
       if (right) return 'is-missed';
       if (sel) return 'is-wrong';
       return 'is-dim';
