@@ -1210,6 +1210,12 @@
   .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video, .v5-q.is-past .tf-choice-btn,
   .v5-q.is-past .tf-verdict, .v5-q.is-past .tf-fb-lead, .v5-q.is-past .tf-fb-full { opacity: .7; }
   .v5-q.is-past:hover .tf-title, .v5-q.is-past:hover .tf-choice-btn, .v5-q.is-past:hover .tf-fb-lead, .v5-q.is-past:hover .tf-verdict { opacity: 1; }
+  .v5-ahead { margin-top: -20px; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
+  .v5-deck { position: relative; width: 100%; height: 18px; }
+  .v5-deck span { position: absolute; left: 50%; top: 0; height: 100%; transform: translateX(-50%); border-radius: 0 0 14px 14px; background: rgba(255, 255, 255, .55); box-shadow: 0 4px 12px rgba(15, 83, 84, .06); }
+  .v5-deck span:first-child { height: 9px; width: calc(100% - 24px); z-index: 1; }
+  .v5-deck span:last-child { height: 18px; width: calc(100% - 56px); background: rgba(255, 255, 255, .3); box-shadow: none; }
+  .v5-ahead-text { margin: 14px 0 0; font-size: 13px; line-height: 18px; letter-spacing: .01em; color: var(--ms-sub); opacity: .85; }
   .v5-end { padding: 8px 8px 28px; animation: tf-in .5s var(--ms-ease) both; }
   .v5-end-note { margin: 18px 24px 0; font-size: 14px; line-height: 21px; color: var(--ms-sub); }
   .v5-end .tf-actions { padding: 0 24px; }
@@ -1371,6 +1377,12 @@
                 </div>
               </section>
             </template>
+
+            <!-- Subtiliai: po aktyviu klausimu matosi, kad eilėje dar laukia kiti (kortelių „kaladė“ + tyli frazė) -->
+            <div class="v5-ahead" x-show="!v5Done" aria-live="polite">
+              <div class="v5-deck" x-show="!isLast" aria-hidden="true"><span></span><span></span></div>
+              <p class="v5-ahead-text" x-text="isLast ? 'Paskutinis klausimas' : `Toliau dar ${questions.length - idx - 1} ${plural(questions.length - idx - 1, 'klausimas', 'klausimai', 'klausimų')}`"></p>
+            </div>
 
             <!-- Pabaiga: tik įvertinimas; atsakymus galima peržiūrėti pakilus aukštyn -->
             <template x-if="v5Done">
