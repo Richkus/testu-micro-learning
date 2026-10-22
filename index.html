@@ -1379,9 +1379,8 @@
             </template>
 
             <!-- Subtiliai: po aktyviu klausimu matosi, kad eilėje dar laukia kiti (kortelių „kaladė“ + tyli frazė) -->
-            <div class="v5-ahead" x-show="!v5Done" aria-live="polite">
+            <div class="v5-ahead" x-show="!v5Done" aria-hidden="true">
               <div class="v5-deck" x-show="!isLast" aria-hidden="true"><span></span><span></span></div>
-              <p class="v5-ahead-text" x-text="isLast ? 'Paskutinis klausimas' : `Toliau dar ${questions.length - idx - 1} ${plural(questions.length - idx - 1, 'klausimas', 'klausimai', 'klausimų')}`"></p>
             </div>
 
             <!-- Pabaiga: tik įvertinimas; atsakymus galima peržiūrėti pakilus aukštyn -->
