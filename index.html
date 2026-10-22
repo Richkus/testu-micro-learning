@@ -1194,17 +1194,17 @@
   .v5-q.is-done { background-color: transparent; box-shadow: none; border-color: rgba(95, 122, 126, .5); border-width: 1.5px; }
   .v5-q.is-past { content-visibility: auto; contain-intrinsic-size: auto 520px; }
   .v5-q.is-done .ms-progress { background: rgba(255, 255, 255, .6); }
-  .v5-q.is-done .tf-choice { background-color: transparent; border-color: rgba(95, 122, 126, .3); }
-  .v5-q.is-done .tf-choice.is-ok, .v5-q.is-done .tf-choice.is-bad, .v5-q.is-done .tf-choice.is-unk { background-color: transparent; border-color: rgba(95, 122, 126, .5); border-width: 1.5px; }
-  .v5-q.is-done .tf-choice.is-missed { background-color: transparent; border-color: rgba(79, 171, 127, .6); }
-  .v5-q.is-done .tf-choice .tf-key { background: transparent; border-color: rgba(95, 122, 126, .35); }
-  .v5-q.is-done .tf-choice.is-ok .tf-key { color: var(--ms-ok); border-color: transparent; }
-  .v5-q.is-done .tf-choice.is-bad .tf-key { color: var(--ms-bad); border-color: transparent; }
-  .v5-q.is-done .tf-choice.is-dim { opacity: .6; }
+  /* visi atsakymai vienodu neutraliu kontūru; varnelė / x neutralios spalvos, bet ryškios */
+  .v5-q.is-done .tf-choice, .v5-q.is-done .tf-choice.is-ok, .v5-q.is-done .tf-choice.is-bad, .v5-q.is-done .tf-choice.is-unk, .v5-q.is-done .tf-choice.is-missed { background-color: transparent; border: 1px solid rgba(95, 122, 126, .45); opacity: 1; }
+  .v5-q.is-done .tf-choice .tf-key { background: transparent; border-color: rgba(95, 122, 126, .35); color: var(--ms-sub); }
+  .v5-q.is-done .tf-choice.is-ok .tf-key, .v5-q.is-done .tf-choice.is-bad .tf-key, .v5-q.is-done .tf-choice.is-unk .tf-key, .v5-q.is-done .tf-choice.is-missed .tf-key { border: 0; color: var(--ms-ink); }
+  .v5-q.is-done .tf-key-ok, .v5-q.is-done .tf-key-x { stroke-width: 2.6; }
+  .v5-q.is-done .tf-choice-btn { opacity: 1 !important; }
+  .v5-q.is-done .tf-choice:not(.is-ok):not(.is-bad):not(.is-unk):not(.is-missed) .tf-choice-text { color: var(--ms-sub); }
   .v5-q.is-done .tf-inline-body, .v5-q.is-done .tf-fb { border-top-color: rgba(255, 255, 255, .8); }
   .v5-q.is-done .tf-fb { background: transparent; border-color: rgba(95, 122, 126, .3); }
   .v5-q.is-done .tf-verdict { color: var(--ms-ink-soft); }
-  .v5-q.is-done .ms-tag { background: rgba(255, 255, 255, .6); }
+  .v5-q.is-done .ms-tag, .v5-q.is-done .tf-choice.is-bad .ms-tag { background: rgba(255, 255, 255, .6); color: var(--ms-ink-soft); }
   /* praėję klausimai dar kiek nublankę, užvedus pele ryškėja */
   .v5-q .tf-title, .v5-q .tf-sit, .v5-q .tf-video, .v5-q .tf-choice-btn, .v5-q .tf-verdict, .v5-q .tf-fb-lead, .v5-q .tf-fb-full, .v5-q .tf-hint { transition: opacity .45s ease; }
   .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video, .v5-q.is-past .tf-choice-btn,
