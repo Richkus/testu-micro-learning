@@ -1210,6 +1210,13 @@
   /* praėję: klausimas šiek tiek nublankęs, išaiškinimas visada pilnai ryškus ir skaitomas */
   .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video { opacity: .7; }
   .v5-q.is-done .tf-num { color: inherit; }
+  /* atliktas žingsnis: tekstai ne pilki, o brand žalsvumo (#447777 šeima) */
+  .v5-q.is-done { --done-ink: #447777; --done-ink-soft: #5f8f8f; }
+  .v5-q.is-done .tf-title, .v5-q.is-done .tf-sit, .v5-q.is-done .tf-choice-text, .v5-q.is-done .tf-verdict,
+  .v5-q.is-done .tf-fb-lead, .v5-q.is-done .tf-fb-full p, .v5-q.is-done .ms-progress { color: var(--done-ink); }
+  .v5-q.is-done .tf-choice:not(.is-ok):not(.is-bad):not(.is-unk):not(.is-missed) .tf-choice-text, .v5-q.is-done .tf-choice .tf-key { color: var(--done-ink-soft); }
+  .v5-q.is-done .tf-choice.is-ok .tf-key, .v5-q.is-done .tf-choice.is-bad .tf-key, .v5-q.is-done .tf-choice.is-unk .tf-key, .v5-q.is-done .tf-choice.is-missed .tf-key { color: var(--done-ink); }
+  .v5-q.is-done .ms-tag, .v5-q.is-done .tf-choice.is-bad .ms-tag { color: var(--done-ink); }
   /* pirmas klausimas: kortelė optiškai centre (šiek tiek aukščiau vidurio), vėliau stack'as kyla į viršų */
   .v5-stack { transition: margin-top .5s var(--ms-ease); }
   .v5-stack.is-first { margin-top: clamp(24px, calc((100vh - 760px) / 2 + 40px), 160px); }
