@@ -1287,6 +1287,22 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   }
+
+  /* ---------- Spausdinimas / PDF: tik rezultatai, visi atsakymai išskleisti ---------- */
+  @media print {
+    @page { size: A4; margin: 14mm 14mm 16mm; }
+    html, body, .ms-app { background: #fff !important; }
+    body { padding-top: 0 !important; }
+    body::before { display: none !important; }
+    .ms-bgx, .tf { display: none !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .ms-proto-bar, .ms-sidebar, .ms-topbar, .ms-crumbs, .ms-results-actions, .ms-report, .ms-fb, .ms-fb-backdrop, .ms-coach,
+    .ms-admin, .ms-admin-btn, .ms-bgp, .ms-ibanner-wrap, .ms-news, .ms-mark, .ms-chev, .ms-rsel, .ms-modal-backdrop { display: none !important; }
+    .ms-rbody { display: block !important; height: auto !important; overflow: visible !important; }
+    .ms-results-card { box-shadow: none !important; border: 0 !important; }
+    .ms-rrow, .ms-linkcard, .ms-rbtn, .ms-results-head { break-inside: avoid; }
+    .ms-rbtn { break-after: avoid; }
+  }
 </style>
 </head>
 <body>
@@ -2254,7 +2270,7 @@
         <div class="ms-results-headrow">
         <!-- Veiksmai virš kortelės, kaip senajame dizaine -->
         <div class="ms-results-actions">
-          <a href="#" @click.prevent>Atsisiųsti PDF</a>
+          <a href="#" @click.prevent="printResults()">Atsisiųsti PDF</a>
           <span aria-hidden="true"></span>
           <a href="#" @click.prevent="restart()">Spręsti iš naujo</a>
         </div>
@@ -2285,7 +2301,7 @@
           </div>
           <div class="ms-rlist">
           <template x-for="(rq, ri) in questions" :key="'r' + ri">
-            <div class="ms-ritem" x-data="{ open: false }">
+            <div class="ms-ritem" x-data="{ open: false }" @ms-expand-all.window="open = true">
               <button class="ms-rbtn" @click="open = !open" :aria-expanded="open">
                 <span class="ms-icon" :class="isRightAnswer(ri) ? 'is-ok' : (isUnknownAns(ri) ? 'is-neutral' : 'is-bad')">
                   <svg x-show="isRightAnswer(ri)" width="13" height="10" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l3.5 3.5L12 1"/></svg>
@@ -2298,7 +2314,7 @@
                 </span>
                 <svg class="ms-chev" :class="{ 'is-open': open }" width="12" height="8" fill="none" stroke="#5f7a7e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l5 5 5-5"/></svg>
               </button>
-              <div x-show="open" x-collapse.duration.300ms>
+              <div class="ms-rbody" x-show="open" x-collapse.duration.300ms>
                 <div class="ms-rexpl">
                   <!-- Tik tai, ką pasirinko (+ teisingas, jei suklydo vieno atsakymo klausime). Nepasirinktų neteisingų nerodom -->
                   <template x-for="(g, gi) in rGroups(ri)" :key="'rg' + ri + gi">
@@ -2642,6 +2658,11 @@ function quiz() {
     multiSel: [],
     toggleMulti(i) { if (this.answered) return; const k = this.multiSel.indexOf(i); k > -1 ? this.multiSel.splice(k, 1) : this.multiSel.push(i); },
     // „Nežinau, parodyk atsakymą“: rodom teisingą atsakymą su visu išaiškinimu, rezultatuose „Praleistas atsakymas“
+    // „Atsisiųsti PDF“: išskleidžiam visus atsakymus (matosi ir ekrane), tada spausdinimo langas
+    printResults() {
+      window.dispatchEvent(new CustomEvent('ms-expand-all'));
+      setTimeout(() => window.print(), 450);
+    },
     toggleMark(i = this.idx) {
       const on = !this.marked[i];
       this.marked = { ...this.marked, [i]: on };
