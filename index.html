@@ -786,7 +786,8 @@
   .ms-moption.is-wrong .ms-mbox { background: var(--ms-bad-icon-bg); border-color: var(--ms-bad-icon-bg); color: var(--ms-bad); }
   .ms-moption.is-missed { background: var(--ms-surface); border: 1px dashed var(--ms-ok-line); }
   .ms-moption.is-missed .ms-mbox { background: var(--ms-surface); border: 1.5px dashed var(--ms-ok-line); color: var(--ms-ok-line); }
-  .ms-tag.is-missed { color: var(--ms-ok-text); background: var(--ms-ok-bg); }
+  .ms-tag.is-missed, .ms-tag.is-ok { color: var(--ms-ok-text); background: var(--ms-ok-bg); }
+  .ms-tag.is-ok { background: #fff; }
   /* Patikrinus: „Patikrinti“ išblunka iškart, aukščiai keičiasi tuo pačiu tempu (abu 400ms), išaiškinimas išryškėja vėliau, kad nesipjautų */
   .ms-mcheck { transition: opacity .15s ease; }
   .ms-mcheck.is-gone { opacity: 0; }
@@ -2051,8 +2052,8 @@
                             <svg x-show="answered && multiSel.includes(i) && !isRightOpt(q, i)" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M1 1l8 8M9 1L1 9"/></svg>
                           </span>
                           <span class="ms-option-text" x-text="o"></span>
-                          <span class="ms-tag" x-show="answered && multiSel.includes(i) && !isRightOpt(q, i)" x-transition.opacity.duration.250ms>Jūsų pasirinkimas</span>
-                          <span class="ms-tag is-missed" x-show="answered && !multiSel.includes(i) && isRightOpt(q, i)" x-transition.opacity.duration.250ms>Praleidote</span>
+                          <span class="ms-tag" :class="{ 'is-ok': isRightOpt(q, i) }" x-show="answered && multiSel.includes(i)" x-transition.opacity.duration.250ms>Jūsų pasirinkimas</span>
+                          <span class="ms-tag is-missed" x-show="answered && !multiSel.includes(i) && isRightOpt(q, i)" x-transition.opacity.duration.250ms>Praleistas atsakymas</span>
                         </button>
                       </div>
                     </template>
@@ -2596,7 +2597,7 @@ function quiz() {
       if (!this.q.multi) return null;
       const wrong = this.multiSel.some(i => !this.isRightOpt(this.q, i));
       if (!wrong && this.multiHits === this.q.correct.length) return 'ok';
-      return this.multiHits > 0 ? 'partial' : 'bad';
+      return 'bad'; // bent viena klaida ar praleistas teisingas = neteisingai (be „iš dalies“)
     },
     multiClass(i) {
       const sel = this.multiSel.includes(i), right = this.isRightOpt(this.q, i);
@@ -2992,7 +2993,6 @@ function quiz() {
       const qq = this.questions[ri], a = this.answers[ri];
       if (this.isUnknownAns(ri)) return 'unknown';
       if (this.isRightAnswer(ri)) return 'ok';
-      if (Array.isArray(qq.correct) && Array.isArray(a) && a.some(x => qq.correct.includes(x))) return 'partial';
       return 'bad';
     },
     tfRClass(ri, oi) {
