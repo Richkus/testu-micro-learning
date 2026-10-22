@@ -1210,6 +1210,9 @@
   /* praėję: klausimas šiek tiek nublankęs, išaiškinimas visada pilnai ryškus ir skaitomas */
   .v5-q.is-past .tf-title, .v5-q.is-past .tf-sit, .v5-q.is-past .tf-video { opacity: .7; }
   .v5-q.is-done .tf-num { color: inherit; }
+  /* pirmas klausimas: kortelė optiškai centre (šiek tiek aukščiau vidurio), vėliau stack'as kyla į viršų */
+  .v5-stack { transition: margin-top .5s var(--ms-ease); }
+  .v5-stack.is-first { margin-top: clamp(24px, calc((100vh - 760px) / 2 + 40px), 160px); }
   .v5-ahead { margin-top: -20px; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
   .v5-deck { position: relative; width: 100%; height: 18px; }
   .v5-deck span { position: absolute; left: 50%; top: 0; height: 100%; transform: translateX(-50%); border-radius: 0 0 14px 14px; background: rgba(255, 255, 255, .55); box-shadow: 0 4px 12px rgba(15, 83, 84, .06); }
@@ -1286,7 +1289,7 @@
             <div class="v5-bar-progress" aria-hidden="true"><span :style="`width: ${v5Done ? 100 : Math.round(idx / questions.length * 100)}%`"></span></div>
           </div>
 
-          <div class="v5-stack">
+          <div class="v5-stack" :class="{ 'is-first': idx === 0 && !v5Done }">
             <template x-for="ri in v5Range" :key="'v5q' + ri">
               <section class="tf-card v5-q" :data-v5="ri" :class="{ 'is-past': ri < idx || v5Done, 'is-cur': ri === idx && !v5Done, 'is-done': ri < idx || v5Done }">
                 <h2 class="tf-title"><span class="tf-num" x-text="`${ri + 1}.`"></span> <span x-text="questions[ri].text"></span></h2>
