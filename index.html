@@ -1282,7 +1282,7 @@
 
           <div class="v5-stack">
             <template x-for="ri in v5Range" :key="'v5q' + ri">
-              <section class="tf-card v5-q" :data-v5="ri" :class="{ 'is-past': ri < idx || v5Done, 'is-cur': ri === idx && !v5Done, 'is-done': v5Answered(ri) }">
+              <section class="tf-card v5-q" :data-v5="ri" :class="{ 'is-past': ri < idx || v5Done, 'is-cur': ri === idx && !v5Done, 'is-done': ri < idx || v5Done }">
                 <h2 class="tf-title"><span class="tf-num" x-text="`${ri + 1}.`"></span> <span x-text="questions[ri].text"></span></h2>
                 <p class="ms-situation tf-sit" x-show="questions[ri].situation"><span>Situacija:</span> <span x-text="questions[ri].situation"></span></p>
                 <template x-if="questions[ri].video">
