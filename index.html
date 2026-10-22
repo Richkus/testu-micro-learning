@@ -408,7 +408,9 @@
   .ms-v22-fb .ms-inline-lead { margin-bottom: 10px; }
   .ms-v22-fb .ms-more { margin-bottom: 0; }
   .ms-v22-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
-  .ms-dk { padding-top: 16px; }
+  .ms-dk { transition: opacity .15s ease; }
+  .ms-dk.is-gone { opacity: 0; }
+  .ms-dk-in { padding-top: 16px; }
   .ms-dk-btn { background: none; border: 0; padding: 8px 0; color: #5f7a7e; font: inherit; font-size: 14px; line-height: 20px; font-weight: 400; cursor: pointer; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: color .2s, text-decoration-color .2s; }
   .ms-dk-btn:hover { color: var(--ms-ink); text-decoration-color: currentColor; }
   /* „Kitas klausimas“ po „Tikrinti“: rodyklė + trumpas atsiradimas, kad būtų aišku, jog tai naujas veiksmas */
@@ -424,6 +426,12 @@
 
   /* Trumpas paaiškinimas teisingo varianto viduje */
   .ms-inline { padding: 0 28px 32px 56px; }
+  /* išaiškinimo išsiskleidimas per CSS grid (be aukščio matavimo, todėl pabaigoje niekas nešokteli) */
+  .ms-grow { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+  .ms-grow.is-open { grid-template-rows: 1fr; }
+  .ms-grow-in { min-height: 0; overflow: hidden; }
+  .ms-grow .ms-mreveal { animation: none; opacity: 0; transition: opacity .25s ease; }
+  .ms-grow.is-open .ms-mreveal { opacity: 1; transition-delay: .15s; }
   .ms-inline-body { border-top: 1px solid var(--ms-ok-line); padding-top: 14px; }
   /* V.1.2: „Mano pasižymėti“ žymė išaiškinimo kampe */
   .ms-inline-body, .ms-mexpl { position: relative; }
@@ -2074,11 +2082,13 @@
                       </div>
                     </template>
                   </div>
-                  <div class="ms-mcheck" x-show="!answered" x-collapse.duration.400ms :class="{ 'is-gone': answered }">
+                  <div class="ms-mcheck-wrap" x-show="!answered" x-collapse.duration.400ms>
+                  <div class="ms-mcheck" :class="{ 'is-gone': answered }">
                     <button type="button" class="ms-btn" :disabled="!multiSel.length" @click="checkMulti()">Patvirtinti atsakymą</button>
                     <button type="button" class="ms-dk-btn" x-show="protoVersion === 'v12'" @click="dontKnow()">Nežinau, parodyk atsakymą</button>
                   </div>
-                  <div x-show="answered && !leaving" x-collapse.duration.400ms><div class="ms-mreveal">
+                  </div>
+                  <div class="ms-grow" :class="{ 'is-open': answered && !leaving }" :inert="!(answered && !leaving)"><div class="ms-grow-in"><div class="ms-mreveal">
                     <div class="ms-mexpl" :class="'is-' + (pickedUnknown ? 'neutral' : multiResult)" aria-live="polite">
                       <button type="button" class="ms-mark" x-show="protoVersion === 'v12'" :class="{ 'is-on': marked[idx], 'is-flash': markFlash }" @click="toggleMark()" :aria-pressed="(!!marked[idx]).toString()" :aria-label="marked[idx] ? 'Pašalinti iš Mano pasižymėti' : 'Pridėti prie Mano pasižymėti'" :data-tip="marked[idx] ? (markFlash ? 'Pridėta prie Mano pasižymėti' : 'Pašalinti iš Mano pasižymėti') : 'Pridėti prie Mano pasižymėti'"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.75h9c.41 0 .75.34.75.75V17.2L10 13.6l-5.25 3.6V3.5c0-.41.34-.75.75-.75z"/></svg></button>
                       <div class="ms-inline-status" :class="{ 'is-ok': multiResult === 'ok', 'is-bad': multiResult === 'bad' && !pickedUnknown, 'is-neutral': pickedUnknown }" x-text="pickedUnknown ? 'Kodėl taip?' : (multiResult === 'ok' ? 'Teisingai!' : 'Neteisingai')"></div>
@@ -2096,7 +2106,7 @@
                       <button type="button" class="ms-more" x-show="!pickedUnknown" @click="openModal()">Platesnis išaiškinimas</button>
                     </div>
                     <button class="ms-btn ms-mnext" @click="next()"><span x-text="isLast ? 'Žiūrėti rezultatus' : 'Kitas klausimas'"></span></button>
-                  </div></div>
+                  </div></div></div>
                 </div>
               </template>
               <div class="ms-options" x-show="!q.multi" role="group" aria-label="Atsakymų variantai">
@@ -2120,7 +2130,7 @@
                       <span class="ms-tag is-ok" x-show="answered && pickedUnknown && i === q.correct && protoVersion === 'v12'" x-transition.opacity.duration.250ms>Teisingas atsakymas</span>
                     </button>
                     <!-- Trumpas paaiškinimas + CTA tik teisingame variante -->
-                    <div x-show="answered && !leaving && i === expandIdx && protoVersion !== 'v22'" x-collapse.duration.400ms>
+                    <div class="ms-grow" :class="{ 'is-open': answered && !leaving && i === expandIdx && protoVersion !== 'v22' }" :inert="!(answered && !leaving && i === expandIdx && protoVersion !== 'v22')"><div class="ms-grow-in">
                       <div class="ms-inline" aria-live="polite">
                         <div class="ms-inline-body">
                           <button type="button" class="ms-mark" x-show="protoVersion === 'v12'" :class="{ 'is-on': marked[idx], 'is-flash': markFlash }" @click="toggleMark()" :aria-pressed="(!!marked[idx]).toString()" :aria-label="marked[idx] ? 'Pašalinti iš Mano pasižymėti' : 'Pridėti prie Mano pasižymėti'" :data-tip="marked[idx] ? (markFlash ? 'Pridėta prie Mano pasižymėti' : 'Pašalinti iš Mano pasižymėti') : 'Pridėti prie Mano pasižymėti'"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 2.75h9c.41 0 .75.34.75.75V17.2L10 13.6l-5.25 3.6V3.5c0-.41.34-.75.75-.75z"/></svg></button>
@@ -2150,12 +2160,12 @@
                           </button>
                         </div>
                       </div>
-                    </div>
+                    </div></div>
                   </div>
                 </template>
               </div>
-              <div class="ms-dk" x-show="!q.multi && protoVersion === 'v12' && !answered" x-collapse.duration.300ms>
-                <button type="button" class="ms-dk-btn" @click="dontKnow()">Nežinau, parodyk atsakymą</button>
+              <div class="ms-dk" x-show="!q.multi && protoVersion === 'v12' && !answered" x-collapse.duration.400ms :class="{ 'is-gone': answered }">
+                <div class="ms-dk-in"><button type="button" class="ms-dk-btn" @click="dontKnow()">Nežinau, parodyk atsakymą</button></div>
               </div>
               <!-- V.2.2: pasirenki, spaudi „Patvirtinti atsakymą“; rezultatas bloke virš mygtuko, mygtukas toje pačioje vietoje tampa „Kitas klausimas“ -->
               <template x-if="protoVersion === 'v22' && !q.multi">
@@ -2636,7 +2646,10 @@ function quiz() {
     dontKnow() {
       if (this.answered) return;
       this.multiSel = []; this.sel = null;
-      this.answer(this.q.unknown);
+      // pirma pažymim „Nežinau“, kad išaiškinimo turinys (pilnas tekstas be trumpos versijos) susidėliotų
+      // prieš x-collapse išmatuojant aukštį; kitaip pabaigoje kortelė šokteli žemyn
+      this.picked = this.q.unknown;
+      this.$nextTick(() => this.answer(this.q.unknown));
       if (this.q.multi) setTimeout(() => { const b = this.$root.querySelector('.ms-mnext'); if (b) b.focus({ preventScroll: true }); }, 420);
     },
     checkMulti() {
