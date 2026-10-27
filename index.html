@@ -650,6 +650,8 @@
   @media (max-width: 991.98px) { .ms-bgx { left: 0; } }
 
   .ms-admin-row { display: flex; gap: 6px; }
+  /* Telefone prototipo įrankiai uždengia turinį (mygtukus), todėl slepiami */
+  @media (max-width: 575.98px) { .ms-admin { display: none; } }
   .ms-bgp { position: fixed; top: 8px; left: 8px; bottom: 8px; z-index: 500; width: 288px; max-width: calc(100vw - 16px); display: flex; flex-direction: column; background: #fff; border-radius: 12px; box-shadow: var(--ui-shadow); font: 12px/1.4 var(--ui-font); color: var(--ui-ink); -webkit-font-smoothing: antialiased; overflow: hidden; }
   .ms-bgp-anim { transition: transform .25s var(--ms-ease), opacity .2s ease; }
   .ms-bgp-from { transform: translateX(-12px); opacity: 0; }
