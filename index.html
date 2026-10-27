@@ -523,11 +523,8 @@
   .ms-rscore { align-items: center; }
   .ms-rscore h1 { margin: 0; text-wrap: balance; }
   .ms-rkicker { display: block; margin-bottom: 4px; font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ms-ok-text); }
-  .ms-score { flex: none; text-align: right; }
-  .ms-score b { display: block; font-size: 48px; line-height: 52px; font-weight: 700; letter-spacing: -.01em; color: var(--ms-ink-soft); font-variant-numeric: tabular-nums; }
-  .ms-score-of { font-weight: 600; color: var(--ms-sub); }
-  .ms-score small { display: block; margin-top: 2px; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--ms-sub); }
-  @media (max-width: 575.98px) { .ms-rscore { flex-direction: column; align-items: flex-start; gap: 12px; } .ms-score { text-align: left; } .ms-score b { font-size: 40px; line-height: 44px; } }
+  .ms-rsub { margin: 4px 0 0; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ms-sub); }
+  @media (max-width: 575.98px) { .ms-rscore { gap: 16px; } .ms-rscore h1 { font-size: 18px; line-height: 24px; } }
   /* Rezultato žiedas (Figma 4891-1389) */
   .ms-ring { position: relative; flex: 0 0 84px; width: 84px; height: 84px; display: grid; place-items: center; }
   .ms-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -2301,13 +2298,14 @@
           <div class="ms-results-head">
             <!-- Aiškiai pasakom, kad tai paskutinis etapas; rodom tik įvertinimą, be klaidų ir praleistų skaičiaus -->
             <div class="ms-results-top ms-rscore">
+              <div class="ms-ring" role="img" :aria-label="`Teisingai ${score} iš ${questions.length}`">
+                <svg viewBox="0 0 84 84" aria-hidden="true"><circle class="ms-ring-track" cx="42" cy="42" r="37"/><circle class="ms-ring-fill" cx="42" cy="42" r="37" pathLength="100" :style="`stroke-dasharray: ${screen === 'results' ? Math.round(score / questions.length * 100) : 0} 100`"/></svg>
+                <b x-text="`${score}/${questions.length}`"></b>
+              </div>
               <div class="ms-results-info">
                 <span class="ms-rkicker">Testas baigtas</span>
                 <h1>Testo rezultatai su išaiškinimais</h1>
-              </div>
-              <div class="ms-score" role="img" :aria-label="`Teisingai atsakėte į ${score} iš ${questions.length}`">
-                <b><span x-text="score"></span><span class="ms-score-of" x-text="' / ' + questions.length"></span></b>
-                <small x-text="`Teisingai atsakėte į ${score} iš ${questions.length}`"></small>
+                <p class="ms-rsub" x-text="`Teisingai atsakėte į ${score} iš ${questions.length}`"></p>
               </div>
             </div>
           </div>
