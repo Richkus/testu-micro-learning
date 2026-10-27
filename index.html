@@ -2149,7 +2149,7 @@
                       </template>
                       <span class="ms-option-text" x-text="o"></span>
                       <span class="ms-tag" :class="{ 'is-neutral': i === q.unknown }" x-show="answered && i === picked && i !== q.correct" x-transition.opacity.duration.250ms>Jūsų atsakymas</span>
-                      <span class="ms-tag is-ok" x-show="answered && pickedUnknown && i === q.correct && protoVersion === 'v12'" x-transition.opacity.duration.250ms>Teisingas atsakymas</span>
+                      <span class="ms-tag is-ok" x-show="answered && pickedUnknown && i === q.correct" x-transition.opacity.duration.250ms>Teisingas atsakymas</span>
                     </button>
                     <!-- Trumpas paaiškinimas + CTA tik teisingame variante -->
                     <div class="ms-grow" :class="{ 'is-open': answered && !leaving && i === expandIdx && protoVersion !== 'v22' }" :inert="!(answered && !leaving && i === expandIdx && protoVersion !== 'v22')"><div class="ms-grow-in">
@@ -2642,7 +2642,8 @@ function quiz() {
     isUnknownAns(ri) { const qq = this.questions[ri]; return qq.unknown !== undefined && this.answers[ri] === qq.unknown; },
     get unknownCount() { return this.questions.filter((qq, i) => this.isUnknownAns(i)).length; },
     inlineResult(ri) { const qq = this.questions[ri], a = this.answers[ri]; return this.protoVersion !== 'v1' && !qq.multi && a !== undefined && a !== null; },
-    get expandIdx() { return this.protoVersion !== 'v1' && !this.pickedUnknown ? this.picked : this.q.correct; },
+    // „Nežinau“ išaiškinimas atsiveria pačiame „Nežinau“ variante (kaip kitur pasirinktame), V.1.2 jo neturi, todėl teisingame
+    get expandIdx() { return this.protoVersion === 'v1' || (this.pickedUnknown && this.protoVersion === 'v12') ? this.q.correct : this.picked; },
     // Rezultatų sąrašas: rodom tik pasirinktus variantus; vieno atsakymo klausime suklydus, dar ir teisingą
     rGroups(ri) {
       const qq = this.questions[ri], a = this.answers[ri];
