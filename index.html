@@ -2371,6 +2371,14 @@
 </div>
 
 <script>
+// Ramus slinkimas: lėtesnis ir švelnesnis nei naršyklės „smooth“ (ease-in-out, ~0.9 s)
+function msCalmScroll(dy, dur = 900) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { scrollBy(0, dy); return; }
+  const y0 = scrollY, t0 = performance.now();
+  const ease = t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const step = now => { const t = Math.min(1, (now - t0) / dur); scrollTo(0, y0 + dy * ease(t)); if (t < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
 function quiz() {
   // klausimų sąrašas kiekvienai versijai sukuriamas vieną kartą (V.5 jį skaito šimtus kartų per paspaudimą)
   const questionsCache = {};
@@ -2705,7 +2713,7 @@ function quiz() {
       if (this.answered || !this.multiSel.length) return;
       this.answers[this.idx] = this.multiSel.slice().sort();
       this.answered = true;
-      setTimeout(() => { const b = this.$root.querySelector('.ms-mnext'); if (b) { b.focus({ preventScroll: true }); const r = b.getBoundingClientRect(); if (r.bottom > window.innerHeight - 16) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }, 420);
+      setTimeout(() => { const b = this.$root.querySelector('.ms-mnext'); if (b) { b.focus({ preventScroll: true }); const r = b.getBoundingClientRect(); if (r.bottom > window.innerHeight - 32) msCalmScroll(r.bottom - (window.innerHeight - 32)); } }, 420);
     },
     get multiHits() { return Array.isArray(this.q.correct) ? this.multiSel.filter(i => this.q.correct.includes(i)).length : 0; },
     get multiResult() {
@@ -2896,7 +2904,7 @@ function quiz() {
         if (!btn) return;
         btn.focus({ preventScroll: true });
         const r = btn.getBoundingClientRect();
-        if (r.bottom > window.innerHeight - 16) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (r.bottom > window.innerHeight - 32) msCalmScroll(r.bottom - (window.innerHeight - 32));
       }, 420);
     },
 
@@ -2926,7 +2934,7 @@ function quiz() {
         this.idx++;
         this.picked = null; this.multiSel = []; this.sel = null;
         this.leaving = false;
-        if (card.getBoundingClientRect().top < 0) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        { const top = card.getBoundingClientRect().top - 24; if (top < 0) msCalmScroll(top); }
       }, 260);
     },
 
