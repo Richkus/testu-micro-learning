@@ -1633,7 +1633,6 @@
           <section class="tf-card tf-review" x-show="tfReviewOn">
             <div class="ms-rlist-head tf-review-head">
               <h2>Atsakymai su išaiškinimais</h2>
-              <p>Išaiškinimus jau matėte eigoje. Čia galite juos peržiūrėti dar kartą.</p>
             </div>
             <template x-for="(rq, ri) in questions" :key="'tfr' + ri">
               <div class="tf-ritem" x-data="{ open: false }" :class="{ 'is-open': open }">
@@ -2312,7 +2311,6 @@
 
           <div class="ms-rlist-head">
             <h2>Jūsų atsakymai</h2>
-            <p>Išaiškinimus jau matėte eigoje. Čia galite juos peržiūrėti dar kartą.</p>
           </div>
           <div class="ms-rlist">
           <template x-for="(rq, ri) in questions" :key="'r' + ri">
