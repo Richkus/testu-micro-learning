@@ -337,7 +337,7 @@
   .ms-admin-btn:hover, .ms-admin-btn[aria-expanded="true"] { opacity: 1; background: #fff; }
   .ms-admin-btn[aria-expanded="true"] svg { color: var(--ui-ink); }
   .ms-admin-btn:focus-visible, .ms-bgp button:focus-visible { outline: 2px solid rgba(0,0,0,.25); outline-offset: 1px; }
-  .ms-admin-panel { width: 248px; background: #fff; border-radius: 12px; box-shadow: var(--ui-shadow); padding: 6px; font: 12px/1.4 var(--ui-font); color: var(--ui-ink); }
+  .ms-admin-panel { width: 248px; max-height: calc(100vh - 140px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; background: #fff; border-radius: 12px; box-shadow: var(--ui-shadow); padding: 6px; font: 12px/1.4 var(--ui-font); color: var(--ui-ink); }
   .ms-admin-title { font-weight: 600; padding: 8px 8px 4px; }
   .ms-admin-group { font-size: 11px; font-weight: 500; color: var(--ui-sub); padding: 10px 8px 4px; margin: 0; }
   .ms-admin-opt { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; line-height: 16px; transition: background .12s; }
@@ -745,9 +745,6 @@
   .ms-ibanner-close { flex: 0 0 28px; width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ms-icon-muted); cursor: pointer; transition: background .15s; }
   .ms-ibanner-close:hover { background: rgba(15, 83, 84, .07); }
   /* visa juostelė paspaudžiama: atidaro „Kas naujo“ modalą; subtilus „Plačiau ›“ ir hover */
-  .ms-ibanner { cursor: pointer; transition: background-color .2s, border-color .2s; }
-  .ms-ibanner:hover { background: #e3f2eb; border-color: #a4d5be; }
-  .ms-ibanner:focus-visible { outline: 3px solid rgba(83,169,177,.35); outline-offset: 2px; }
   .ms-ibanner-more { font-weight: 400; color: var(--ms-link); text-decoration: none; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .2s; }
   .ms-ibanner:hover .ms-ibanner-more { color: var(--ms-teal-dark); text-decoration: underline; }
   /* J variantas: ta pati juostelė kaip atskiras elementas, lygiuotas su kortele */
@@ -810,8 +807,9 @@
   .ms-moption.is-selected .ms-mbox { background: var(--ms-teal); border-color: var(--ms-teal); }
   .ms-moption.is-correct .ms-mbox { background: var(--ms-ok-icon-bg); border-color: var(--ms-ok-icon-bg); color: var(--ms-ok); }
   .ms-moption.is-wrong .ms-mbox { background: var(--ms-bad-icon-bg); border-color: var(--ms-bad-icon-bg); color: var(--ms-bad); }
-  .ms-moption.is-missed { background: var(--ms-surface); border: 1px dashed var(--ms-ok-line); }
-  .ms-moption.is-missed .ms-mbox { background: var(--ms-surface); border: 1.5px dashed var(--ms-ok-line); color: var(--ms-ok-line); }
+  .ms-moption.is-missed { background: var(--ms-bad-bg); border: 1.5px solid var(--ms-bad-line); }
+  .ms-moption.is-missed .ms-mbox { background: var(--ms-bad-icon-bg); border-color: var(--ms-bad-icon-bg); color: var(--ms-bad); }
+  .ms-moption.is-missed .ms-tag.is-missed { color: var(--ms-bad-text); background: var(--ms-bad-tag-bg); }
   .ms-tag.is-missed, .ms-tag.is-ok { color: var(--ms-ok-text); background: var(--ms-ok-bg); }
   .ms-tag.is-ok { background: #fff; }
   /* Patikrinus: „Patikrinti“ išblunka iškart, aukščiai keičiasi tuo pačiu tempu (abu 400ms), išaiškinimas išryškėja vėliau, kad nesipjautų */
@@ -824,6 +822,8 @@
   .ms-mcheck .ms-btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
   .ms-mexpl { margin-top: 16px; padding: 18px 20px 20px; border-radius: var(--ms-radius-md); background: var(--ms-surface-soft); }
   .ms-mexpl .ms-more { margin-bottom: 0; }
+  .ms-mexpl.is-ok { background: var(--ms-ok-bg); box-shadow: inset 0 0 0 1px var(--ms-ok-line); }
+  .ms-mexpl.is-bad { background: var(--ms-bad-bg); box-shadow: inset 0 0 0 1px var(--ms-bad-line); }
   .ms-mnext { display: flex; width: fit-content; min-width: 200px; margin-top: 16px; }
   @media (max-width: 991.98px) { .ms-mnext { width: 100%; } .ms-mcheck { flex-wrap: wrap; } .ms-mcheck .ms-btn { width: 100%; } }
   html.theme-new .ms-mbox { border-color: var(--ink-line); }
@@ -1308,9 +1308,6 @@
 <!-- Prototipo juostelė (MagicPath principu: šviesi, centruota, ikona + tekstas) -->
 <div class="ms-proto-bar" role="note">
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 1.5h4M6.75 1.5v4.2L2.6 12.6A1.3 1.3 0 0 0 3.7 14.5h8.6a1.3 1.3 0 0 0 1.1-1.9L9.25 5.7V1.5"/><path d="M4.4 10h7.2"/></svg>
-  <span class="ms-proto-ver" role="group" aria-label="Prototipo versija">
-    <button type="button" onclick="window.msSetVersion('v2')" data-ver="v2" data-desc="Bazinis micro-learning su naujais klausimų tipais (keli teisingi, situacija, video, „Nežinau“). Išaiškinimas pasirinkto varianto viduje." aria-description="Bazinis micro-learning su naujais klausimų tipais (keli teisingi, situacija, video, „Nežinau“). Išaiškinimas pasirinkto varianto viduje.">V.1<span class="ms-proto-final">Final</span></button><button type="button" onclick="window.msSetVersion('v22')" data-ver="v22" data-desc="Kaip V.1, bet be auto-pateikimo: pasirenki variantą ir spaudi „Patvirtinti atsakymą“. Rezultatas bloke virš mygtuko." aria-description="Kaip V.1, bet be auto-pateikimo: pasirenki variantą ir spaudi „Patvirtinti atsakymą“. Rezultatas bloke virš mygtuko.">V.1.1</button><button type="button" onclick="window.msSetVersion('v12')" data-ver="v12" data-desc="Kaip V.1 (atsakymas iškart, be papildomo paspaudimo), bet „Nežinau“ ne variantas, o antrinis mygtukas „Nežinau, parodyk atsakymą“ kiekviename klausime." aria-description="Kaip V.1 (atsakymas iškart, be papildomo paspaudimo), bet „Nežinau“ ne variantas, o antrinis mygtukas „Nežinau, parodyk atsakymą“ kiekviename klausime.">V.1.2</button><button type="button" onclick="window.msSetVersion('v3')" data-ver="v3" data-desc="Typeform principas: vienas klausimas per visą ekraną, klaviatūra (A-D, Enter), ↑↓ navigacija." aria-description="Typeform principas: vienas klausimas per visą ekraną, klaviatūra (A-D, Enter), ↑↓ navigacija.">V.2</button><button type="button" onclick="window.msSetVersion('v4')" data-ver="v4" data-desc="V.2 Suflerio rėmuose: šoninis meniu susitraukia, testas šalia jo, X kampe ant žalio fono." aria-description="V.2 Suflerio rėmuose: šoninis meniu susitraukia, testas šalia jo, X kampe ant žalio fono.">V.3</button><button type="button" onclick="window.msSetVersion('v5')" data-ver="v5" data-desc="Vienas ilgas puslapis: atsakyti klausimai lieka viršuje kaip istorija. Pabaigoje tik įvertinimas." aria-description="Vienas ilgas puslapis: atsakyti klausimai lieka viršuje kaip istorija. Pabaigoje tik įvertinimas.">V.4</button><button type="button" onclick="window.msSetVersion('v55')" data-ver="v55" data-desc="Kaip V.4, bet atsakoma kaip V.1.1: pasirinkimas + „Patvirtinti atsakymą“, rezultatas bloke." aria-description="Kaip V.4, bet atsakoma kaip V.1.1: pasirinkimas + „Patvirtinti atsakymą“, rezultatas bloke.">V.4.4</button>
-  </span>
   <span><strong>Prototipas</strong><span class="ms-proto-sep ms-proto-mid" aria-hidden="true">/</span><span class="ms-proto-text ms-proto-mid">Testai, micro-learning</span><span class="ms-proto-sep" aria-hidden="true">/</span><span class="ms-proto-text">Work in progress</span></span>
 </div>
 <div class="ms-app" x-data="quiz()" x-init="init()" @keydown.window="onKey($event)">
@@ -1732,6 +1729,10 @@
   <div class="ms-admin" @keydown.escape.window="adminOpen = false">
     <div class="ms-admin-panel" x-show="adminOpen" x-cloak x-transition.opacity.scale.95.origin.bottom.left.duration.150ms @click.outside="adminOpen = false">
       <div class="ms-admin-title">Prototipo versijos</div>
+      <div class="ms-admin-group">Versija (V.1 finalinė, kitos istorija)</div>
+      <template x-for="v in protoVersions" :key="v.id">
+        <label class="ms-admin-opt" :title="v.desc"><input type="radio" name="ms-proto-version" :value="v.id" :id="'ms-pv-' + v.id" x-model="protoVersion"><span><b x-text="v.label"></b><span class="ms-proto-final" x-show="v.final">Final</span></span></label>
+      </template>
       <div class="ms-admin-group">Tema</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="default" id="ms-theme-default" x-model="theme"><span>Default (dabartinė)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="new" id="ms-theme-new" x-model="theme"><span>New (iliustruota)</span></label>
@@ -1918,10 +1919,10 @@
 
         <!-- I / J variantai: naujienos juostelė už kortelės (I) arba atskirai virš jos (J) -->
         <div class="ms-ibanner-wrap" :class="{ 'is-separate': introVariant === 'J' || isTf }" x-show="(introVariant === 'I' || introVariant === 'J' || isTf) && !tipSeen" x-collapse.duration.300ms>
-          <div class="ms-ibanner" role="button" tabindex="0" aria-haspopup="dialog" @click="newsModal = true" @keydown.enter.prevent="newsModal = true" @keydown.space.prevent="newsModal = true">
+          <div class="ms-ibanner">
             <span class="ms-announce-badge is-light">Naujiena</span>
             <span class="ms-ibanner-text">Išaiškinimą dabar matysite iškart po atsakymo.</span>
-            <button type="button" class="ms-ibanner-close" @click.stop="tipSeen = true" @keydown.enter.stop @keydown.space.stop aria-label="Uždaryti pranešimą"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
+            <button type="button" class="ms-ibanner-close" @click="tipSeen = true" aria-label="Uždaryti pranešimą"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg></button>
           </div>
         </div>
         <!-- V.3 pradžia: įprastas puslapis (sidebar + top bar), naujo tipo turinys; pradėjus atsidaro viso ekrano režimas -->
@@ -2095,7 +2096,7 @@
                           </span>
                           <span class="ms-option-text" x-text="o"></span>
                           <span class="ms-tag" :class="{ 'is-ok': isRightOpt(q, i) }" x-show="answered && multiSel.includes(i)" x-transition.opacity.duration.250ms>Jūsų pasirinkimas</span>
-                          <span class="ms-tag is-missed" x-show="answered && !pickedUnknown && !multiSel.includes(i) && isRightOpt(q, i)" x-transition.opacity.duration.250ms>Praleistas atsakymas</span>
+                          <span class="ms-tag is-missed" x-show="answered && !pickedUnknown && !multiSel.includes(i) && isRightOpt(q, i)" x-transition.opacity.duration.250ms>Reikėjo pasirinkti</span>
                           <span class="ms-tag is-ok" x-show="answered && pickedUnknown && isRightOpt(q, i)" x-transition.opacity.duration.250ms>Teisingas atsakymas</span>
                         </button>
                       </div>
@@ -2466,6 +2467,15 @@ function quiz() {
     ],
     tipSeen: false,
     protoVersion: 'v2',
+    protoVersions: [
+      { id: 'v2', label: 'V.1', final: true, desc: 'Finalinė: išaiškinimas iškart po atsakymo, pasirinkto varianto viduje.' },
+      { id: 'v22', label: 'V.1.1', desc: 'Be auto-pateikimo: pasirenki ir spaudi „Patvirtinti atsakymą“.' },
+      { id: 'v12', label: 'V.1.2', desc: 'Kaip V.1, bet „Nežinau, parodyk atsakymą“ antrinis mygtukas.' },
+      { id: 'v3', label: 'V.2', desc: 'Typeform principas: vienas klausimas per visą ekraną.' },
+      { id: 'v4', label: 'V.3', desc: 'V.2 Suflerio rėmuose.' },
+      { id: 'v5', label: 'V.4', desc: 'Vienas ilgas puslapis su istorija.' },
+      { id: 'v55', label: 'V.4.4', desc: 'Kaip V.4, bet su „Patvirtinti atsakymą“.' },
+    ],
     theme: 'default',
     ctaStyle: 'solid',
     cardSize: 'std',
