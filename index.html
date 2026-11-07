@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Žinių testas - micro-learning</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Figtree:wght@400;500;600;700&family=Gelasio:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Figtree:wght@400;500;600;700&family=Gelasio:wght@500;600;700&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.14.1/dist/cdn.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
@@ -771,11 +771,11 @@
   @media (max-width: 575.98px) { .ms-ibanner-wrap { padding: 0 12px; } .ms-ibanner { align-items: flex-start; flex-wrap: wrap; row-gap: 6px; } .ms-ibanner-text { flex-basis: calc(100% - 40px); order: 3; } .ms-ibanner-close { margin-left: auto; } }
 
   /* ---------- Papildoma opcija Default temai: vientisi CTA (#038389) ir nuorodos (#006A6E) ---------- */
-  html.cta-solid:not(.theme-new) { --ms-link: #006a6e; }
-  html.cta-solid:not(.theme-new) .ms-btn { background: #038389; border-color: #038389; }
-  html.cta-solid:not(.theme-new) .ms-btn:hover { filter: none; background: #02747a; border-color: #02747a; }
-  html.cta-solid:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; }
-  html.cta-solid:not(.theme-new) .ms-btn-outline:hover { background: var(--ms-surface-soft); color: #02747a; }
+  html.cta-solid:not(.theme-new):not(.theme-t1) { --ms-link: #006a6e; }
+  html.cta-solid:not(.theme-new):not(.theme-t1) .ms-btn { background: #038389; border-color: #038389; }
+  html.cta-solid:not(.theme-new):not(.theme-t1) .ms-btn:hover { filter: none; background: #02747a; border-color: #02747a; }
+  html.cta-solid:not(.theme-new):not(.theme-t1) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; }
+  html.cta-solid:not(.theme-new):not(.theme-t1) .ms-btn-outline:hover { background: var(--ms-surface-soft); color: #02747a; }
 
   /* ---------- Opcija „Gyvas“ (Airbnb tipo): pagrindas #038389 ir #4DAAAF spotlight: ramybėje viršuje kairėje,
      užvedus pelę seka žymeklį. Tekstas visada ant #038389 zonos (kontrastas ≥ 4.5:1) ---------- */
@@ -783,8 +783,8 @@
   @property --mx { syntax: '<percentage>'; inherits: false; initial-value: 22%; }
   @property --my { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
   @property --sa { syntax: '<number>'; inherits: false; initial-value: 1; }
-  html.cta-live:not(.theme-new) { --ms-link: #006a6e; }
-  html.cta-live:not(.theme-new) .ms-btn {
+  html.cta-live:not(.theme-new):not(.theme-t1) { --ms-link: #006a6e; }
+  html.cta-live:not(.theme-new):not(.theme-t1) .ms-btn {
     border-color: transparent;
     /* ramybės būsenoje spotlight stovi viršuje kairėje, užvedus pelę jis ryškėja ir seka žymeklį */
     background:
@@ -794,14 +794,14 @@
     /* spotlight padėtį sklandžiai (lerp) valdo JS: atplaukia iki žymeklio; nuėjus pelei užgęsta vietoje */
     transition: --hl .7s var(--ms-ease), --sa .55s ease, transform .15s;
   }
-  html.cta-live:not(.theme-new) .ms-btn:hover { filter: none; --hl: 1; transition: --hl .4s ease, --sa .3s ease, transform .15s; }
+  html.cta-live:not(.theme-new):not(.theme-t1) .ms-btn:hover { filter: none; --hl: 1; transition: --hl .4s ease, --sa .3s ease, transform .15s; }
   /* nuėjus pelei: spotlight užgęsta ten, kur buvo, ir be judesio vėl įsižiebia ramybės vietoje */
-  html.cta-live:not(.theme-new) .ms-btn.is-spot-out { transition: --hl .35s ease, --sa .35s ease, transform .15s; }
-  html.cta-live:not(.theme-new) .ms-btn:active { transform: translateY(1px) scale(.99); }
-  html.cta-live:not(.theme-new) .ms-btn:focus-visible { outline: 3px solid rgba(77, 170, 175, .55); outline-offset: 3px; }
-  html.cta-live:not(.theme-new) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; box-shadow: none; }
-  html.cta-live:not(.theme-new) .ms-btn-outline:hover { background: rgba(77, 170, 175, .1); }
-  @media (prefers-reduced-motion: reduce) { html.cta-live:not(.theme-new) .ms-btn:hover { --hl: 0; } }
+  html.cta-live:not(.theme-new):not(.theme-t1) .ms-btn.is-spot-out { transition: --hl .35s ease, --sa .35s ease, transform .15s; }
+  html.cta-live:not(.theme-new):not(.theme-t1) .ms-btn:active { transform: translateY(1px) scale(.99); }
+  html.cta-live:not(.theme-new):not(.theme-t1) .ms-btn:focus-visible { outline: 3px solid rgba(77, 170, 175, .55); outline-offset: 3px; }
+  html.cta-live:not(.theme-new):not(.theme-t1) .ms-btn-outline { background: transparent; border-color: #038389; color: #038389; box-shadow: none; }
+  html.cta-live:not(.theme-new):not(.theme-t1) .ms-btn-outline:hover { background: rgba(77, 170, 175, .1); }
+  @media (prefers-reduced-motion: reduce) { html.cta-live:not(.theme-new):not(.theme-t1) .ms-btn:hover { --hl: 0; } }
 
   /* ---------- V.2: klausimas su vaizdo įrašu (rodomas tik teste, ne rezultatuose) ---------- */
   .ms-video { margin: 0 0 22px; }
@@ -1320,6 +1320,140 @@
     .ms-rrow, .ms-linkcard, .ms-rbtn, .ms-results-head { break-inside: avoid; }
     .ms-rbtn { break-after: avoid; }
   }
+
+  /* ==========================================================
+     Tema „T1“: ramus, minimalistinis look & feel pagal t1energy.com.
+     Balta erdvė, šilti pilki paneliai, ploni (300) dideli šriftai,
+     mono uppercase žymos su ■, juodi pill mygtukai, dideli užapvalinimai.
+     ========================================================== */
+  html.theme-t1 {
+    --ms-font: 'Geist', 'Helvetica Neue', Arial, sans-serif;
+    --t1-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --t1-ink: #322d2a; --t1-black: #171717; --t1-panel: #f0efe9; --t1-line: #e2ddd8; --t1-line-strong: #bfb8b5;
+    --ms-ink: #322d2a; --ms-ink-soft: #322d2a; --ms-sub: #7a726d; --ms-muted: #a39b96;
+    --ms-line: var(--t1-line); --ms-surface: #ffffff; --ms-surface-soft: #f7f6f2; --ms-pill: transparent;
+    --ms-option-bg: #ffffff; --ms-option-bg-hover: #faf9f6; --ms-option-line: var(--t1-line);
+    --ms-teal: #171717; --ms-teal-hover: #000; --ms-teal-dark: #171717; --ms-teal-ink: #322d2a; --ms-link: #322d2a;
+    --ms-modal-line: transparent; --ms-howto-bg: #ffffff; --ms-howto-line: transparent;
+    --ms-link-line: var(--t1-line); --ms-link-eyebrow: #7a726d; --ms-link-arrow: #171717; --ms-icon-muted: #7a726d;
+    --ms-sidebar: var(--t1-panel); --ms-sidebar-active: #ffffff; --ms-topbar: #ffffff;
+    --ms-ok: #2f7d55; --ms-ok-text: #2c6a4a; --ms-ok-bg: #eef4ef; --ms-ok-line: #cfe0d4; --ms-ok-icon-bg: #dcebe0;
+    --ms-bad: #b8392a; --ms-bad-text: #a8352a; --ms-bad-bg: #fbf1ef; --ms-bad-line: #efd2cc; --ms-bad-tag-bg: #f6e1dd; --ms-bad-icon-bg: #f2d6d0;
+    --ms-shadow-card: none;
+    --ms-radius-sm: 12px; --ms-radius-md: 16px; --ms-radius-lg: 40px;
+  }
+  html.theme-t1 body { background: #ffffff; letter-spacing: .01em; -webkit-font-smoothing: antialiased; }
+  html.theme-t1 .ms-bgx { display: none; }
+  html.theme-t1 .ms-main { background: #ffffff; }
+
+  /* Rėmas: šoninis meniu ir viršutinė juosta */
+  html.theme-t1 .ms-sidebar { background: var(--t1-panel); }
+  html.theme-t1 .ms-logo { color: var(--t1-black); }
+  html.theme-t1 .ms-nav a { margin: 1px 16px; padding: 9px 14px; border-radius: 14px; color: var(--t1-ink); font-size: 14px; }
+  html.theme-t1 .ms-nav a:hover { background: rgba(255, 255, 255, .6); }
+  html.theme-t1 .ms-nav a.is-active { background: #fff; font-weight: 500; }
+  html.theme-t1 .ms-nav .ms-count { font-family: var(--t1-mono); font-size: 11px; color: var(--ms-sub); }
+  html.theme-t1 .ms-nav .ms-badge { background: var(--t1-black); color: #fff; font-family: var(--t1-mono); font-size: 11px; border-radius: 8px; }
+  html.theme-t1 .ms-nav-sep { background: var(--t1-line); }
+  html.theme-t1 .ms-topbar { border-top: 0; border-bottom: 1px solid var(--t1-line); background: rgba(255, 255, 255, .85); backdrop-filter: blur(12px); }
+  html.theme-t1 .ms-search input { height: 36px; border-color: var(--t1-line); border-radius: 14px; box-shadow: none; font-size: 14px; background: var(--ms-surface-soft); }
+  html.theme-t1 .ms-search input::placeholder { color: var(--ms-sub); }
+  html.theme-t1 .ms-topnav a { color: var(--t1-ink); font-weight: 400; font-size: 14px; }
+  html.theme-t1 .ms-topnav svg { color: var(--t1-ink); }
+  html.theme-t1 .ms-topbar svg { color: var(--t1-ink); }
+  html.theme-t1 .ms-topbar svg [stroke]:not([stroke="none"]) { stroke: var(--t1-ink); }
+  html.theme-t1 .ms-topbar svg [fill]:not([fill="none"]) { fill: var(--t1-ink); }
+  html.theme-t1 .ms-topbar svg[stroke]:not([stroke="none"]) { stroke: var(--t1-ink); }
+  html.theme-t1 .ms-crumbs { font-family: var(--t1-mono); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--ms-sub); }
+
+  /* Mono žymos su kvadratėliu */
+  html.theme-t1 .ms-progress, html.theme-t1 .ms-rkicker, html.theme-t1 .ms-intro-label, html.theme-t1 .ms-inline-status, html.theme-t1 .ms-rlab, html.theme-t1 .ms-linkcard-text small, html.theme-t1 .ms-announce-badge {
+    font-family: var(--t1-mono); font-weight: 400; font-size: 12px; letter-spacing: .02em; text-transform: uppercase;
+  }
+  html.theme-t1 .ms-progress { padding: 0; background: none; color: var(--t1-ink); margin-bottom: 22px; }
+  html.theme-t1 .ms-progress::before, html.theme-t1 .ms-rkicker::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 10px; background: currentColor; vertical-align: 1px; }
+  html.theme-t1 .ms-intro-label { border-bottom-color: var(--t1-line-strong); }
+  html.theme-t1 .ms-intro-label b { font-weight: 500; }
+
+  /* Kortelės: šiltas panelis be šešėlio, dideli užapvalinimai */
+  html.theme-t1 .ms-card { background: var(--t1-panel); box-shadow: none; border-radius: 40px; }
+  html.theme-t1 .ms-qcard { padding: 44px 48px 48px; }
+  html.theme-t1 .ms-intro { padding: 48px 56px 52px; }
+  html.theme-t1 .ms-intro h1 { font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -.01em; margin-top: 28px; }
+  html.theme-t1 .ms-intro p { font-size: 15px; line-height: 23px; color: var(--ms-sub); }
+  html.theme-t1 .ms-intro-check { border: 1px solid var(--t1-line-strong); border-radius: 20px; background: #fff; }
+  html.theme-t1 .ms-intro-check svg { fill: var(--t1-panel); stroke: var(--t1-black); stroke-width: 1.6; }
+  html.theme-t1 .ms-question { font-size: 26px; line-height: 33px; font-weight: 300; letter-spacing: -.005em; margin-bottom: 26px; }
+  html.theme-t1 .ms-situation { color: var(--ms-sub); }
+
+  /* Variantai */
+  html.theme-t1 .ms-options { gap: 8px; }
+  html.theme-t1 .ms-option { border-color: transparent; background: #fff; border-radius: 16px; }
+  html.theme-t1 .ms-option-btn { padding: 16px 28px 16px 16px; border-radius: 16px; }
+  html.theme-t1 .ms-option:not(.is-locked):hover { background: #fff; border-color: var(--t1-black); }
+  html.theme-t1 .ms-option-text { font-size: 15px; }
+  html.theme-t1 .ms-key { border-color: var(--t1-line-strong); font-family: var(--t1-mono); font-weight: 400; font-size: 12px; color: var(--t1-ink); }
+  html.theme-t1 .ms-option:not(.is-locked):hover .ms-key { border-color: var(--t1-black); background: var(--t1-black); color: #fff; }
+  html.theme-t1 .ms-option.is-correct { background: var(--ms-ok-bg); border-color: var(--ms-ok-line); }
+  html.theme-t1 .ms-option.is-correct .ms-option-text { font-weight: 500; }
+  html.theme-t1 .ms-option.is-wrong { background: var(--ms-bad-bg); border-color: var(--ms-bad-line); }
+  html.theme-t1 .ms-option.is-dim { opacity: .5; }
+  html.theme-t1 .ms-tag { border-radius: 8px; font-weight: 500; }
+  html.theme-t1 .ms-mbox { border-radius: 6px; border-color: var(--t1-line-strong); }
+  html.theme-t1 .ms-moption.is-selected { background: #fff; border-color: var(--t1-black); box-shadow: inset 0 0 0 1px var(--t1-black); }
+  html.theme-t1 .ms-multi-hint { color: var(--ms-sub); }
+  html.theme-t1 .ms-inline-lead { color: var(--t1-ink); }
+  html.theme-t1 .ms-mexpl { border-radius: 16px; }
+
+  /* Mygtukai ir nuorodos */
+  html.theme-t1 .ms-btn { background: var(--t1-black); border: 0; border-radius: 16px; padding: 15px 22px; font-size: 14px; line-height: 18px; font-weight: 400; letter-spacing: .01em; color: #fff; box-shadow: none; }
+  html.theme-t1 .ms-btn:hover { background: #000; filter: none; }
+  html.theme-t1 .ms-btn-outline { background: transparent; border: 1px solid var(--t1-line-strong); color: var(--t1-ink); }
+  html.theme-t1 .ms-btn-outline:hover { background: #fff; border-color: var(--t1-black); }
+  html.theme-t1 .ms-more { color: var(--t1-ink); text-decoration-style: solid; text-decoration-color: var(--t1-line-strong); }
+  html.theme-t1 .ms-more:hover { text-decoration-color: currentColor; color: #000; }
+  html.theme-t1 .ms-linkcard { background: #fff; border-color: var(--t1-line); border-radius: 16px; }
+  html.theme-t1 .ms-linkcard:hover { border-color: var(--t1-black); }
+  html.theme-t1 .ms-linkcard-ico { border-color: var(--t1-line); border-radius: 12px; }
+  html.theme-t1 .ms-linkcard:hover .ms-linkcard-text span { color: #000; }
+  html.theme-t1 .ms-inline-body { border-top-color: rgba(50, 45, 42, .12); }
+
+  /* Rezultatai */
+  html.theme-t1 .ms-results-actions a { color: var(--t1-ink); font-weight: 400; }
+  html.theme-t1 .ms-results-actions span { background: var(--t1-line-strong); }
+  html.theme-t1 .ms-results-head { background: #fff; border: 0; border-radius: 28px; padding: 32px 36px; }
+  html.theme-t1 .ms-results-head h1 { font-size: 30px; line-height: 36px; font-weight: 300; letter-spacing: -.01em; }
+  html.theme-t1 .ms-rkicker { color: var(--t1-ink); }
+  html.theme-t1 .ms-rsub { font-weight: 400; color: var(--ms-sub); }
+  html.theme-t1 .ms-ring-track { stroke: var(--t1-panel); }
+  html.theme-t1 .ms-ring-fill { stroke: var(--t1-black); stroke-linecap: butt; }
+  html.theme-t1 .ms-ring b { font-family: var(--t1-mono); font-weight: 400; font-size: 18px; color: var(--t1-ink); }
+  html.theme-t1 .ms-rlist-head h2 { font-size: 22px; line-height: 28px; font-weight: 300; }
+  html.theme-t1 .ms-ritem { border-bottom-color: rgba(50, 45, 42, .1); }
+  html.theme-t1 .ms-rbtn:hover { background: rgba(255, 255, 255, .55); }
+  html.theme-t1 .ms-rq { font-weight: 500; }
+  html.theme-t1 .ms-rrow { border-radius: 12px; color: var(--t1-ink); }
+  html.theme-t1 .ms-rwhy { background: #fff; border-radius: 16px; }
+
+  /* Modalai, pranešimai */
+  html.theme-t1 .ms-modal-backdrop { background: rgba(15, 14, 18, .45); backdrop-filter: blur(6px); }
+  html.theme-t1 .ms-modal { border: 0; border-radius: 32px; box-shadow: 0 24px 60px rgba(15, 14, 18, .18); }
+  html.theme-t1 .ms-modal-head h3 { font-size: 20px; line-height: 26px; font-weight: 300; }
+  html.theme-t1 .ms-modal-q { background: var(--t1-panel); border-radius: 12px; }
+  html.theme-t1 .ms-ibanner { background: var(--t1-panel); border-color: transparent; }
+  html.theme-t1 .ms-ibanner-wrap.is-separate .ms-ibanner { border-radius: 16px; border-color: transparent; }
+  html.theme-t1 .ms-announce-badge, html.theme-t1 .ms-announce-badge.is-light { background: var(--t1-black); color: #fff; border-radius: 6px; }
+  html.theme-t1 .ms-fb { border-radius: 24px; border: 0; box-shadow: 0 18px 50px rgba(15, 14, 18, .16); }
+  html.theme-t1 .ms-report { color: var(--t1-ink); }
+  @media (max-width: 991.98px) {
+    html.theme-t1 .ms-card { border-radius: 28px; }
+    html.theme-t1 .ms-qcard { padding: 28px 20px 28px; }
+    html.theme-t1 .ms-intro { padding: 32px 24px 36px; }
+    html.theme-t1 .ms-intro h1 { font-size: 28px; line-height: 32px; }
+    html.theme-t1 .ms-question { font-size: 21px; line-height: 27px; }
+    html.theme-t1 .ms-results-head { padding: 22px; border-radius: 22px; }
+    html.theme-t1 .ms-results-head h1 { font-size: 22px; line-height: 28px; }
+  }
 </style>
 </head>
 <body>
@@ -1753,6 +1887,7 @@
       <div class="ms-admin-group">Tema</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="default" id="ms-theme-default" x-model="theme"><span>Default (dabartinė)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="new" id="ms-theme-new" x-model="theme"><span>New (iliustruota)</span></label>
+      <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="t1" id="ms-theme-t1" x-model="theme"><span>T1 (minimalistinė, t1energy.com)</span></label>
       <div class="ms-admin-group">Kortelių dydis</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-cards" value="std" id="ms-cards-std" x-model="cardSize"><span>Standartinės (600px)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-cards" value="wide" id="ms-cards-wide" x-model="cardSize"><span>Platesnės (720px, kaip V.2)</span></label>
@@ -2734,7 +2869,9 @@ function quiz() {
       try {
         const saved = JSON.parse(localStorage.getItem('ms-proto-v4') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
-        if (saved.theme === 'new' || saved.theme === 'default') this.theme = saved.theme;
+        if (['new', 'default', 't1'].includes(saved.theme)) this.theme = saved.theme;
+        // ?tema=t1 nuorodoje: tiesiai atidaro pasirinktą temą (patogu pasidalinti)
+        const qTheme = new URLSearchParams(location.search).get('tema'); if (['new', 'default', 't1'].includes(qTheme)) this.theme = qTheme;
         if (['v2', 'v22', 'v12', 'v3', 'v4', 'v5', 'v55'].includes(saved.protoVersion)) this.protoVersion = saved.protoVersion;
         if (['solid', 'gradient', 'live'].includes(saved.ctaStyle)) this.ctaStyle = saved.ctaStyle;
         if (saved.cardSize === 'wide') this.cardSize = 'wide';
@@ -2744,7 +2881,7 @@ function quiz() {
       } catch (e) { this.bg = { ...this.bgDefaults }; }
       const persist = () => { try { localStorage.setItem('ms-proto-v4', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion, cardSize: this.cardSize, explainStyle: this.explainStyle })); } catch (e) {} };
       this.$watch('introVariant', persist);
-      const applyTheme = () => document.documentElement.classList.toggle('theme-new', this.theme === 'new');
+      const applyTheme = () => { const c = document.documentElement.classList; c.toggle('theme-new', this.theme === 'new'); c.toggle('theme-t1', this.theme === 't1'); };
       applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
       window.msSetVersion = v => { this.protoVersion = v; };
       const markVer = () => document.querySelectorAll('.ms-proto-ver button').forEach(b => b.classList.toggle('is-on', b.dataset.ver === this.protoVersion));
