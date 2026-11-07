@@ -1407,7 +1407,7 @@
 
   /* Mygtukai ir nuorodos */
   html.theme-t1 .ms-btn { background: var(--t1-black); border: 0; border-radius: 16px; padding: 15px 22px; font-size: 14px; line-height: 18px; font-weight: 400; letter-spacing: .01em; color: #fff; box-shadow: none; }
-  html.theme-t1 .ms-btn:hover { background: #000; filter: none; }
+  html.theme-t1 .ms-btn:hover { background: var(--t1-black-hover, #000); filter: none; }
   html.theme-t1 .ms-btn-outline { background: transparent; border: 1px solid var(--t1-line-strong); color: var(--t1-ink); }
   html.theme-t1 .ms-btn-outline:hover { background: #fff; border-color: var(--t1-black); }
   html.theme-t1 .ms-more { color: var(--t1-ink); text-decoration-style: solid; text-decoration-color: var(--t1-line-strong); }
@@ -1454,6 +1454,26 @@
     html.theme-t1 .ms-results-head { padding: 22px; border-radius: 22px; }
     html.theme-t1 .ms-results-head h1 { font-size: 22px; line-height: 28px; }
   }
+
+  /* T1 + Suflerio teal: ta pati T1 struktūra, bet neutralūs atspalviai pasukti į vėsią pusę,
+     o teal naudojamas tik kaip akcentas (CTA, aktyvios būsenos, progresas). Taisyklė ~60/30/10:
+     balta 60 %, vėsūs pilki paneliai 30 %, teal 10 %. */
+  html.theme-t1.t1-teal {
+    --t1-ink: #1f3437; --t1-black: #038389; --t1-black-hover: #026e73; --t1-panel: #eef4f4; --t1-line: #dbe6e6; --t1-line-strong: #a9c4c5;
+    --ms-ink: #1f3437; --ms-ink-soft: #1f3437; --ms-sub: #5f7a7e; --ms-muted: #8aa3a6;
+    --ms-surface-soft: #f5f9f9; --ms-option-bg-hover: #f7fbfb;
+    --ms-teal: #038389; --ms-teal-hover: #026e73; --ms-teal-dark: #0f5354; --ms-teal-ink: #1f3437; --ms-link: #006a6e;
+    --ms-link-arrow: #0f5354; --ms-icon-muted: #5f7a7e;
+  }
+  html.theme-t1.t1-teal .ms-progress, html.theme-t1.t1-teal .ms-rkicker, html.theme-t1.t1-teal .ms-crumbs a { color: #0f5354; }
+  html.theme-t1.t1-teal .ms-intro-check svg { fill: #dbe9ea; stroke: #0f5354; }
+  html.theme-t1.t1-teal .ms-option:not(.is-locked):hover { border-color: #4c9095; }
+  html.theme-t1.t1-teal .ms-more { color: #006a6e; text-decoration-color: #a9c4c5; }
+  html.theme-t1.t1-teal .ms-more:hover, html.theme-t1.t1-teal .ms-linkcard:hover .ms-linkcard-text span { color: #0f5354; }
+  html.theme-t1.t1-teal .ms-linkcard:hover { border-color: #4c9095; }
+  html.theme-t1.t1-teal .ms-ring-fill { stroke: #038389; }
+  html.theme-t1.t1-teal .ms-nav a.is-active { color: #0f5354; }
+  html.theme-t1.t1-teal .ms-nav .ms-badge { background: #4c9095; }
 </style>
 </head>
 <body>
@@ -1888,6 +1908,7 @@
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="default" id="ms-theme-default" x-model="theme"><span>Default (dabartinė)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="new" id="ms-theme-new" x-model="theme"><span>New (iliustruota)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="t1" id="ms-theme-t1" x-model="theme"><span>T1 (minimalistinė, t1energy.com)</span></label>
+      <label class="ms-admin-opt"><input type="radio" name="ms-theme" value="t1teal" id="ms-theme-t1teal" x-model="theme"><span>T1 + Suflerio teal</span></label>
       <div class="ms-admin-group">Kortelių dydis</div>
       <label class="ms-admin-opt"><input type="radio" name="ms-cards" value="std" id="ms-cards-std" x-model="cardSize"><span>Standartinės (600px)</span></label>
       <label class="ms-admin-opt"><input type="radio" name="ms-cards" value="wide" id="ms-cards-wide" x-model="cardSize"><span>Platesnės (720px, kaip V.2)</span></label>
@@ -2869,9 +2890,9 @@ function quiz() {
       try {
         const saved = JSON.parse(localStorage.getItem('ms-proto-v4') || '{}');
         if (saved.introVariant && this.introVariants.some(v => v.id === saved.introVariant)) this.introVariant = saved.introVariant;
-        if (['new', 'default', 't1'].includes(saved.theme)) this.theme = saved.theme;
+        if (['new', 'default', 't1', 't1teal'].includes(saved.theme)) this.theme = saved.theme;
         // ?tema=t1 nuorodoje: tiesiai atidaro pasirinktą temą (patogu pasidalinti)
-        const qTheme = new URLSearchParams(location.search).get('tema'); if (['new', 'default', 't1'].includes(qTheme)) this.theme = qTheme;
+        const qTheme = new URLSearchParams(location.search).get('tema'); if (['new', 'default', 't1', 't1teal'].includes(qTheme)) this.theme = qTheme;
         if (['v2', 'v22', 'v12', 'v3', 'v4', 'v5', 'v55'].includes(saved.protoVersion)) this.protoVersion = saved.protoVersion;
         if (['solid', 'gradient', 'live'].includes(saved.ctaStyle)) this.ctaStyle = saved.ctaStyle;
         if (saved.cardSize === 'wide') this.cardSize = 'wide';
@@ -2881,7 +2902,7 @@ function quiz() {
       } catch (e) { this.bg = { ...this.bgDefaults }; }
       const persist = () => { try { localStorage.setItem('ms-proto-v4', JSON.stringify({ introVariant: this.introVariant, bg: this.bg, theme: this.theme, ctaStyle: this.ctaStyle, protoVersion: this.protoVersion, cardSize: this.cardSize, explainStyle: this.explainStyle })); } catch (e) {} };
       this.$watch('introVariant', persist);
-      const applyTheme = () => { const c = document.documentElement.classList; c.toggle('theme-new', this.theme === 'new'); c.toggle('theme-t1', this.theme === 't1'); };
+      const applyTheme = () => { const c = document.documentElement.classList; c.toggle('theme-new', this.theme === 'new'); c.toggle('theme-t1', this.theme === 't1' || this.theme === 't1teal'); c.toggle('t1-teal', this.theme === 't1teal'); };
       applyTheme(); this.$watch('theme', () => { applyTheme(); persist(); });
       window.msSetVersion = v => { this.protoVersion = v; };
       const markVer = () => document.querySelectorAll('.ms-proto-ver button').forEach(b => b.classList.toggle('is-on', b.dataset.ver === this.protoVersion));
