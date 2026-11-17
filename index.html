@@ -1478,7 +1478,7 @@
   /* ==========================================================
      Tema „BRN“: agentūros brnagency.lt look & feel (refai: Mobbin kolekcija
      „Testų tema: BRN stilius“, Figma Learn Design, Podia). Mėtinis fonas, baklažano
-     tekstas ir mygtukai, koralinės plokščios geometrinės formos, statūs kampai,
+     tekstas ir mygtukai, koralinės plokščios geometrinės formos, švelniai apvalinti kampai (10–16 px),
      plonos 1 px linijos. Šriftas Hanken Grotesk (originalas Bw Gradual yra mokamas).
      Sąmoningai dalykiška: be vaikiškų personažų, formos tik kaip akcentai.
      ========================================================== */
@@ -1496,7 +1496,7 @@
     --ms-ok: #1f7a55; --ms-ok-text: #17664a; --ms-ok-bg: #e4f4ec; --ms-ok-line: #9fd2b9; --ms-ok-icon-bg: #c7ead8;
     --ms-bad: #c8432b; --ms-bad-text: #b23a24; --ms-bad-bg: #fff0eb; --ms-bad-line: #f5b5a6; --ms-bad-tag-bg: #fde0d8; --ms-bad-icon-bg: #fcd3c8;
     --ms-shadow-card: none;
-    --ms-radius-sm: 2px; --ms-radius-md: 2px; --ms-radius-lg: 4px;
+    --ms-radius-sm: 8px; --ms-radius-md: 10px; --ms-radius-lg: 16px;
   }
   html.theme-brn body { background: var(--brn-mint); -webkit-font-smoothing: antialiased; }
   html.theme-brn .ms-bgx { display: none; }
@@ -1508,10 +1508,10 @@
   html.theme-brn .ms-nav a { margin: 0 20px; padding: 9px 4px; border-radius: 0; color: var(--brn-ink); font-size: 15px; font-weight: 500; border-bottom: 1px solid transparent; }
   html.theme-brn .ms-nav a:hover { background: none; border-bottom-color: var(--brn-line-strong); }
   html.theme-brn .ms-nav a.is-active { background: none; border-top: 1px solid var(--brn-ink); border-bottom: 1px solid var(--brn-ink); font-weight: 600; }
-  html.theme-brn .ms-nav .ms-badge { background: var(--brn-coral); color: var(--brn-ink); border-radius: 0; font-weight: 600; }
+  html.theme-brn .ms-nav .ms-badge { background: var(--brn-coral); color: var(--brn-ink); border-radius: 6px; font-weight: 600; }
   html.theme-brn .ms-nav-sep { background: var(--brn-line); }
   html.theme-brn .ms-topbar { border-top: 0; border-bottom: 1px solid var(--brn-line); background: var(--brn-mint); }
-  html.theme-brn .ms-search input { border: 1px solid var(--brn-line); border-radius: 0; box-shadow: none; background: #fff; color: var(--brn-ink); }
+  html.theme-brn .ms-search input { border: 1px solid var(--brn-line); border-radius: 10px; box-shadow: none; background: #fff; color: var(--brn-ink); }
   html.theme-brn .ms-search input::placeholder { color: var(--ms-muted); }
   html.theme-brn .ms-topnav a, html.theme-brn .ms-topbar svg { color: var(--brn-ink); font-weight: 500; }
   html.theme-brn .ms-topbar svg [stroke]:not([stroke="none"]), html.theme-brn .ms-topbar svg[stroke]:not([stroke="none"]) { stroke: var(--brn-ink); }
@@ -1524,7 +1524,7 @@
   html.theme-brn .ms-intro-label { border-bottom-color: var(--brn-ink); color: var(--brn-ink); }
 
   /* Kortelės: baltos, statūs kampai, be šešėlio */
-  html.theme-brn .ms-card { background: #fff; box-shadow: none; border-radius: 4px; }
+  html.theme-brn .ms-card { background: #fff; box-shadow: none; border-radius: 16px; }
   html.theme-brn .ms-qcard { padding: 44px 48px 48px; }
   html.theme-brn .ms-intro h1 { font-size: 40px; line-height: 44px; font-weight: 500; letter-spacing: -.02em; color: var(--brn-ink); }
   html.theme-brn .ms-intro p { font-size: 17px; line-height: 26px; color: var(--ms-sub); }
@@ -1536,8 +1536,8 @@
 
   /* Variantai */
   html.theme-brn .ms-options { gap: 8px; }
-  html.theme-brn .ms-option { border: 1px solid var(--brn-line); background: #fff; border-radius: 2px; }
-  html.theme-brn .ms-option-btn { border-radius: 2px; }
+  html.theme-brn .ms-option { border: 1px solid var(--brn-line); background: #fff; border-radius: 10px; }
+  html.theme-brn .ms-option-btn { border-radius: 10px; }
   html.theme-brn .ms-option:not(.is-locked):hover { background: #fff; border-color: var(--brn-ink); }
   html.theme-brn .ms-option-text { font-size: 16px; color: var(--brn-ink); }
   html.theme-brn .ms-key { border-color: var(--brn-line-strong); font-weight: 600; color: var(--brn-ink); }
@@ -1546,28 +1546,28 @@
   html.theme-brn .ms-option.is-correct .ms-option-text { font-weight: 600; }
   html.theme-brn .ms-option.is-wrong { background: var(--ms-bad-bg); border-color: var(--ms-bad-line); }
   html.theme-brn .ms-option.is-dim { opacity: .55; }
-  html.theme-brn .ms-tag { border-radius: 0; font-weight: 600; }
-  html.theme-brn .ms-mbox { border-radius: 0; border-color: var(--brn-line-strong); }
+  html.theme-brn .ms-tag { border-radius: 6px; font-weight: 600; }
+  html.theme-brn .ms-mbox { border-radius: 4px; border-color: var(--brn-line-strong); }
   html.theme-brn .ms-moption.is-selected { background: #fff; border-color: var(--brn-ink); box-shadow: inset 0 0 0 1px var(--brn-ink); }
-  html.theme-brn .ms-mexpl { border-radius: 2px; }
+  html.theme-brn .ms-mexpl { border-radius: 10px; }
   html.theme-brn .ms-inline-body { border-top-color: var(--brn-line); }
 
   /* Mygtukai: kaip BRN „Prenumeruoti“ (baklažanas, statūs kampai); antriniai kaip „Gauti auditą“ (linijos viršuje ir apačioje) */
-  html.theme-brn .ms-btn { background: var(--brn-ink); border: 0; border-radius: 0; padding: 14px 24px; font-weight: 500; letter-spacing: .01em; color: #fff; box-shadow: none; }
+  html.theme-brn .ms-btn { background: var(--brn-ink); border: 0; border-radius: 10px; padding: 14px 24px; font-weight: 500; letter-spacing: .01em; color: #fff; box-shadow: none; }
   html.theme-brn .ms-btn:hover { background: var(--brn-ink-2); filter: none; }
   html.theme-brn .ms-btn:focus-visible { outline: 3px solid var(--brn-coral); outline-offset: 2px; }
   html.theme-brn .ms-btn-outline { background: transparent; border: 0; border-top: 1px solid var(--brn-ink); border-bottom: 1px solid var(--brn-ink); border-radius: 0; color: var(--brn-ink); padding-left: 2px; padding-right: 2px; }
   html.theme-brn .ms-btn-outline:hover { background: transparent; color: var(--brn-ink-2); border-color: var(--brn-coral); }
   html.theme-brn .ms-more { color: var(--brn-ink); text-decoration-style: solid; text-decoration-color: var(--brn-coral); text-underline-offset: 4px; }
   html.theme-brn .ms-more:hover { text-decoration-thickness: 2px; }
-  html.theme-brn .ms-linkcard { background: #fff; border-color: var(--brn-line); border-radius: 2px; }
+  html.theme-brn .ms-linkcard { background: #fff; border-color: var(--brn-line); border-radius: 10px; }
   html.theme-brn .ms-linkcard:hover { border-color: var(--brn-ink); }
-  html.theme-brn .ms-linkcard-ico { border-color: var(--brn-line); border-radius: 0; background: var(--brn-mint); }
+  html.theme-brn .ms-linkcard-ico { border-color: var(--brn-line); border-radius: 8px; background: var(--brn-mint); }
 
   /* Rezultatai: antraštė su koraline ir melsva figūra ir „pen tool“ linija */
   html.theme-brn .ms-results-actions a { color: var(--brn-ink); }
   html.theme-brn .ms-results-actions span { background: var(--brn-line-strong); }
-  html.theme-brn .ms-results-head { position: relative; background: var(--brn-mint); border: 0; border-radius: 2px; padding: 32px 210px 32px 36px; }
+  html.theme-brn .ms-results-head { position: relative; background: var(--brn-mint); border: 0; border-radius: 12px; padding: 32px 210px 32px 36px; }
   html.theme-brn .ms-results-head::after { content: ''; position: absolute; right: 22px; top: 50%; width: 170px; height: 120px; transform: translateY(-50%); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 170 120'%3E%3Cpolygon points='22,48 64,30 90,64 62,104 18,92' fill='%23FA7A5F'/%3E%3Cpolygon points='112,14 144,32 144,68 112,86 80,68 80,32' fill='%23A8CBFF'/%3E%3Cpath d='M70 10H146V40' fill='none' stroke='%23361A44' stroke-width='1.2'/%3E%3Crect x='66' y='6' width='8' height='8' fill='%23fff' stroke='%23361A44'/%3E%3Crect x='104' y='6' width='8' height='8' fill='%23fff' stroke='%23361A44'/%3E%3Crect x='142' y='6' width='8' height='8' fill='%23fff' stroke='%23361A44'/%3E%3Crect x='142' y='36' width='8' height='8' fill='%23fff' stroke='%23361A44'/%3E%3C/svg%3E") center / contain no-repeat; pointer-events: none; }
   html.theme-brn .ms-results-head h1 { font-size: 32px; line-height: 38px; font-weight: 500; letter-spacing: -.02em; }
   html.theme-brn .ms-rkicker { color: var(--brn-ink); }
@@ -1577,18 +1577,18 @@
   html.theme-brn .ms-rlist-head h2 { font-size: 24px; font-weight: 500; letter-spacing: -.01em; }
   html.theme-brn .ms-ritem { border-bottom-color: var(--brn-line); }
   html.theme-brn .ms-rbtn:hover { background: var(--ms-surface-soft); }
-  html.theme-brn .ms-rrow { border-radius: 2px; color: var(--brn-ink); }
-  html.theme-brn .ms-rwhy { background: var(--ms-surface-soft); border-radius: 2px; }
+  html.theme-brn .ms-rrow { border-radius: 8px; color: var(--brn-ink); }
+  html.theme-brn .ms-rwhy { background: var(--ms-surface-soft); border-radius: 10px; }
 
   /* Modalai, pranešimai */
   html.theme-brn .ms-modal-backdrop { background: rgba(36, 16, 47, .45); }
-  html.theme-brn .ms-modal { border: 1px solid var(--brn-ink); border-radius: 2px; box-shadow: 8px 8px 0 var(--brn-coral); }
+  html.theme-brn .ms-modal { border: 1px solid var(--brn-ink); border-radius: 16px; box-shadow: 8px 8px 0 var(--brn-coral); }
   html.theme-brn .ms-modal-head h3 { font-weight: 500; }
-  html.theme-brn .ms-modal-q { background: var(--brn-mint); border-radius: 0; }
-  html.theme-brn .ms-ibanner { background: #fff; border-color: var(--brn-line); border-radius: 2px; }
-  html.theme-brn .ms-ibanner-wrap.is-separate .ms-ibanner { border-radius: 2px; border-color: var(--brn-line); }
-  html.theme-brn .ms-announce-badge, html.theme-brn .ms-announce-badge.is-light { background: var(--brn-coral); color: var(--brn-ink); border-radius: 0; }
-  html.theme-brn .ms-fb { border-radius: 2px; border: 1px solid var(--brn-ink); box-shadow: 6px 6px 0 var(--brn-coral); }
+  html.theme-brn .ms-modal-q { background: var(--brn-mint); border-radius: 8px; }
+  html.theme-brn .ms-ibanner { background: #fff; border-color: var(--brn-line); border-radius: 12px; }
+  html.theme-brn .ms-ibanner-wrap.is-separate .ms-ibanner { border-radius: 12px; border-color: var(--brn-line); }
+  html.theme-brn .ms-announce-badge, html.theme-brn .ms-announce-badge.is-light { background: var(--brn-coral); color: var(--brn-ink); border-radius: 6px; }
+  html.theme-brn .ms-fb { border-radius: 14px; border: 1px solid var(--brn-ink); box-shadow: 6px 6px 0 var(--brn-coral); }
   @media (max-width: 991.98px) {
     html.theme-brn .ms-qcard { padding: 28px 20px 28px; }
     html.theme-brn .ms-intro h1 { font-size: 30px; line-height: 34px; }
