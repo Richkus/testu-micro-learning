@@ -1511,7 +1511,10 @@
   html.theme-brn .ms-nav .ms-badge { background: var(--brn-coral); color: var(--brn-ink); border-radius: 6px; font-weight: 600; }
   html.theme-brn .ms-nav-sep { background: var(--brn-line); }
   html.theme-brn .ms-topbar { border-top: 0; border-bottom: 1px solid var(--brn-line); background: var(--brn-mint); }
-  html.theme-brn .ms-search input { border: 1px solid var(--brn-line); border-radius: 10px; box-shadow: none; background: #fff; color: var(--brn-ink); }
+  /* Paieška: pill forma, permatoma ant mėtinio (ne ryškiai balta); fokusuojant tampa balta */
+  html.theme-brn .ms-search input { border: 1px solid rgba(54, 26, 68, .1); border-radius: 999px; box-shadow: none; background: rgba(255, 255, 255, .38); color: var(--brn-ink); transition: background-color .2s, border-color .2s; }
+  html.theme-brn .ms-search input:hover { background: rgba(255, 255, 255, .55); }
+  html.theme-brn .ms-search input:focus { background: #fff; border-color: rgba(54, 26, 68, .35); outline: none; box-shadow: 0 0 0 3px rgba(250, 122, 95, .25); }
   html.theme-brn .ms-search input::placeholder { color: var(--ms-muted); }
   html.theme-brn .ms-topnav a, html.theme-brn .ms-topbar svg { color: var(--brn-ink); font-weight: 500; }
   html.theme-brn .ms-topbar svg [stroke]:not([stroke="none"]), html.theme-brn .ms-topbar svg[stroke]:not([stroke="none"]) { stroke: var(--brn-ink); }
